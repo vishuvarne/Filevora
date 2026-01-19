@@ -16,7 +16,7 @@
         "trailingSlash": true,
         "headers": [
             {
-                "source": "**/*.@(jpg|jpeg|gif|png|webp|svg|css|js)",
+                "source": "**/*.@(jpg|jpeg|gif|png|webp|svg)",
                 "headers": [
                     {
                         "key": "Cache-Control",
@@ -25,11 +25,29 @@
                 ]
             },
             {
-                "source": "**/*.@(eot|otf|ttf|ttc|woff|woff2)",
+                "source": "_next/static/**/*.@(js|css)",
                 "headers": [
                     {
                         "key": "Cache-Control",
                         "value": "public, max-age=31536000, immutable"
+                    }
+                ]
+            },
+            {
+                "source": "**/*.@(html|json)",
+                "headers": [
+                    {
+                        "key": "Cache-Control",
+                        "value": "no-cache, no-store, must-revalidate"
+                    }
+                ]
+            },
+            {
+                "source": "service-worker.js",
+                "headers": [
+                    {
+                        "key": "Cache-Control",
+                        "value": "no-cache, no-store, must-revalidate"
                     }
                 ]
             }
