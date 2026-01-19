@@ -6,12 +6,21 @@ import asyncio
 import logging
 from collections import defaultdict
 import time
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from .config import config, Config
 from .utils.file_ops import file_ops
-from .routers import processor, auth
+from .routers import processor, auth, cloud_import
 from .database import init_db
 from .admin import setup_admin
+
+# ... (existing code)
+
+app.include_router(processor.router)
+app.include_router(auth.router)
+app.include_router(cloud_import.router)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("filevora")
@@ -124,7 +133,7 @@ async def rate_limit_middleware(request: Request, call_next):
     response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     response.headers["Permissions-Policy"] = "geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()"
-    response.headers["Content-Security-Policy"] = "default-src 'self'; img-src 'self' data: https: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data: https:; connect-src 'self' https:;"
+    response.headers["Content-Security-Policy"] = "default-src 'self'; img-src 'self' data: https: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://accounts.google.com; style-src 'self' 'unsafe-inline'; font-src 'self' data: https:; connect-src 'self' https:; frame-src 'self' https://docs.google.com https://accounts.google.com;"
     
     return response
 

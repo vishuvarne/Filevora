@@ -16,3 +16,4 @@ imageio-ffmpeg
 sqlalchemy
 sqladmin
 psycopg2-binary
+python-dotenv

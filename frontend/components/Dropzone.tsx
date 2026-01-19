@@ -1,6 +1,10 @@
 "use client";
 
 import { useState, useRef, DragEvent, ChangeEvent, KeyboardEvent } from "react";
+import { useGoogleDrivePicker } from "../hooks/useGoogleDrive";
+import { useDropboxChooser } from "../hooks/useDropbox";
+import { useOneDrivePicker } from "../hooks/useOneDrive";
+import { importCloudFile, getDownloadUrl } from "../lib/api";
 
 interface DropzoneProps {
     onFilesSelected: (files: File[]) => void;
@@ -55,9 +59,83 @@ export default function Dropzone({
         }
     };
 
+    const { openPicker: openGoogleRequest } = useGoogleDrivePicker({
+        clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "",
+        apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY || "",
+        appId: process.env.NEXT_PUBLIC_GOOGLE_APP_ID || ""
+    });
+
+    const { openChooser: openDropboxRequest } = useDropboxChooser({
+        appKey: process.env.NEXT_PUBLIC_DROPBOX_APP_KEY || ""
+    });
+
+    const { openPicker: openOneDriveRequest } = useOneDrivePicker({
+        clientId: process.env.NEXT_PUBLIC_ONEDRIVE_CLIENT_ID || ""
+    });
+
+    const [isImporting, setIsImporting] = useState(false);
+
+    const handleCloudImport = async (provider: 'google' | 'dropbox' | 'onedrive') => {
+        setIsImporting(true);
+        try {
+            let result;
+            let importData: { url: string; name: string; token?: string; id?: string } | null = null; // Removed 'any'
+
+            if (provider === 'google') {
+                const docs = await openGoogleRequest();
+                if (docs && docs[0]) {
+                    const doc = docs[0];
+                    importData = {
+                        url: doc.url, // For Google, we might need to handle this differently in backend if it's not a direct download
+                        name: doc.name,
+                        token: window.gapi?.auth?.getToken()?.access_token || doc.auth_token || "", // Try to get token
+                        id: doc.id
+                    };
+                }
+            } else if (provider === 'dropbox') {
+                const file = await openDropboxRequest();
+                if (file) {
+                    importData = { url: file.link, name: file.name };
+                }
+            } else if (provider === 'onedrive') {
+                const file = await openOneDriveRequest();
+                if (file) {
+                    importData = { url: file["@microsoft.graph.downloadUrl"], name: file.name };
+                }
+            }
+
+            if (importData) {
+                // 1. Tell Backend to fetch it
+                const job = await importCloudFile(
+                    provider,
+                    importData.url,
+                    importData.name,
+                    importData.token,
+                    importData.id
+                );
+
+                // 2. Fetch the "virtual" file back to browser (Loopback)
+                // This ensures we have a File object compatible with the rest of the app
+                const res = await fetch(getDownloadUrl(job.download_url)); // Using virtual download link
+                const blob = await res.blob();
+                const file = new File([blob], job.filename, { type: blob.type });
+
+                onFilesSelected([file]);
+            }
+
+        } catch (e: any) { // Type 'unknown' or 'any' for error
+            console.error("Cloud import error:", e);
+            if (e !== "Cancelled") {
+                alert("Failed to import file: " + (e.message || e));
+            }
+        } finally {
+            setIsImporting(false);
+        }
+    };
+
     return (
         <div
-            onClick={() => fileInputRef.current?.click()}
+            onClick={() => !isImporting && fileInputRef.current?.click()}
             onKeyDown={handleKeyDown}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -66,13 +144,20 @@ export default function Dropzone({
             role="button"
             aria-label="Upload file dropzone"
             className={`
-        border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+        border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 relative overflow-hidden
         ${isDragging
                     ? "border-blue-500 bg-blue-50/10 text-blue-500"
                     : "border-gray-300 text-gray-500 hover:border-blue-400 hover:text-blue-400"
                 }
       `}
         >
+            {isImporting && (
+                <div className="absolute inset-0 bg-white/80 z-10 flex flex-col items-center justify-center backdrop-blur-sm">
+                    <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-2"></div>
+                    <p className="text-sm font-bold text-blue-600">Importing from Cloud...</p>
+                </div>
+            )}
+
             <input
                 ref={fileInputRef}
                 type="file"
@@ -111,7 +196,7 @@ export default function Dropzone({
                         type="button"
                         onClick={(e) => {
                             e.stopPropagation();
-                            alert("Google Drive integration coming soon!");
+                            handleCloudImport('google');
                         }}
                         className="p-2 bg-white rounded-full shadow-sm border border-slate-200 hover:scale-110 active:scale-95 transition-all"
                         aria-label="Import from Google Drive"
@@ -128,7 +213,7 @@ export default function Dropzone({
                         type="button"
                         onClick={(e) => {
                             e.stopPropagation();
-                            alert("Dropbox integration coming soon!");
+                            handleCloudImport('dropbox');
                         }}
                         className="p-2 bg-[#0061FE] rounded-full shadow-sm border border-[#0061FE] hover:scale-110 active:scale-95 transition-all group"
                         aria-label="Import from Dropbox"
@@ -142,7 +227,7 @@ export default function Dropzone({
                         type="button"
                         onClick={(e) => {
                             e.stopPropagation();
-                            alert("OneDrive integration coming soon!");
+                            handleCloudImport('onedrive');
                         }}
                         className="p-2 bg-[#0078D4] rounded-full shadow-sm border border-[#0078D4] hover:scale-110 active:scale-95 transition-all"
                         aria-label="Import from OneDrive"

@@ -38,6 +38,12 @@ class Config:
     SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
     EMAIL_FROM = os.getenv("EMAIL_FROM", "noreply@filevora.com")
 
+    # Cloud Import Keys
+    GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
+    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "")
+    DROPBOX_APP_KEY = os.getenv("DROPBOX_APP_KEY", "")
+    ONEDRIVE_CLIENT_ID = os.getenv("ONEDRIVE_CLIENT_ID", "")
+
     @staticmethod
     def setup_storage():
         Config.STORAGE_PATH.mkdir(parents=True, exist_ok=True)
