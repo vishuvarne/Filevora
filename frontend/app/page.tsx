@@ -80,6 +80,85 @@ export default function Home() {
         {/* Tools Grid */}
         <ToolsGrid />
 
+        {/* How It Works */}
+        <section className="mt-32 mb-20">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-4">
+              How it Works
+            </h2>
+            <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+              Simple, fast, and secure file processing in 3 easy steps.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                step: "01",
+                title: "Upload File",
+                desc: "Drag & drop your file or tap to select. We support 100+ formats.",
+                icon: (
+                  <svg className="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                  </svg>
+                )
+              },
+              {
+                step: "02",
+                title: "Process Instantly",
+                desc: "Our powerful cloud servers process your files in seconds.",
+                icon: (
+                  <svg className="w-8 h-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                  </svg>
+                )
+              },
+              {
+                step: "03",
+                title: "Download Securely",
+                desc: "Get your result immediately. Files are auto-deleted after 1 hour.",
+                icon: (
+                  <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                )
+              }
+            ].map((item, idx) => (
+              <div key={idx} className="relative bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none hover:-translate-y-1 transition-transform">
+                <div className="absolute -top-6 left-8 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-100 dark:border-slate-700">
+                  {item.icon}
+                </div>
+                <div className="mt-8">
+                  <span className="text-xs font-bold tracking-wider text-slate-400 uppercase mb-2 block">Step {item.step}</span>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{item.title}</h3>
+                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Stats & Trust */}
+        <section className="py-20 border-y border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 mb-24">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+              {[
+                { label: "Files Processed", value: "15M+" },
+                { label: "Happy Users", value: "2M+" },
+                { label: "Daily Conversions", value: "50k+" },
+                { label: "Tools Available", value: "60+" }
+              ].map((stat, idx) => (
+                <div key={idx}>
+                  <div className="text-3xl md:text-5xl font-extrabold text-blue-600 dark:text-blue-400 mb-2">{stat.value}</div>
+                  <div className="text-sm font-medium text-slate-500 uppercase tracking-wide">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <div className="mt-24">
           <SecuritySection />
         </div>
