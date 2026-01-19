@@ -95,6 +95,7 @@ export default function Navbar() {
                                 key={category}
                                 className="relative group px-2 lg:px-3 xl:px-4 py-8 cursor-pointer shrink-0"
                                 onMouseEnter={() => setActiveCategory(category)}
+                                onClick={() => setActiveCategory(activeCategory === category ? null : category)}
                             >
                                 <div className={`flex items-center gap-1.5 text-[15px] lg:text-[17px] font-bold transition-colors ${activeCategory === category ? "text-blue-600 dark:text-blue-400" : "text-slate-600 dark:text-slate-300 group-hover:text-blue-600 dark:group-hover:text-blue-400"}`}>
                                     {category === "Web Apps" && (
@@ -167,19 +168,19 @@ export default function Navbar() {
                 </div>
             </div>
 
-            {/* Mobile: Backdrop */}
+            {/* Mobile: Backdrop - Bumped Z-Index to avoid blocking by sticky footers */}
             {mobileMenuOpen && (
                 <button
                     type="button"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="md:hidden fixed inset-0 top-20 bg-black/20 backdrop-blur-[2px] z-40 animate-in fade-in duration-200"
+                    className="md:hidden fixed inset-0 top-20 bg-black/20 backdrop-blur-[2px] z-[100] animate-in fade-in duration-200"
                     aria-label="Close menu"
                 />
             )}
 
-            {/* Mobile: Drawer */}
+            {/* Mobile: Drawer - Bumped Z-Index */}
             <div
-                className={`md:hidden fixed top-20 right-0 h-[calc(100vh-5rem)] w-[85vw] max-w-sm bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-700 shadow-2xl z-50 flex flex-col transition-transform duration-300 ease-out ${mobileMenuOpen ? "translate-x-0" : "translate-x-full pointer-events-none"}`}
+                className={`md:hidden fixed top-20 right-0 h-[calc(100vh-5rem)] w-[85vw] max-w-sm bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-700 shadow-2xl z-[101] flex flex-col transition-transform duration-300 ease-out ${mobileMenuOpen ? "translate-x-0" : "translate-x-full pointer-events-none"}`}
                 aria-hidden={!mobileMenuOpen}
             >
                 <div className="flex-1 overflow-y-auto overscroll-contain">
