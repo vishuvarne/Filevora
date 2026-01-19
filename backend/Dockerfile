@@ -1,13 +1,13 @@
-FROM python:3.11-slim
+FROM python:3.11
 
 WORKDIR /app
 
-# Install system dependencies (magic, build tools)
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     libmagic1 \
     ffmpeg \
     libgl1-mesa-glx \
-    build-essential \
+    libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
