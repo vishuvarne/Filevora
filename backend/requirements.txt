@@ -12,7 +12,6 @@ python-jose[cryptography]
 pdf2docx
 py7zr
 imageio-ffmpeg
-docx2pdf
 sqlalchemy
 sqladmin
 psycopg2-binary

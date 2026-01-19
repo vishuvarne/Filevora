@@ -1,34 +1,45 @@
+import subprocess
+import logging
 
-import os
-from pathlib import Path
-from typing import Union, IO
-import shutil
-import pythoncom 
+logger = logging.getLogger("filevora")
 
 class DocumentService:
     @staticmethod
     def docx_to_pdf(job_input: Path, output_path: Path):
         """
-        Converts DOCX to PDF using docx2pdf (requires Word installed on Windows).
+        Converts DOCX to PDF using LibreOffice (Headless).
+        Works on Linux/Docker.
         """
-        from docx2pdf import convert
-        
         try:
-            # docx2pdf requires absolute paths
-            input_abs = str(job_input.resolve())
-            output_abs = str(output_path.resolve())
+            # LibreOffice requires an output directory, not filename
+            output_dir = output_path.parent
             
-            # Initialize COM for this thread (needed for FastAPI threads)
-            pythoncom.CoInitialize()
+            # Command: soffice --headless --convert-to pdf <input> --outdir <output_dir>
+            cmd = [
+                "soffice",
+                "--headless",
+                "--convert-to", "pdf",
+                str(job_input),
+                "--outdir",
+                str(output_dir)
+            ]
             
-            convert(input_abs, output_abs)
+            logger.info(f"Running LibreOffice conversion: {' '.join(cmd)}")
+            result = subprocess.run(cmd, check=True, capture_output=True, text=True)
+            logger.info(result.stdout)
             
+            # LibreOffice creates the file with the same name as input but .pdf extension
+            # verify it matches our expected output path or rename it
+            created_pdf = output_dir / f"{job_input.stem}.pdf"
+            
+            if created_pdf.exists() and created_pdf != output_path:
+                shutil.move(created_pdf, output_path)
+                
             return output_path
+
+        except subprocess.CalledProcessError as e:
+            logger.error(f"LibreOffice failed: {e.stderr}")
+            raise ValueError(f"Failed to convert DOCX to PDF: {e.stderr}")
         except Exception as e:
-            raise ValueError(f"Failed to convert DOCX to PDF: {e}")
-        finally:
-            # Uninitialize COM is tricky in threads, docx2pdf might handle part of it, 
-            # but usually good practice to try/finally if we purely manage COM. 
-            # For docx2pdf, it manages the word instance, but thread initialization is key.
-            # pythoncom.CoUninitialize() # Can cause issues if not careful, keeping safely omitted unless needed
-            pass
+            logger.error(f"Conversion error: {str(e)}")
+            raise ValueError(f"Failed to convert DOCX to PDF: {str(e)}")

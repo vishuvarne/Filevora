@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     ffmpeg \
     libgl1 \
     libglib2.0-0 \
+    libreoffice \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy from backend directory (Build Context: Root)
