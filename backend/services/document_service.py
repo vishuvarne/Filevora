@@ -1,5 +1,7 @@
 import subprocess
 import logging
+from pathlib import Path
+import shutil
 
 logger = logging.getLogger("filevora")
 
