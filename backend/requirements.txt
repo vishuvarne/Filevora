@@ -2,6 +2,7 @@ fastapi
 uvicorn
 python-multipart
 pymupdf
+pypandoc
 Pillow
 aiofiles
 python-magic-bin; sys_platform == 'win32'

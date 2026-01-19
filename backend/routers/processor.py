@@ -12,6 +12,7 @@ from ..services.image_service import ImageService
 from ..services.archive_service import ArchiveService
 from ..services.media_service import MediaService
 from ..services.document_service import DocumentService
+from ..services.gif_service import GIFService
 from ..config import config
 
 router = APIRouter()
@@ -467,3 +468,55 @@ async def download_file(job_id: str, filename: str):
         raise HTTPException(status_code=404, detail="File not found or expired")
     
     return FileResponse(path=file_path, filename=filename)
+@router.post("/pdf-to-epub")
+async def pdf_to_epub(file: UploadFile = File(...)):
+    """
+    Convert PDF to EPUB.
+    """
+    return await process_file(file, DocumentService.pdf_to_epub, ".epub", "application/epub+zip")
+
+@router.post("/video-to-gif")
+async def video_to_gif(
+    file: UploadFile = File(...),
+    fps: int = Form(15),
+    scale: int = Form(480)
+):
+    """
+    Convert video to GIF.
+    """
+    job_dir = file_ops.create_job_dir()
+    output_dir = job_dir / "outputs"
+    
+    try:
+        # Save uploaded file
+        input_path = await file_ops.save_upload(file, job_dir)
+        
+        # Generate output filename
+        output_filename = f"{Path(file.filename).stem}.gif"
+        output_path = output_dir / output_filename
+        
+        # Convert video to GIF
+        result_path = await run_in_threadpool(
+            GIFService.video_to_gif,
+            input_path,
+            output_path,
+            fps,
+            scale
+        )
+        
+        # Get file size
+        file_size = result_path.stat().st_size
+        
+        # Schedule cleanup
+        file_ops.schedule_cleanup(job_dir)
+        
+        return {
+            "job_id": job_dir.name,
+            "filename": output_filename,
+            "download_url": f"/download/{job_dir.name}/{output_filename}",
+            "file_size": file_size
+        }
+        
+    except Exception as e:
+        file_ops.cleanup_job(job_dir)
+        raise HTTPException(status_code=500, detail=str(e))

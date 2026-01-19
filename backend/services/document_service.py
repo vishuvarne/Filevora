@@ -2,10 +2,44 @@ import subprocess
 import logging
 from pathlib import Path
 import shutil
+import pypandoc
+from pdf2docx import Converter
 
 logger = logging.getLogger("filevora")
 
 class DocumentService:
+    @staticmethod
+    def pdf_to_epub(job_input: Path, output_path: Path):
+        """
+        Converts PDF to EPUB in two steps:
+        1. PDF -> DOCX (using pdf2docx for better layout)
+        2. DOCX -> EPUB (using pandoc)
+        """
+        try:
+            # Step 1: PDF to DOCX
+            docx_path = job_input.parent / f"{job_input.stem}_temp.docx"
+            cv = Converter(str(job_input))
+            cv.convert(str(docx_path))
+            cv.close()
+
+            # Step 2: DOCX to EPUB using pypandoc
+            # Ensure pypandoc can find the binary (in Docker it's installed via apt)
+            pypandoc.convert_file(
+                str(docx_path),
+                'epub',
+                outputfile=str(output_path)
+            )
+
+            # Cleanup
+            if docx_path.exists():
+                docx_path.unlink()
+
+            return output_path
+
+        except Exception as e:
+            logger.error(f"PDF to EPUB failed: {str(e)}")
+            raise ValueError(f"Failed to convert PDF to EPUB: {str(e)}")
+
     @staticmethod
     def docx_to_pdf(job_input: Path, output_path: Path):
         """
