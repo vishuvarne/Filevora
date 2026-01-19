@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, DragEvent, ChangeEvent } from "react";
+import { useState, useRef, DragEvent, ChangeEvent, KeyboardEvent } from "react";
 
 interface DropzoneProps {
     onFilesSelected: (files: File[]) => void;
@@ -48,14 +48,25 @@ export default function Dropzone({
         onFilesSelected(files);
     };
 
+    const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            fileInputRef.current?.click();
+        }
+    };
+
     return (
         <div
             onClick={() => fileInputRef.current?.click()}
+            onKeyDown={handleKeyDown}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
+            tabIndex={0}
+            role="button"
+            aria-label="Upload file dropzone"
             className={`
-        border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors
+        border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
         ${isDragging
                     ? "border-blue-500 bg-blue-50/10 text-blue-500"
                     : "border-gray-300 text-gray-500 hover:border-blue-400 hover:text-blue-400"

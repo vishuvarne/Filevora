@@ -203,36 +203,67 @@ async def image_to_pdf(files: List[UploadFile] = File(...)):
 
 @router.post("/process/convert-image")
 async def convert_image(
-    file: UploadFile = File(...), 
+    files: List[UploadFile] = File(...), 
     target_format: str = Form(...), # "png", "jpeg", "webp"
     quality: int = Form(85)
 ):
+    if not files:
+        raise HTTPException(status_code=400, detail="No files uploaded")
+
     # Create Job Environment
     job_dir = file_ops.create_job_dir()
     output_dir = job_dir / "outputs"
+    output_dir.mkdir(exist_ok=True)
 
     try:
-        # Validate Magic Bytes (Allow any image)
-        if not file_ops.validate_magic_bytes(file.file, "image/"):
-             raise HTTPException(status_code=400, detail="Invalid image file")
-
-        # Process
-        output_filename = f"{Path(file.filename).stem}.{target_format.lower()}"
-        output_path = output_dir / output_filename
+        processed_files = []
         
-        await run_in_threadpool(
-            ImageService.convert_image,
-            file.file, 
-            output_path, 
-            format=target_format, 
-            quality=quality
-        )
+        # Validate and Process All Files
+        for file in files:
+            # Validate Magic Bytes (Allow any image)
+            # Re-reading file stream for validation might be needed if not handled by save_upload
+            # But save_upload reads chunks, so we should validate start
+            # For simplicity in batch, we can trust the extension or Quick check
+            # Best practice: Check bytes. 
+            # Note: file_ops.save_upload saves the file. We can validate after saving or before.
+            # file_ops.validate_magic_bytes consumes stream but seeks back 0.
+            
+            if not file_ops.validate_magic_bytes(file.file, "image/"):
+                 # Skip or Error? For batch, maybe skip or error. Let's error for now.
+                 raise HTTPException(status_code=400, detail=f"Invalid image file: {file.filename}")
 
-        return {
-            "job_id": job_dir.name,
-            "filename": output_filename,
-            "download_url": f"/download/{job_dir.name}/{output_filename}"
-        }
+            output_filename = f"{Path(file.filename).stem}.{target_format.lower()}"
+            output_path = output_dir / output_filename
+            
+            await run_in_threadpool(
+                ImageService.convert_image,
+                file.file, 
+                output_path, 
+                format=target_format, 
+                quality=quality
+            )
+            processed_files.append(output_filename)
+
+        # Determine Response
+        if len(processed_files) > 1:
+            # Zip results
+            zip_filename = f"converted_images_{job_dir.name}.zip"
+            zip_path = job_dir / zip_filename
+            await run_in_threadpool(file_ops.create_zip, output_dir, zip_path)
+            
+            return {
+                "job_id": job_dir.name,
+                "filename": zip_filename,
+                "download_url": f"/download/{job_dir.name}/{zip_filename}"
+            }
+        elif len(processed_files) == 1:
+             return {
+                "job_id": job_dir.name,
+                "filename": processed_files[0],
+                "download_url": f"/download/{job_dir.name}/{processed_files[0]}"
+            }
+        else:
+            raise HTTPException(status_code=400, detail="No files processed")
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

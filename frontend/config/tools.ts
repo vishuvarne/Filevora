@@ -253,7 +253,7 @@ export const TOOLS: ToolDef[] = [
         theme: THEMES.blue,
         endpoint: "/process/convert-image",
         acceptedTypes: "image/*",
-        multiple: false
+        multiple: true
     },
     {
         id: "rotate-image",
@@ -275,7 +275,7 @@ export const TOOLS: ToolDef[] = [
         theme: THEMES.blue,
         endpoint: "/process/convert-image",
         acceptedTypes: "image/webp",
-        multiple: false,
+        multiple: true,
         presetOptions: { target_format: "PNG" }
     },
     {
@@ -287,7 +287,7 @@ export const TOOLS: ToolDef[] = [
         theme: THEMES.blue,
         endpoint: "/process/convert-image",
         acceptedTypes: "image/jpeg,image/pjpeg", // JFIF is technically JPEG
-        multiple: false,
+        multiple: true,
         presetOptions: { target_format: "PNG" }
     },
     {
@@ -310,7 +310,7 @@ export const TOOLS: ToolDef[] = [
         theme: THEMES.blue,
         endpoint: "/process/convert-image", // Fallback to generic, expecting backend support or fail
         acceptedTypes: ".heic,image/heic",
-        multiple: false,
+        multiple: true,
         presetOptions: { target_format: "JPEG" }
     },
     {
@@ -322,7 +322,7 @@ export const TOOLS: ToolDef[] = [
         theme: THEMES.blue,
         endpoint: "/process/convert-image",
         acceptedTypes: ".heic,image/heic",
-        multiple: false,
+        multiple: true,
         presetOptions: { target_format: "PNG" }
     },
     {
@@ -334,7 +334,7 @@ export const TOOLS: ToolDef[] = [
         theme: THEMES.blue,
         endpoint: "/process/convert-image",
         acceptedTypes: "image/webp",
-        multiple: false,
+        multiple: true,
         presetOptions: { target_format: "JPEG" }
     },
     {
@@ -346,7 +346,7 @@ export const TOOLS: ToolDef[] = [
         theme: THEMES.purple,
         endpoint: "/process/convert-image",
         acceptedTypes: "image/*,image/svg+xml",
-        multiple: false
+        multiple: true
     },
 
     // --- GIF Tools (Placeholder) ---
