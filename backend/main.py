@@ -1,8 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from contextlib import asynccontextmanager
 import asyncio
 import logging
+from collections import defaultdict
+import time
 
 from .config import config, Config
 from .utils.file_ops import file_ops
@@ -45,14 +48,59 @@ async def periodic_cleanup():
 app = FastAPI(lifespan=lifespan)
 setup_admin(app)
 
-# CORS
+# CORS - Restrict to known origins only
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=config.ALLOWED_ORIGINS,
+    allow_origins=config.ALLOWED_ORIGINS if len(config.ALLOWED_ORIGINS) > 0 else ["https://filevora.web.app", "https://filevora.com"],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "DELETE"],  # Only allow needed methods
+    allow_headers=["Content-Type", "Authorization"],  # Restrict headers
+    max_age=3600,  # Cache preflight for 1 hour
 )
+
+# Trusted Host - Prevent host header attacks
+app.add_middleware(
+    TrustedHostMiddleware,
+    allowed_hosts=["*.filevora.com", "*.filevora.web.app", "*.onrender.com", "localhost", "127.0.0.1"]
+)
+
+# Rate limiting storage
+rate_limit_storage = defaultdict(list)
+
+@app.middleware("http")
+async def rate_limit_middleware(request: Request, call_next):
+    """Simple rate limiting: 60 requests per minute per IP"""
+    client_ip = request.client.host if request.client else "unknown"
+    current_time = time.time()
+    
+    # Clean old requests (older than 1 minute)
+    rate_limit_storage[client_ip] = [
+        timestamp for timestamp in rate_limit_storage[client_ip]
+        if current_time - timestamp < 60
+    ]
+    
+    # Check rate limit
+    if len(rate_limit_storage[client_ip]) >= 60:
+        from fastapi.responses import JSONResponse
+        return JSONResponse(
+            status_code=429,
+            content={"detail": "Too many requests. Please wait before trying again."},
+            headers={"Retry-After": "60"}
+        )
+    
+    # Add current request
+    rate_limit_storage[client_ip].append(current_time)
+    
+    # Add security headers
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = "geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()"
+    
+    return response
 
 app.include_router(processor.router)
 app.include_router(auth.router)
