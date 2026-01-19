@@ -1,0 +1,18 @@
+fastapi
+uvicorn
+python-multipart
+pymupdf
+Pillow
+aiofiles
+python-magic-bin; sys_platform == 'win32'
+python-magic; sys_platform != 'win32'
+email-validator
+passlib[bcrypt]
+python-jose[cryptography]
+pdf2docx
+py7zr
+imageio-ffmpeg
+docx2pdf
+sqlalchemy
+sqladmin
+psycopg2-binary

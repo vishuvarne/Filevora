@@ -1,0 +1,469 @@
+from fastapi import APIRouter, UploadFile, File, Form, HTTPException, BackgroundTasks
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.concurrency import run_in_threadpool
+from typing import List, Optional
+import shutil
+import os
+from pathlib import Path
+
+from ..utils.file_ops import file_ops
+from ..services.pdf_service import PDFService
+from ..services.image_service import ImageService
+from ..services.archive_service import ArchiveService
+from ..services.media_service import MediaService
+from ..services.document_service import DocumentService
+from ..config import config
+
+router = APIRouter()
+
+@router.post("/process/merge-pdf")
+async def merge_pdf(files: List[UploadFile] = File(...)):
+    if not files:
+        raise HTTPException(status_code=400, detail="No files uploaded")
+
+    # Create Job Environment
+    job_dir = file_ops.create_job_dir()
+    # upload_dir = job_dir / "uploads" # No longer needed
+    output_dir = job_dir / "outputs"
+    inputs = []
+
+    try:
+        # Validate and Collect Inputs
+        for file in files:
+            # Validate Magic Bytes (Peek at stream)
+            if not file_ops.validate_magic_bytes(file.file, "application/pdf"):
+                 raise HTTPException(status_code=400, detail=f"Invalid PDF file: {file.filename}")
+            
+            # Pass the spooled file directly
+            inputs.append(file.file)
+
+        # Process in threadpool to avoid blocking event loop
+        output_filename = "merged.pdf"
+        output_path = output_dir / output_filename
+        
+        await run_in_threadpool(PDFService.merge_pdfs, inputs, output_path)
+
+        return {
+            "job_id": job_dir.name,
+            "filename": output_filename,
+            "download_url": f"/download/{job_dir.name}/{output_filename}"
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/process/split-pdf")
+async def split_pdf(file: UploadFile = File(...)):
+    job_dir = file_ops.create_job_dir()
+    output_dir = job_dir / "outputs"
+    
+    try:
+        if not file_ops.validate_magic_bytes(file.file, "application/pdf"):
+            raise HTTPException(status_code=400, detail="Invalid PDF file")
+            
+        # Process (streaming)
+        await run_in_threadpool(PDFService.split_pdf, file.file, output_dir)
+        
+        # Zip results
+        zip_path = job_dir / f"{Path(file.filename).stem}_split.zip"
+        await run_in_threadpool(file_ops.create_zip, output_dir, zip_path)
+        
+        return {
+            "job_id": job_dir.name,
+            "filename": zip_path.name,
+            "download_url": f"/download/{job_dir.name}/{zip_path.name}"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/process/compress-pdf")
+async def compress_pdf(
+    file: UploadFile = File(...), 
+    level: str = Form(None), 
+    quality: int = Form(None), 
+    dpi: int = Form(None)
+):
+    job_dir = file_ops.create_job_dir()
+    output_dir = job_dir / "outputs"
+    
+    try:
+        if not file_ops.validate_magic_bytes(file.file, "application/pdf"):
+            raise HTTPException(status_code=400, detail="Invalid PDF file")
+        
+        # Save input file to disk for size tracking
+        input_path = job_dir / file.filename
+        with open(input_path, "wb") as f:
+            shutil.copyfileobj(file.file, f)
+        
+        original_size = input_path.stat().st_size
+            
+        output_filename = f"{Path(file.filename).stem}_compressed.pdf"
+        output_path = output_dir / output_filename
+        
+        # Use manual settings if provided, otherwise use preset level
+        if quality is not None and dpi is not None:
+            await run_in_threadpool(
+                PDFService.compress_pdf_manual, 
+                input_path, 
+                output_path, 
+                quality, 
+                dpi
+            )
+        else:
+            compression_level = level or "basic"
+            await run_in_threadpool(PDFService.compress_pdf, input_path, output_path, compression_level)
+        
+        compressed_size = output_path.stat().st_size
+        reduction_percent = round((1 - compressed_size / original_size) * 100, 1) if original_size > 0 else 0
+        
+        return {
+            "job_id": job_dir.name,
+            "filename": output_filename,
+            "download_url": f"/download/{job_dir.name}/{output_filename}",
+            "original_size": original_size,
+            "compressed_size": compressed_size,
+            "reduction_percent": reduction_percent
+        }
+    except Exception as e:
+         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/process/pdf-to-word")
+async def pdf_to_word(file: UploadFile = File(...)):
+    job_dir = file_ops.create_job_dir()
+    output_dir = job_dir / "outputs"
+    
+    try:
+        if not file_ops.validate_magic_bytes(file.file, "application/pdf"):
+            raise HTTPException(status_code=400, detail="Invalid PDF file")
+            
+        output_filename = f"{Path(file.filename).stem}.docx"
+        output_path = output_dir / output_filename
+        
+        await run_in_threadpool(PDFService.pdf_to_word, file.file, output_path)
+        
+        return {
+            "job_id": job_dir.name,
+            "filename": output_filename,
+            "download_url": f"/download/{job_dir.name}/{output_filename}"
+        }
+    except Exception as e:
+         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/process/pdf-to-image")
+async def pdf_to_image(file: UploadFile = File(...), format: str = Form("png")):
+    job_dir = file_ops.create_job_dir()
+    output_dir = job_dir / "outputs"
+    
+    try:
+        if not file_ops.validate_magic_bytes(file.file, "application/pdf"):
+            raise HTTPException(status_code=400, detail="Invalid PDF file")
+            
+        await run_in_threadpool(PDFService.pdf_to_image, file.file, output_dir, format)
+        
+        # Zip results
+        zip_path = job_dir / f"{Path(file.filename).stem}_images.zip"
+        await run_in_threadpool(file_ops.create_zip, output_dir, zip_path)
+        
+        return {
+            "job_id": job_dir.name,
+            "filename": zip_path.name,
+            "download_url": f"/download/{job_dir.name}/{zip_path.name}"
+        }
+    except Exception as e:
+         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/process/image-to-pdf")
+async def image_to_pdf(files: List[UploadFile] = File(...)):
+    if not files:
+        raise HTTPException(status_code=400, detail="No files uploaded")
+
+    job_dir = file_ops.create_job_dir()
+    output_dir = job_dir / "outputs"
+    inputs = []
+    
+    try:
+        # Save input files to disk
+        saved_paths = []
+        for file in files:
+            file_path = job_dir / file.filename
+            with open(file_path, "wb") as f:
+                shutil.copyfileobj(file.file, f)
+            saved_paths.append(file_path)
+            
+        output_filename = "converted_images.pdf"
+        output_path = output_dir / output_filename
+        
+        await run_in_threadpool(PDFService.image_to_pdf, saved_paths, output_path)
+        
+        return {
+            "job_id": job_dir.name,
+            "filename": output_filename,
+            "download_url": f"/download/{job_dir.name}/{output_filename}"
+        }
+    except Exception as e:
+         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/process/convert-image")
+async def convert_image(
+    file: UploadFile = File(...), 
+    target_format: str = Form(...), # "png", "jpeg", "webp"
+    quality: int = Form(85)
+):
+    # Create Job Environment
+    job_dir = file_ops.create_job_dir()
+    output_dir = job_dir / "outputs"
+
+    try:
+        # Validate Magic Bytes (Allow any image)
+        if not file_ops.validate_magic_bytes(file.file, "image/"):
+             raise HTTPException(status_code=400, detail="Invalid image file")
+
+        # Process
+        output_filename = f"{Path(file.filename).stem}.{target_format.lower()}"
+        output_path = output_dir / output_filename
+        
+        await run_in_threadpool(
+            ImageService.convert_image,
+            file.file, 
+            output_path, 
+            format=target_format, 
+            quality=quality
+        )
+
+        return {
+            "job_id": job_dir.name,
+            "filename": output_filename,
+            "download_url": f"/download/{job_dir.name}/{output_filename}"
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/process/rotate-image")
+async def rotate_image(
+    file: UploadFile = File(...), 
+    angle: int = Form(...)
+):
+    job_dir = file_ops.create_job_dir()
+    output_dir = job_dir / "outputs"
+    
+    try:
+        if not file_ops.validate_magic_bytes(file.file, "image/"):
+             raise HTTPException(status_code=400, detail="Invalid image file")
+            
+        output_filename = file.filename
+        output_path = output_dir / output_filename
+        
+        await run_in_threadpool(ImageService.rotate_image, file.file, output_path, angle)
+        
+        return {
+            "job_id": job_dir.name,
+            "filename": output_filename,
+            "download_url": f"/download/{job_dir.name}/{output_filename}"
+        }
+    except Exception as e:
+         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/process/chat-pdf-init")
+async def chat_pdf_init(file: UploadFile = File(...)):
+    if not file_ops.validate_magic_bytes(file.file, "application/pdf"):
+        raise HTTPException(status_code=400, detail="Invalid PDF file")
+    
+    try:
+        # For this simple demo, we just verify text extraction works
+        # In a real app, we would cache this text in Redis or a Vector DB
+        text = await run_in_threadpool(PDFService.extract_text, file.file)
+        return {"status": "success", "message": "PDF analyzed", "preview": text[:100]}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/process/docx-to-pdf")
+async def docx_to_pdf(file: UploadFile = File(...)):
+    job_dir = file_ops.create_job_dir()
+    output_dir = job_dir / "outputs"
+    output_dir.mkdir(exist_ok=True)
+    
+    try:
+        # Validate magic bytes is hard for docx/zip, rely on extension or complex check
+        # For now, trust extension or try-catch failure
+        if not file.filename.lower().endswith((".docx", ".doc")):
+             raise HTTPException(status_code=400, detail="Invalid Word file (must be .docx or .doc)")
+
+        # Save input file first (docx2pdf needs file on disk)
+        input_path = job_dir / file.filename
+        with open(input_path, "wb") as f:
+            shutil.copyfileobj(file.file, f)
+            
+        output_filename = f"{Path(file.filename).stem}.pdf"
+        output_path = output_dir / output_filename
+        
+        await run_in_threadpool(DocumentService.docx_to_pdf, input_path, output_path)
+        
+        return {
+            "job_id": job_dir.name,
+            "filename": output_filename,
+            "download_url": f"/download/{job_dir.name}/{output_filename}"
+        }
+    except Exception as e:
+         raise HTTPException(status_code=500, detail=str(e))
+         
+@router.post("/process/chat-pdf-query")
+async def chat_pdf_query(file: UploadFile = File(...), query: str = Form(...)):
+    # Re-extract text (stateless demo)
+    try:
+        text = await run_in_threadpool(PDFService.extract_text, file.file)
+        
+        lines = text.split('\n')
+        relevant_lines = [line for line in lines if any(word.lower() in line.lower() for word in query.split())]
+        
+        if relevant_lines:
+            answer = "Here is what I found:\n" + "\n".join(relevant_lines[:5])
+        else:
+            answer = "I couldn't find specific keywords from your query in the document, but I have read the file."
+            
+        return {"answer": answer}
+    except Exception as e:
+         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/process/archive-convert")
+async def archive_convert(file: UploadFile = File(...), target_format: str = Form("zip")):
+    job_dir = file_ops.create_job_dir()
+    output_dir = job_dir / "outputs"
+    output_dir.mkdir(exist_ok=True)
+    
+    try:
+        # Save input to disk
+        input_path = job_dir / file.filename
+        with open(input_path, "wb") as f:
+            shutil.copyfileobj(file.file, f)
+
+        # Validate input (basic)
+        output_path = await run_in_threadpool(
+            ArchiveService.convert_archive, 
+            input_path, 
+            output_dir, 
+            target_format
+        )
+        
+        return {
+            "job_id": job_dir.name,
+            "filename": output_path.name,
+            "download_url": f"/download/{job_dir.name}/{output_path.name}"
+        }
+    except Exception as e:
+         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/process/convert-video")
+async def convert_video(file: UploadFile = File(...), target_format: str = Form("mp4")):
+    job_dir = file_ops.create_job_dir()
+    output_dir = job_dir / "outputs"
+    output_dir.mkdir(exist_ok=True)
+    
+    try:
+        # Save input to disk for FFmpeg
+        input_path = job_dir / file.filename
+        with open(input_path, "wb") as f:
+            shutil.copyfileobj(file.file, f)
+
+        output_filename = f"{Path(file.filename).stem}.{target_format}"
+        output_path = output_dir / output_filename
+        
+        await run_in_threadpool(MediaService.convert_video, input_path, output_path, target_format)
+        
+        return {
+            "job_id": job_dir.name,
+            "filename": output_filename,
+            "download_url": f"/download/{job_dir.name}/{output_filename}"
+        }
+    except Exception as e:
+         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/process/compress-video")
+async def compress_video(file: UploadFile = File(...), level: str = Form("basic")):
+    job_dir = file_ops.create_job_dir()
+    output_dir = job_dir / "outputs"
+    output_dir.mkdir(exist_ok=True)
+    
+    try:
+        # Save input to disk
+        input_path = job_dir / file.filename
+        with open(input_path, "wb") as f:
+            shutil.copyfileobj(file.file, f)
+
+        output_filename = f"{Path(file.filename).stem}_compressed.mp4"
+        output_path = output_dir / output_filename
+        
+        await run_in_threadpool(MediaService.compress_video, input_path, output_path, level)
+        
+        return {
+            "job_id": job_dir.name,
+            "filename": output_filename,
+            "download_url": f"/download/{job_dir.name}/{output_filename}"
+        }
+    except Exception as e:
+         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/process/extract-audio")
+async def extract_audio(file: UploadFile = File(...), target_format: str = Form("mp3")):
+    job_dir = file_ops.create_job_dir()
+    output_dir = job_dir / "outputs"
+    output_dir.mkdir(exist_ok=True)
+    
+    try:
+        # Save input to disk
+        input_path = job_dir / file.filename
+        with open(input_path, "wb") as f:
+            shutil.copyfileobj(file.file, f)
+
+        output_filename = f"{Path(file.filename).stem}.{target_format}"
+        output_path = output_dir / output_filename
+        
+        await run_in_threadpool(MediaService.extract_audio, input_path, output_path, target_format)
+        
+        return {
+            "job_id": job_dir.name,
+            "filename": output_filename,
+            "download_url": f"/download/{job_dir.name}/{output_filename}"
+        }
+    except Exception as e:
+         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/process/convert-audio")
+async def convert_audio(file: UploadFile = File(...), target_format: str = Form("mp3")):
+    job_dir = file_ops.create_job_dir()
+    output_dir = job_dir / "outputs"
+    output_dir.mkdir(exist_ok=True)
+    
+    try:
+        # Save input to disk
+        input_path = job_dir / file.filename
+        with open(input_path, "wb") as f:
+            shutil.copyfileobj(file.file, f)
+
+        output_filename = f"{Path(file.filename).stem}.{target_format}"
+        output_path = output_dir / output_filename
+        
+        await run_in_threadpool(MediaService.convert_audio, input_path, output_path, target_format)
+        
+        return {
+            "job_id": job_dir.name,
+            "filename": output_filename,
+            "download_url": f"/download/{job_dir.name}/{output_filename}"
+        }
+    except Exception as e:
+         raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/download/{job_id}/{filename}")
+async def download_file(job_id: str, filename: str):
+    # Check both the job dir (for zip files) and outputs dir
+    job_path = config.STORAGE_DIR / job_id
+    file_path = job_path / "outputs" / filename
+    
+    # If not in outputs, check root of job dir (for zips I put there in previous steps? Wait i put zips in job_dir)
+    if not file_path.exists():
+        file_path = job_path / filename
+        
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="File not found or expired")
+    
+    return FileResponse(path=file_path, filename=filename)
