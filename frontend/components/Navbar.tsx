@@ -79,7 +79,11 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-20">
                     {/* Logo */}
-                    <Link href="/" className="flex items-center gap-2 z-[60] shrink-0">
+                    <Link
+                        href="/"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center gap-2 z-[60] shrink-0"
+                    >
                         <div className="w-9 h-9 sm:w-10 sm:h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-extrabold text-xl sm:text-2xl shadow-blue-200 shadow-lg shrink-0">
                             F
                         </div>
@@ -349,10 +353,18 @@ export default function Navbar() {
 
                 {/* Mobile: Auth buttons */}
                 <div className="p-4 border-t border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80 space-y-3 shrink-0">
-                    <Link href="/login" className="block w-full py-3 text-center rounded-xl border border-slate-200 dark:border-slate-600 font-bold text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 active:bg-slate-100 dark:active:bg-slate-600 transition-colors">
+                    <Link
+                        href="/login"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="block w-full py-3 text-center rounded-xl border border-slate-200 dark:border-slate-600 font-bold text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 active:bg-slate-100 dark:active:bg-slate-600 transition-colors"
+                    >
                         Log In
                     </Link>
-                    <Link href="/signup" className="block w-full py-3 text-center rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 active:bg-blue-800 shadow-lg shadow-blue-200/50 dark:shadow-blue-900/50 transition-colors">
+                    <Link
+                        href="/signup"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="block w-full py-3 text-center rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 active:bg-blue-800 shadow-lg shadow-blue-200/50 dark:shadow-blue-900/50 transition-colors"
+                    >
                         Sign Up
                     </Link>
                 </div>
