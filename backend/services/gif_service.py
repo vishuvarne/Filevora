@@ -26,6 +26,7 @@ class GIFService:
                 "ffmpeg",
                 "-i", str(job_input),
                 "-vf", f"fps={fps},scale={scale}:-1:flags=lanczos,palettegen",
+                "-threads", "0",
                 "-y",
                 str(palette_path)
             ]
@@ -39,6 +40,7 @@ class GIFService:
                 "-i", str(job_input),
                 "-i", str(palette_path),
                 "-filter_complex", f"fps={fps},scale={scale}:-1:flags=lanczos[x];[x][1:v]paletteuse",
+                "-threads", "0",
                 "-y",
                 str(output_path)
             ]
