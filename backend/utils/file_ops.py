@@ -85,4 +85,56 @@ class FileOps:
         shutil.make_archive(str(output_path.with_suffix('')), 'zip', source_dir)
         return output_path
 
+    @staticmethod
+    def sanitize_filename(filename: str) -> str:
+        """
+        Sanitize filename to prevent directory traversal and unsafe characters.
+        """
+        import re
+        # Get the basename (files only, no paths)
+        filename = Path(filename).name
+        # Allow only alphanumeric, dashes, dots, underscores
+        clean_name = re.sub(r'[^a-zA-Z0-9_.-]', '_', filename)
+        # Ensure it's not empty and no dots at start
+        clean_name = clean_name.lstrip('.')
+        if not clean_name:
+            clean_name = "unnamed_file"
+        return clean_name
+
+    @staticmethod
+    async def save_upload(file, job_dir: Path) -> Path:
+        """
+        Securely saves an uploaded file to the job directory with a sanitized name.
+        Returns the path to the saved file.
+        """
+        clean_filename = FileOps.sanitize_filename(file.filename)
+        destination = job_dir / clean_filename
+        
+        # Avoid overwrites by appending counter
+        counter = 1
+        stem = destination.stem
+        suffix = destination.suffix
+        while destination.exists():
+            destination = job_dir / f"{stem}_{counter}{suffix}"
+            counter += 1
+            
+        # Save file
+        # Using a loop for async support if needed, but shutil is sync
+        # Since we are in run_in_threadpool context usually, sync is fine?
+        # UploadFile.read is async, but file.file is SpooledTemporaryFile
+        
+        # Best practice for FastAPI UploadFile:
+        # If we use `await file.read()`, it loads into memory.
+        # `shutil.copyfileobj(file.file, f)` is efficient.
+        
+        with open(destination, "wb") as f:
+            shutil.copyfileobj(file.file, f)
+            
+        return destination
+
+    @staticmethod
+    def schedule_cleanup(job_dir: Path):
+        """Placeholder for any specific cleanup scheduling if needed"""
+        pass
+
 file_ops = FileOps()

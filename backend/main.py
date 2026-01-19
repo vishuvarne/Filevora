@@ -79,6 +79,15 @@ async def rate_limit_middleware(request: Request, call_next):
         if current_time - timestamp < 60
     ]
     
+    # Check max content size (500MB)
+    content_length = request.headers.get("content-length")
+    if content_length and int(content_length) > 500 * 1024 * 1024:
+        from fastapi.responses import JSONResponse
+        return JSONResponse(
+            status_code=413,
+            content={"detail": "File too large (Max 500MB)"},
+        )
+    
     # Check rate limit
     if len(rate_limit_storage[client_ip]) >= 60:
         from fastapi.responses import JSONResponse
@@ -99,8 +108,21 @@ async def rate_limit_middleware(request: Request, call_next):
     response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     response.headers["Permissions-Policy"] = "geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()"
+    response.headers["Content-Security-Policy"] = "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data: https:; connect-src 'self' https:;"
     
     return response
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    """
+    Mask detailed internal errors in production.
+    Logs the actual error but returns a generic message to the client.
+    """
+    logger.error(f"Global error: {exc}", exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal Server Error. Please try again later."},
+    )
 
 app.include_router(processor.router)
 app.include_router(auth.router)

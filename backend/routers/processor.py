@@ -92,9 +92,8 @@ async def compress_pdf(
             raise HTTPException(status_code=400, detail="Invalid PDF file")
         
         # Save input file to disk for size tracking
-        input_path = job_dir / file.filename
-        with open(input_path, "wb") as f:
-            shutil.copyfileobj(file.file, f)
+        # Save input file to disk securely
+        input_path = await file_ops.save_upload(file, job_dir)
         
         original_size = input_path.stat().st_size
             
@@ -186,9 +185,7 @@ async def image_to_pdf(files: List[UploadFile] = File(...)):
         # Save input files to disk
         saved_paths = []
         for file in files:
-            file_path = job_dir / file.filename
-            with open(file_path, "wb") as f:
-                shutil.copyfileobj(file.file, f)
+            file_path = await file_ops.save_upload(file, job_dir)
             saved_paths.append(file_path)
             
         output_filename = "converted_images.pdf"
@@ -291,9 +288,8 @@ async def docx_to_pdf(file: UploadFile = File(...)):
              raise HTTPException(status_code=400, detail="Invalid Word file (must be .docx or .doc)")
 
         # Save input file first (docx2pdf needs file on disk)
-        input_path = job_dir / file.filename
-        with open(input_path, "wb") as f:
-            shutil.copyfileobj(file.file, f)
+        # Save input file securely
+        input_path = await file_ops.save_upload(file, job_dir)
             
         output_filename = f"{Path(file.filename).stem}.pdf"
         output_path = output_dir / output_filename
@@ -334,9 +330,8 @@ async def archive_convert(file: UploadFile = File(...), target_format: str = For
     
     try:
         # Save input to disk
-        input_path = job_dir / file.filename
-        with open(input_path, "wb") as f:
-            shutil.copyfileobj(file.file, f)
+        # Save input to disk securely
+        input_path = await file_ops.save_upload(file, job_dir)
 
         # Validate input (basic)
         output_path = await run_in_threadpool(
@@ -362,9 +357,8 @@ async def convert_video(file: UploadFile = File(...), target_format: str = Form(
     
     try:
         # Save input to disk for FFmpeg
-        input_path = job_dir / file.filename
-        with open(input_path, "wb") as f:
-            shutil.copyfileobj(file.file, f)
+        # Save input securely
+        input_path = await file_ops.save_upload(file, job_dir)
 
         output_filename = f"{Path(file.filename).stem}.{target_format}"
         output_path = output_dir / output_filename
@@ -387,9 +381,8 @@ async def compress_video(file: UploadFile = File(...), level: str = Form("basic"
     
     try:
         # Save input to disk
-        input_path = job_dir / file.filename
-        with open(input_path, "wb") as f:
-            shutil.copyfileobj(file.file, f)
+        # Save input securely
+        input_path = await file_ops.save_upload(file, job_dir)
 
         output_filename = f"{Path(file.filename).stem}_compressed.mp4"
         output_path = output_dir / output_filename
@@ -412,9 +405,8 @@ async def extract_audio(file: UploadFile = File(...), target_format: str = Form(
     
     try:
         # Save input to disk
-        input_path = job_dir / file.filename
-        with open(input_path, "wb") as f:
-            shutil.copyfileobj(file.file, f)
+        # Save input securely
+        input_path = await file_ops.save_upload(file, job_dir)
 
         output_filename = f"{Path(file.filename).stem}.{target_format}"
         output_path = output_dir / output_filename
@@ -437,9 +429,8 @@ async def convert_audio(file: UploadFile = File(...), target_format: str = Form(
     
     try:
         # Save input to disk
-        input_path = job_dir / file.filename
-        with open(input_path, "wb") as f:
-            shutil.copyfileobj(file.file, f)
+        # Save input securely
+        input_path = await file_ops.save_upload(file, job_dir)
 
         output_filename = f"{Path(file.filename).stem}.{target_format}"
         output_path = output_dir / output_filename
