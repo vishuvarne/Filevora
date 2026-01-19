@@ -265,18 +265,6 @@ export default function ToolInterface({ tool }: ToolInterfaceProps) {
                             </svg>
                             Secure (SSL)
                         </div>
-                        <div className="flex items-center gap-1.5 bg-blue-50 px-3 py-1.5 rounded-full border border-blue-100 text-blue-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
-                                <path clipRule="evenodd" fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" />
-                            </svg>
-                            No Signup Required
-                        </div>
-                        <div className="flex items-center gap-1.5 bg-yellow-50 px-3 py-1.5 rounded-full border border-yellow-100 text-yellow-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
-                                <path fillRule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clipRule="evenodd" />
-                            </svg>
-                            4.8/5 Rating
-                        </div>
                     </div>
                 </div>
 
@@ -381,14 +369,6 @@ export default function ToolInterface({ tool }: ToolInterfaceProps) {
                         </div>
                     ) : (
                         <div className="space-y-8">
-                            {/* Security Banner */}
-                            <div className="flex items-center justify-center gap-2 text-sm text-slate-500 bg-slate-50 border border-slate-100 rounded-full px-4 py-2 w-fit mx-auto mb-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-slate-400">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                                </svg>
-                                <span>Files are <span className="font-semibold text-slate-700">automatically deleted</span> after 1 hour. Max 500MB.</span>
-                            </div>
-
                             {/* Dropzone */}
                             <Dropzone
                                 onFilesSelected={handleFilesSelected}
@@ -399,6 +379,14 @@ export default function ToolInterface({ tool }: ToolInterfaceProps) {
                                     : `Drop files here to ${tool.name.toLowerCase()}`
                                 }
                             />
+
+                            {/* Security Banner */}
+                            <div className="flex items-center justify-center gap-2 text-sm text-slate-500 bg-slate-50 border border-slate-100 rounded-full px-4 py-2 w-fit mx-auto">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-slate-400">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                                </svg>
+                                <span>Files are <span className="font-semibold text-slate-700">automatically deleted</span> after 1 hour. Max 500MB.</span>
+                            </div>
 
                             {files.length > 0 && (
                                 <div className={`bg-slate-50 rounded-xl p-4 max-h-48 overflow-y-auto border ${tool.theme.border} scrollbar-thin scrollbar-thumb-slate-300`}>
