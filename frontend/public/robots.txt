@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /profile
+Disallow: /api/
+Disallow: /temp/
+
+Sitemap: https://filevora.com/sitemap.xml

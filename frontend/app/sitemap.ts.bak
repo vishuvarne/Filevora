@@ -1,0 +1,56 @@
+import { MetadataRoute } from "next";
+import { TOOLS } from "@/config/tools";
+
+export default function sitemap(): MetadataRoute.Sitemap {
+    const baseUrl = "https://filevora.com";
+
+    // Tool pages
+    const toolUrls = TOOLS.map((tool) => ({
+        url: `${baseUrl}/tools/${tool.id}`,
+        lastModified: new Date(),
+        changeFrequency: "weekly" as const,
+        priority: 0.8,
+    }));
+
+    // Static pages
+    const staticUrls = [
+        {
+            url: baseUrl,
+            lastModified: new Date(),
+            changeFrequency: "daily" as const,
+            priority: 1,
+        },
+        {
+            url: `${baseUrl}/login`,
+            lastModified: new Date(),
+            changeFrequency: "monthly" as const,
+            priority: 0.3,
+        },
+        {
+            url: `${baseUrl}/signup`,
+            lastModified: new Date(),
+            changeFrequency: "monthly" as const,
+            priority: 0.3,
+        },
+        {
+            url: `${baseUrl}/about`,
+            lastModified: new Date(),
+            changeFrequency: "monthly" as const,
+            priority: 0.5,
+        },
+        {
+            url: `${baseUrl}/privacy`,
+            lastModified: new Date(),
+            changeFrequency: "monthly" as const,
+            priority: 0.2,
+        },
+        {
+            url: `${baseUrl}/terms`,
+            lastModified: new Date(),
+            changeFrequency: "monthly" as const,
+            priority: 0.2,
+        },
+    ];
+
+    return [...staticUrls, ...toolUrls];
+}
