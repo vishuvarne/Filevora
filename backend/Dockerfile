@@ -10,10 +10,12 @@ RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
+# Copy from backend directory (Build Context: Root)
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+# Copy backend source code to /app/backend
+COPY backend /app/backend
 
 # Create storage directory
 RUN mkdir -p storage
