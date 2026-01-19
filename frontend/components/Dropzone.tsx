@@ -100,9 +100,60 @@ export default function Dropzone({
                     <span className="hidden sm:inline">{label}</span>
                     <span className="sm:hidden">Tap to Select File</span>
                 </p>
-                <p className="text-xs text-gray-400 text-center px-4">
+                <p className="text-xs text-gray-400 text-center px-4 mb-4">
                     {acceptedTypes ? `Accepts: ${acceptedTypes}` : "All files accepted"}
                 </p>
+
+                {/* Cloud Imports */}
+                <div className="flex items-center gap-3 mt-2">
+                    <span className="text-xs text-slate-400 font-medium">Or import from:</span>
+                    <button
+                        type="button"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            alert("Google Drive integration coming soon!");
+                        }}
+                        className="p-2 bg-white rounded-full shadow-sm border border-slate-200 hover:scale-110 active:scale-95 transition-all"
+                        aria-label="Import from Google Drive"
+                        title="Import from Google Drive"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-5 h-5">
+                            <path d="M12.01 1.485c-1.082 0-1.928.513-2.486 1.408L3.295 14.12l-.004.008-1.557 2.705a1.295 1.295 0 0 0 .005 1.295c.375.645 1.066 1.042 1.815 1.042h4.59l4.897-8.487 4.095-7.093c-.636-.615-1.46-1.005-2.288-1.005h-2.838z" fill="#0066DA" />
+                            <path d="M13.67 8.65 9.177 16.438H4.55l-.004.006-.007.012c-.933.003-1.666.368-2.072 1.01a1.295 1.295 0 0 0-.168.667c0 .066.006.13.015.195l5.594-9.69a.747.747 0 0 1 .012-.019l2.843-4.928 2.907-5.04z" fill="#00AC47" />
+                            <path d="M21.168 12.632 17.65 6.556 13.9 13.052l-4.5 7.78h9.8a2.53 2.53 0 0 0 2.29-1.39l1.558-2.698a1.29 1.29 0 0 0 .005-1.29l-1.885-2.822z" fill="#EA4335" />
+                            <path d="M13.67 8.65h7.64c.22 0 .432.022.637.062l-2.73-4.726a2.532 2.532 0 0 0-2.203-1.258h-7.66l4.316 5.922z" fill="#FFBA00" />
+                        </svg>
+                    </button>
+                    <button
+                        type="button"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            alert("Dropbox integration coming soon!");
+                        }}
+                        className="p-2 bg-[#0061FE] rounded-full shadow-sm border border-[#0061FE] hover:scale-110 active:scale-95 transition-all group"
+                        aria-label="Import from Dropbox"
+                        title="Import from Dropbox"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-5 h-5 fill-white">
+                            <path d="M7 3.5 2 6.641l5 3.141 5-3.141L7 3.5zm10 0-5 3.141 5 3.141 5-3.141L17 3.5zM2 11.859l5 3.141 5-3.141-5-3.141-5 3.141zm15 0 5-3.141-5-3.141-5 3.141 5 3.141zM7 16l5 3.141L17 16l-5-3.141L7 16z" />
+                        </svg>
+                    </button>
+                    <button
+                        type="button"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            alert("OneDrive integration coming soon!");
+                        }}
+                        className="p-2 bg-[#0078D4] rounded-full shadow-sm border border-[#0078D4] hover:scale-110 active:scale-95 transition-all"
+                        aria-label="Import from OneDrive"
+                        title="Import from OneDrive"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-5 h-5 fill-white">
+                            <path d="M13.636 9.176c-.958-1.584-2.884-2.22-4.577-1.472a1.889 1.889 0 0 0-.25.132C8.36 4.985 5.56 4.865 3.738 6.78c-2.317 2.435-2.037 6.43 0 8.196L17.5 15l4.331-2.923c1.789-1.579 1.543-4.329-.396-5.467-1.464-.86-3.178-.344-4.814 1.25.143-2.936-1.531-4.867-2.985-5.322z" />
+                            <path d="M10.975 16s-2.006 1.882-3.177 1.882c-1.127 0-3.327-1.114-3.327-1.114s-.542 2.083.829 2.872c.866.498 3.518.598 4.675-.125 1.573-.984 4.544-3.515 4.544-3.515H10.975z" />
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
     );
