@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { authAPI } from "@/lib/auth-api";
+import { FirestoreService } from "@/lib/firestore-service";
 
 interface User {
     id: string;
@@ -18,6 +19,8 @@ export default function ProfilePage() {
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<"overview" | "history" | "settings">("overview");
 
+    const [history, setHistory] = useState<any[]>([]);
+
     useEffect(() => {
         const loadUser = async () => {
             try {
@@ -29,6 +32,8 @@ export default function ProfilePage() {
                 const userData = authAPI.getStoredUser();
                 if (userData) {
                     setUser(userData);
+                    // Load history
+                    FirestoreService.getUserHistory(userData.id).then(setHistory);
                 }
             } catch (error) {
                 console.error("Error loading user:", error);
@@ -121,8 +126,8 @@ export default function ProfilePage() {
                             <button
                                 onClick={() => setActiveTab("overview")}
                                 className={`py-4 px-1 border-b-2 font-semibold text-sm transition-colors ${activeTab === "overview"
-                                        ? "border-blue-600 text-blue-600"
-                                        : "border-transparent text-slate-600 hover:text-slate-900"
+                                    ? "border-blue-600 text-blue-600"
+                                    : "border-transparent text-slate-600 hover:text-slate-900"
                                     }`}
                             >
                                 Overview
@@ -130,8 +135,8 @@ export default function ProfilePage() {
                             <button
                                 onClick={() => setActiveTab("history")}
                                 className={`py-4 px-1 border-b-2 font-semibold text-sm transition-colors ${activeTab === "history"
-                                        ? "border-blue-600 text-blue-600"
-                                        : "border-transparent text-slate-600 hover:text-slate-900"
+                                    ? "border-blue-600 text-blue-600"
+                                    : "border-transparent text-slate-600 hover:text-slate-900"
                                     }`}
                             >
                                 Conversion History
@@ -139,8 +144,8 @@ export default function ProfilePage() {
                             <button
                                 onClick={() => setActiveTab("settings")}
                                 className={`py-4 px-1 border-b-2 font-semibold text-sm transition-colors ${activeTab === "settings"
-                                        ? "border-blue-600 text-blue-600"
-                                        : "border-transparent text-slate-600 hover:text-slate-900"
+                                    ? "border-blue-600 text-blue-600"
+                                    : "border-transparent text-slate-600 hover:text-slate-900"
                                     }`}
                             >
                                 Settings
@@ -221,15 +226,48 @@ export default function ProfilePage() {
                         )}
 
                         {activeTab === "history" && (
-                            <div className="text-center py-12">
-                                <svg className="w-16 h-16 text-slate-300 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                                <h3 className="text-lg font-semibold text-slate-900 mb-2">No conversion history yet</h3>
-                                <p className="text-slate-500 mb-6">Start using FileVora to see your conversion history here</p>
-                                <Link href="/" className="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors">
-                                    Browse Tools
-                                </Link>
+                            <div className="space-y-6">
+                                <h3 className="text-lg font-bold text-slate-900 mb-4">Recent Conversions</h3>
+                                {history.length > 0 ? (
+                                    <div className="space-y-3">
+                                        {history.map((log: any) => (
+                                            <div key={log.id} className="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 font-bold">
+                                                        {(log.outputFormat || "FILE").toUpperCase().slice(0, 3)}
+                                                    </div>
+                                                    <div>
+                                                        <p className="font-semibold text-slate-900">{log.fileName || "Untitled File"}</p>
+                                                        <p className="text-xs text-slate-500">
+                                                            {log.toolId} • {log.timestamp?.seconds ? new Date(log.timestamp.seconds * 1000).toLocaleDateString() : "Just now"}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                {log.downloadUrl && (
+                                                    <a
+                                                        href={`https://filevora.onrender.com${log.downloadUrl}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="px-4 py-2 text-sm font-semibold text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                                                    >
+                                                        Download
+                                                    </a>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-12">
+                                        <svg className="w-16 h-16 text-slate-300 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                        <h3 className="text-lg font-semibold text-slate-900 mb-2">No conversion history yet</h3>
+                                        <p className="text-slate-500 mb-6">Start using FileVora to see your conversion history here</p>
+                                        <Link href="/" className="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors">
+                                            Browse Tools
+                                        </Link>
+                                    </div>
+                                )}
                             </div>
                         )}
 

@@ -19,6 +19,8 @@ import ToolInfoSection from "@/components/ToolInfoSection";
 import VoiceRecorder from "@/components/tools/VoiceRecorder";
 import PDFChat from "@/components/tools/PDFChat";
 import { processJob, getDownloadUrl, ProcessResponse } from "@/lib/api";
+import { authAPI } from "@/lib/auth-api";
+import { FirestoreService } from "@/lib/firestore-service";
 
 interface ToolInterfaceProps {
     tool: ToolDef;
@@ -201,6 +203,22 @@ export default function ToolInterface({ tool }: ToolInterfaceProps) {
             const res = await processJob(tool.endpoint, formData);
             setResult(res);
             setStatus("success");
+
+            // Log history if user is logged in
+            if (authAPI.isAuthenticated()) {
+                const user = authAPI.getStoredUser();
+                if (user) {
+                    FirestoreService.logConversion({
+                        userId: user.id, // User interface has 'id', not 'uid'
+                        toolId: tool.id,
+                        status: "success",
+                        fileName: files.length === 1 ? files[0].name : `${files.length} files`,
+                        outputFileName: res.filename,
+                        downloadUrl: res.download_url,
+                        fileSize: files.reduce((acc, f) => acc + f.size, 0)
+                    });
+                }
+            }
         } catch (e: any) {
             console.error(e);
             setErrorMsg(e.message || "An error occurred");
