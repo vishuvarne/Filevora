@@ -18,7 +18,7 @@ import ImageCompressor from "@/components/tools/ImageCompressor";
 import ToolInfoSection from "@/components/ToolInfoSection";
 import VoiceRecorder from "@/components/tools/VoiceRecorder";
 import PDFChat from "@/components/tools/PDFChat";
-import { processJob, getDownloadUrl, ProcessResponse } from "@/lib/api";
+import { processJob, getDownloadUrl, ProcessResponse, sendEmail } from "@/lib/api";
 import { authAPI } from "@/lib/auth-api";
 import { FirestoreService } from "@/lib/firestore-service";
 
@@ -32,6 +32,8 @@ export default function ToolInterface({ tool }: ToolInterfaceProps) {
     const [result, setResult] = useState<ProcessResponse | null>(null);
     const [errorMsg, setErrorMsg] = useState("");
     const [simulatedProgress, setSimulatedProgress] = useState(0);
+    const [email, setEmail] = useState("");
+    const [emailStatus, setEmailStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
     useEffect(() => {
         let interval: NodeJS.Timeout;
@@ -253,7 +255,29 @@ export default function ToolInterface({ tool }: ToolInterfaceProps) {
                         </svg>
                     </div>
                     <h1 className="text-3xl font-bold text-center text-slate-900 mb-2">{tool.name}</h1>
-                    <p className="text-center text-slate-500 max-w-lg mx-auto">{tool.description}</p>
+                    <p className="text-center text-slate-500 max-w-lg mx-auto mb-6">{tool.description}</p>
+
+                    {/* Trust Badges */}
+                    <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-semibold text-slate-600">
+                        <div className="flex items-center gap-1.5 bg-green-50 px-3 py-1.5 rounded-full border border-green-100 text-green-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
+                                <path fillRule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clipRule="evenodd" />
+                            </svg>
+                            Secure (SSL)
+                        </div>
+                        <div className="flex items-center gap-1.5 bg-blue-50 px-3 py-1.5 rounded-full border border-blue-100 text-blue-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
+                                <path clipRule="evenodd" fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" />
+                            </svg>
+                            No Signup Required
+                        </div>
+                        <div className="flex items-center gap-1.5 bg-yellow-50 px-3 py-1.5 rounded-full border border-yellow-100 text-yellow-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
+                                <path fillRule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clipRule="evenodd" />
+                            </svg>
+                            4.8/5 Rating
+                        </div>
+                    </div>
                 </div>
 
                 <div className="p-8">
@@ -314,6 +338,46 @@ export default function ToolInterface({ tool }: ToolInterfaceProps) {
                                     Start Over
                                 </button>
                             </div>
+
+                            {/* Email Section */}
+                            <div className="mt-8 max-w-sm mx-auto">
+                                {emailStatus === "sent" ? (
+                                    <div className="text-green-600 bg-green-50 p-4 rounded-xl text-sm font-medium flex items-center justify-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Email sent successfully!
+                                    </div>
+                                ) : (
+                                    <div className="flex gap-2">
+                                        <input
+                                            type="email"
+                                            placeholder="Enter email to save link"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            className="flex-1 px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none text-sm"
+                                        />
+                                        <button
+                                            onClick={async () => {
+                                                if (!email) return;
+                                                setEmailStatus("sending");
+                                                try {
+                                                    await sendEmail(email, getDownloadUrl(result.download_url), result.filename);
+                                                    setEmailStatus("sent");
+                                                } catch (e) {
+                                                    console.error(e);
+                                                    setEmailStatus("error");
+                                                }
+                                            }}
+                                            disabled={emailStatus === "sending" || !email}
+                                            className="px-6 py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 disabled:opacity-50 transition-all whitespace-nowrap"
+                                        >
+                                            {emailStatus === "sending" ? "Sending..." : "Email Me"}
+                                        </button>
+                                    </div>
+                                )}
+                                {emailStatus === "error" && <p className="text-red-500 text-xs mt-2">Failed to send email. Please try again.</p>}
+                            </div>
                         </div>
                     ) : (
                         <div className="space-y-8">
@@ -322,7 +386,7 @@ export default function ToolInterface({ tool }: ToolInterfaceProps) {
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-slate-400">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                                 </svg>
-                                <span>Files are <span className="font-semibold text-slate-700">automatically deleted</span> after 1 hour.</span>
+                                <span>Files are <span className="font-semibold text-slate-700">automatically deleted</span> after 1 hour. Max 500MB.</span>
                             </div>
 
                             {/* Dropzone */}

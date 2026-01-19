@@ -101,7 +101,7 @@ export default function Dropzone({
                     <span className="sm:hidden">Tap to Select File</span>
                 </p>
                 <p className="text-xs text-gray-400 text-center px-4 mb-4">
-                    {acceptedTypes ? `Accepts: ${acceptedTypes}` : "All files accepted"}
+                    {acceptedTypes ? `Accepts: ${acceptedTypes}` : "All files accepted"} <span className="mx-1">•</span> Max 500MB
                 </p>
 
                 {/* Cloud Imports */}

@@ -2,6 +2,8 @@ import fitz  # PyMuPDF
 from pathlib import Path
 from typing import List, IO, Union
 
+from ..config import config
+
 class PDFService:
     @staticmethod
     def merge_pdfs(inputs: List[Union[Path, IO[bytes], bytes]], output_path: Path):
@@ -31,6 +33,10 @@ class PDFService:
                 print(f"Error merging item: {e}")
                 raise ValueError(f"Failed to process PDF item")
         
+        # Validate Page Count
+        if len(doc_merged) > config.MAX_PDF_PAGES:
+            raise ValueError(f"Merged PDF has {len(doc_merged)} pages. Max allowed is {config.MAX_PDF_PAGES}.")
+            
         doc_merged.save(output_path)
         doc_merged.close()
         return output_path
@@ -49,6 +55,10 @@ class PDFService:
                 doc = fitz.open(stream=job_input.read(), filetype="pdf")
             else:
                 doc = fitz.open(job_input)
+                
+            # Validate Page Count
+            if len(doc) > config.MAX_PDF_PAGES:
+                raise ValueError(f"PDF has {len(doc)} pages. Max allowed is {config.MAX_PDF_PAGES}.")
                 
             for i in range(len(doc)):
                 page = doc.load_page(i)
@@ -79,6 +89,10 @@ class PDFService:
             else:
                 doc = fitz.open(job_input)
             
+            # Validate Page Count
+            if len(doc) > config.MAX_PDF_PAGES:
+                raise ValueError(f"PDF has {len(doc)} pages. Max allowed is {config.MAX_PDF_PAGES}.")
+
             # Define compression settings by level
             compression_settings = {
                 "basic": {"max_dpi": 150, "jpeg_quality": 85},
@@ -90,6 +104,99 @@ class PDFService:
             
             # Process each page
             for page_num in range(len(doc)):
+                page = doc[page_num]
+                image_list = page.get_images(full=True)
+                
+                for img_index, img in enumerate(image_list):
+                    xref = img[0]  # xref number
+                    
+                    try:
+                        # Extract image
+                        base_image = doc.extract_image(xref)
+                        image_bytes = base_image["image"]
+                        image_ext = base_image["ext"]
+                        
+                        # Open with PIL
+                        pil_image = Image.open(io.BytesIO(image_bytes))
+                        
+                        # Calculate new dimensions based on DPI target
+                        orig_width, orig_height = pil_image.size
+                        
+                        # Only downsample if image is large
+                        if orig_width > settings["max_dpi"] or orig_height > settings["max_dpi"]:
+                            # Calculate scaling factor
+                            scale_factor = min(
+                                settings["max_dpi"] / orig_width,
+                                settings["max_dpi"] / orig_height
+                            )
+                            
+                            new_width = int(orig_width * scale_factor)
+                            new_height = int(orig_height * scale_factor)
+                            
+                            # Resize image
+                            pil_image = pil_image.resize((new_width, new_height), Image.Resampling.LANCZOS)
+                        
+                        # Convert RGBA to RGB if necessary
+                        if pil_image.mode == 'RGBA':
+                            pil_image = pil_image.convert('RGB')
+                        
+                        # Save compressed image to bytes
+                        img_buffer = io.BytesIO()
+                        pil_image.save(
+                            img_buffer, 
+                            format="JPEG", 
+                            quality=settings["jpeg_quality"],
+                            optimize=True
+                        )
+                        img_buffer.seek(0)
+                        
+                        # Replace image in PDF
+                        doc.replace_image(xref, stream=img_buffer.read())
+                        
+                    except Exception as e:
+                        # If image processing fails, continue with next image
+                        print(f"Warning: Could not compress image {img_index} on page {page_num}: {e}", flush=True)
+                        continue
+            
+            # Save with appropriate options based on level
+            if level == "basic":
+                doc.save(output_path, garbage=4, deflate=True)
+            elif level == "strong":
+                doc.save(output_path, garbage=4, deflate=True, clean=True)
+            else:  # extreme
+                doc.save(output_path, garbage=4, deflate=True, clean=True)
+
+            doc.close()
+            return output_path
+        except Exception as e:
+            raise ValueError(f"Failed to compress PDF: {e}")
+
+    @staticmethod
+    def pdf_to_image(job_input: Union[Path, IO[bytes], bytes], output_dir: Path, format: str = "png"):
+        """
+        Converts PDF pages to images.
+        """
+        try:
+            if isinstance(job_input, (bytes, bytearray)):
+                 doc = fitz.open(stream=job_input, filetype="pdf")
+            elif hasattr(job_input, "read"):
+                if hasattr(job_input, "seek"):
+                    job_input.seek(0)
+                doc = fitz.open(stream=job_input.read(), filetype="pdf")
+            else:
+                doc = fitz.open(job_input)
+                
+            # Validate Page Count
+            if len(doc) > config.MAX_PDF_PAGES:
+                raise ValueError(f"PDF has {len(doc)} pages. Max allowed is {config.MAX_PDF_PAGES}.")
+
+            for i in range(len(doc)):
+                page = doc.load_page(i)
+                pix = page.get_pixmap(dpi=150) # Moderate DPI for web
+                pix.save(output_dir / f"page_{i+1}.{format}")
+            doc.close()
+        except Exception as e:
+            raise ValueError(f"Failed to convert PDF to image: {e}")
                 page = doc[page_num]
                 image_list = page.get_images(full=True)
                 

@@ -16,7 +16,7 @@ export default function ToolCard({ tool }: { tool: ToolDef }) {
                     {tool.name}
                 </h3>
 
-                <p className="text-slate-500 text-sm leading-relaxed">
+                <p className="text-slate-600 text-sm leading-relaxed">
                     {tool.description}
                 </p>
             </div>

@@ -22,11 +22,8 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://filevora.com"),
-  title: {
-    default: "FileVora - Free Online File Converter | PDF, Image, Video Tools",
-    template: "%s | FileVora"
-  },
-  description: "Free online file converter with 60+ tools. Convert PDF to Word, merge PDFs, compress images, convert videos to GIF, and more. No signup required, no watermarks, 100% free forever.",
+  title: "FileVora – Free Online File Converter for PDF, Images, Video & Audio",
+  description: "FileVora is a free online file converter for PDF, images, video, audio, and documents. Fast, secure, and no signup required.",
   keywords: [
     // Core converter keywords
     "online file converter",
@@ -85,8 +82,8 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://filevora.com",
     siteName: "FileVora",
-    title: "FileVora - Free Online File Converter | 60+ Tools",
-    description: "Convert, merge, compress, and edit files online for free. PDF, Image, Video tools with no signup, no watermarks, unlimited usage.",
+    title: "FileVora – Free Online File Converter",
+    description: "Convert, Edit, and Compress files online for free.",
     images: [
       {
         url: "/og-image.png",

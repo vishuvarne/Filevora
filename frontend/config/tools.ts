@@ -21,6 +21,8 @@ export interface ToolDef {
     multiple: boolean;
     presetOptions?: Record<string, string | number>;
     type?: "file" | "interactive"; // default is 'file'
+    seoTitle?: string;
+    seoDescription?: string;
 }
 
 const THEMES = {
@@ -107,7 +109,9 @@ export const TOOLS: ToolDef[] = [
         theme: THEMES.red,
         endpoint: "/process/merge-pdf",
         acceptedTypes: ".pdf,application/pdf",
-        multiple: true
+        multiple: true,
+        seoTitle: "Merge PDF Files Online – Free & Secure | FileVora",
+        seoDescription: "Combine multiple PDF files into one document online for free. Fast, secure, and easy PDF merging with FileVora."
     },
     {
         id: "split-pdf",
@@ -129,7 +133,9 @@ export const TOOLS: ToolDef[] = [
         theme: THEMES.green,
         endpoint: "/process/compress-pdf",
         acceptedTypes: ".pdf,application/pdf",
-        multiple: false
+        multiple: false,
+        seoTitle: "Compress PDF Online – Reduce PDF Size Free | FileVora",
+        seoDescription: "Reduce PDF file size online without losing quality. Free, fast, and secure PDF compression with FileVora."
     },
     {
         id: "pdf-converter",
@@ -151,7 +157,48 @@ export const TOOLS: ToolDef[] = [
         theme: THEMES.blue,
         endpoint: "/process/pdf-to-word",
         acceptedTypes: ".pdf,application/pdf",
-        multiple: false
+        multiple: false,
+        seoTitle: "PDF to Word Converter – Free & Fast | FileVora",
+        seoDescription: "Convert PDF to Word online for free. Maintain formatting, fast processing, and secure file conversion with FileVora. No signup required."
+    },
+    {
+        id: "word-to-pdf",
+        name: "Word to PDF",
+        description: "Convert Word documents to PDF.",
+        category: "PDF & Documents",
+        iconPath: "M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z",
+        theme: THEMES.blue,
+        endpoint: "/process/docx-to-pdf",
+        acceptedTypes: ".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        multiple: false,
+        seoTitle: "Word to PDF Converter Online – Free | FileVora",
+        seoDescription: "Convert Word documents to PDF instantly. Free, secure, and high-quality Word to PDF conversion powered by FileVora."
+    },
+    {
+        id: "excel-to-pdf",
+        name: "Excel to PDF",
+        description: "Convert Excel files to PDF.",
+        category: "PDF & Documents",
+        iconPath: "M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z",
+        theme: THEMES.green,
+        endpoint: "/coming-soon",
+        acceptedTypes: ".xlsx,.xls",
+        multiple: false,
+        seoTitle: "Excel to PDF Converter Online – Free | FileVora",
+        seoDescription: "Convert Excel files to PDF online instantly. Free, accurate, and secure document conversion with FileVora."
+    },
+    {
+        id: "ppt-to-pdf",
+        name: "PowerPoint to PDF",
+        description: "Convert PowerPoint to PDF.",
+        category: "PDF & Documents",
+        iconPath: "M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z",
+        theme: THEMES.orange,
+        endpoint: "/coming-soon",
+        acceptedTypes: ".pptx,.ppt",
+        multiple: false,
+        seoTitle: "PPT to PDF Converter – Free & Fast | FileVora",
+        seoDescription: "Convert PowerPoint presentations to PDF online for free. Fast, secure, and high-quality conversion with FileVora."
     },
     {
         id: "pdf-to-jpg",
@@ -254,6 +301,48 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/convert-image",
         acceptedTypes: "image/*",
         multiple: true
+    },
+    {
+        id: "jpg-to-png",
+        name: "JPG to PNG",
+        description: "Convert JPG to PNG.",
+        category: "Image",
+        iconPath: "M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z",
+        theme: THEMES.blue,
+        endpoint: "/process/convert-image",
+        acceptedTypes: "image/jpeg,image/jpg",
+        multiple: true,
+        presetOptions: { target_format: "PNG" },
+        seoTitle: "JPG to PNG Converter Online – Free | FileVora",
+        seoDescription: "Convert JPG images to PNG format instantly. Free online image converter with fast and secure processing by FileVora."
+    },
+    {
+        id: "png-to-jpg",
+        name: "PNG to JPG",
+        description: "Convert PNG to JPG.",
+        category: "Image",
+        iconPath: "M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z",
+        theme: THEMES.blue,
+        endpoint: "/process/convert-image",
+        acceptedTypes: "image/png",
+        multiple: true,
+        presetOptions: { target_format: "JPEG" },
+        seoTitle: "PNG to JPG Converter – Free Image Tool | FileVora",
+        seoDescription: "Convert PNG to JPG online for free. High-quality image conversion with fast processing using FileVora."
+    },
+    {
+        id: "image-compressor",
+        name: "Image Compressor",
+        description: "Reduce image file size.",
+        category: "Image",
+        iconPath: "M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15",
+        theme: THEMES.green,
+        endpoint: "/coming-soon",
+        acceptedTypes: "image/*",
+        multiple: true,
+        type: "interactive",
+        seoTitle: "Compress Images Online – Free Image Compressor | FileVora",
+        seoDescription: "Compress images online to reduce file size without quality loss. Free and fast image compression with FileVora."
     },
     {
         id: "rotate-image",
@@ -669,7 +758,9 @@ export const TOOLS: ToolDef[] = [
         theme: THEMES.green,
         endpoint: "/process/compress-video",
         acceptedTypes: "video/*",
-        multiple: false
+        multiple: false,
+        seoTitle: "Compress Video Online – Reduce Video Size Free | FileVora",
+        seoDescription: "Reduce video file size online without losing quality. Free video compression tool powered by FileVora."
     },
     {
         id: "video-to-mp4",
@@ -681,7 +772,9 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/convert-video",
         acceptedTypes: "video/*",
         multiple: false,
-        presetOptions: { target_format: "mp4" }
+        presetOptions: { target_format: "mp4" },
+        seoTitle: "Video Converter Online – Free & Fast | FileVora",
+        seoDescription: "Convert videos to multiple formats online for free. Fast, secure, and easy video conversion using FileVora."
     },
     {
         id: "video-to-mp3",
@@ -717,7 +810,9 @@ export const TOOLS: ToolDef[] = [
         theme: THEMES.green,
         endpoint: "/coming-soon",
         acceptedTypes: "audio/*",
-        multiple: false
+        multiple: false,
+        seoTitle: "Audio Converter Online – Free & Secure | FileVora",
+        seoDescription: "Convert audio files to MP3, WAV, and more online for free. Fast and secure audio conversion with FileVora."
     },
     {
         id: "convert-audio",
@@ -840,16 +935,5 @@ export const TOOLS: ToolDef[] = [
         multiple: false,
         type: "interactive"
     },
-    {
-        id: "image-compressor",
-        name: "Image Compressor",
-        description: "Reduce image file size with quality and format options.",
-        category: "Image",
-        iconPath: "M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15h4.5M9 15l5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h-4.5M15 15v4.5M15 15l-5.25 5.25",
-        theme: THEMES.green,
-        endpoint: "/webapp",
-        acceptedTypes: "image/*",
-        multiple: false,
-        type: "interactive"
-    },
+
 ];

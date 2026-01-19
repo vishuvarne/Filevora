@@ -34,8 +34,8 @@ export async function generateMetadata(
     }
 
     // Enhanced Title & Description
-    const title = `${tool.name} Online - Free, Fast & Secure | FileVora`;
-    const description = `The best free online ${tool.name.toLowerCase()} tool. Fast, secure, and no installation required. Convert, compress, or edit your files in seconds with FileVora.`;
+    const title = tool.seoTitle || `${tool.name} Online - Free, Fast & Secure | FileVora`;
+    const description = tool.seoDescription || `The best free online ${tool.name.toLowerCase()} tool. Fast, secure, and no installation required. Convert, compress, or edit your files in seconds with FileVora.`;
 
     return {
         title,
@@ -119,7 +119,7 @@ export default async function ToolPage({ params }: Props) {
                         "name": "Is there a file size limit?",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "FileVora supports files up to 50MB for free users. We handle large files efficiently using advanced cloud processing."
+                            "text": "FileVora supports files up to 500MB for free users. We handle large files efficiently using advanced cloud processing."
                         }
                     },
                     {

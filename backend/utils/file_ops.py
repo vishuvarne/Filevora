@@ -89,16 +89,41 @@ class FileOps:
     def sanitize_filename(filename: str) -> str:
         """
         Sanitize filename to prevent directory traversal and unsafe characters.
+        Blocks executable extensions.
         """
         import re
+        
+        # Blocked extensions (abuse prevention)
+        BLOCKED_EXTENSIONS = {
+            '.exe', '.dll', '.so', '.rpm', '.deb', '.pl', '.sh', '.php', '.py', '.pyc', 
+            '.rb', '.bat', '.cmd', '.vbs', '.js', '.jar', '.msi', '.bin', '.wsf', '.scf',
+            '.com', '.gadget', '.inf', '.installer', '.jsx', '.reg', '.vb', '.vbe'
+        }
+        
         # Get the basename (files only, no paths)
-        filename = Path(filename).name
+        path = Path(filename)
+        clean_name = path.name
+        
+        # Check against blocked extensions (case-insensitive)
+        if path.suffix.lower() in BLOCKED_EXTENSIONS:
+            # Option 1: Raise Error (Secure)
+            raise ValueError(f"File type '{path.suffix}' is not allowed for security reasons.")
+             # Option 2: Rename (User friendly? No, blocking is safer for these types)
+
         # Allow only alphanumeric, dashes, dots, underscores
-        clean_name = re.sub(r'[^a-zA-Z0-9_.-]', '_', filename)
+        clean_name = re.sub(r'[^a-zA-Z0-9_.-]', '_', clean_name)
+        
         # Ensure it's not empty and no dots at start
         clean_name = clean_name.lstrip('.')
         if not clean_name:
             clean_name = "unnamed_file"
+            
+        # Limit length
+        if len(clean_name) > 255:
+            stem = Path(clean_name).stem[:250]
+            suffix = Path(clean_name).suffix
+            clean_name = f"{stem}{suffix}"
+            
         return clean_name
 
     @staticmethod

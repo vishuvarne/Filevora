@@ -203,7 +203,7 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
                 <div className="space-y-4">
                     {[
                         { q: "Is it safe to use?", a: "Yes. Use HTTPS encryption and delete all files automatically after 1 hour." },
-                        { q: "Is there a file size limit?", a: "Currently we support files up to 50MB for free users." },
+                        { q: "Is there a file size limit?", a: "Currently we support files up to 500MB for free users." },
                         { q: "Can I use it on mobile?", a: "Absolutely. Our website is fully responsive and works on all devices." },
                         { q: "How long does it take?", a: "Most conversions finish in under 10 seconds thanks to our high-performance cloud servers." }
                     ].map((faq, i) => (

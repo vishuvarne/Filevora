@@ -1,4 +1,21 @@
-from fastapi import APIRouter, UploadFile, File, Form, HTTPException, BackgroundTasks
+from services.email_service import EmailService
+from pydantic import BaseModel, EmailStr
+
+class EmailRequest(BaseModel):
+    email: EmailStr
+    download_url: str
+    filename: str
+
+@router.post("/email-link")
+async def email_download_link(request: EmailRequest):
+    try:
+        # Validate that the download URL belongs to our domain (security)
+        # For now, we trust the client but in prod, we should verify the token integrity
+        result = EmailService.send_download_link(request.email, request.download_url, request.filename)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.concurrency import run_in_threadpool
 from typing import List, Optional

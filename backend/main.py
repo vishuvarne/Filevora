@@ -58,6 +58,10 @@ app.add_middleware(
     max_age=3600,  # Cache preflight for 1 hour
 )
 
+# GZip Compression
+from fastapi.middleware.gzip import GZipMiddleware
+app.add_middleware(GZipMiddleware, minimum_size=1000)
+
 # Trusted Host - Prevent host header attacks
 app.add_middleware(
     TrustedHostMiddleware,
@@ -69,15 +73,37 @@ rate_limit_storage = defaultdict(list)
 
 @app.middleware("http")
 async def rate_limit_middleware(request: Request, call_next):
-    """Simple rate limiting: 60 requests per minute per IP"""
+    # Rate Limiting
     client_ip = request.client.host if request.client else "unknown"
-    current_time = time.time()
     
-    # Clean old requests (older than 1 minute)
-    rate_limit_storage[client_ip] = [
-        timestamp for timestamp in rate_limit_storage[client_ip]
-        if current_time - timestamp < 60
-    ]
+    # Check Authentication for Rate Limit
+    is_authenticated = False
+    auth_header = request.headers.get("Authorization")
+    try:
+        if auth_header and auth_header.startswith("Bearer "):
+            from .utils.auth import auth_utils
+            token = auth_header.split(" ")[1]
+            if auth_utils.decode_access_token(token):
+                is_authenticated = True
+    except Exception:
+        pass # Fail closed to anonymous limits
+
+    from .middleware.rate_limiter import rate_limiter
+    
+    # Check limit (returns tuple: allowed, current, limit)
+    allowed, current, limit = rate_limiter.is_allowed(request, is_authenticated)
+    
+    if not allowed:
+        from fastapi.responses import JSONResponse
+        return JSONResponse(
+            status_code=429,
+            content={
+                "detail": "Rate limit exceeded",
+                "message": f"You have exceeded the {limit} requests/hour limit.",
+                "retry_after": 3600
+            },
+            headers={"Retry-After": "3600"}
+        )
     
     # Check max content size (500MB)
     content_length = request.headers.get("content-length")
@@ -87,28 +113,18 @@ async def rate_limit_middleware(request: Request, call_next):
             status_code=413,
             content={"detail": "File too large (Max 500MB)"},
         )
-    
-    # Check rate limit
-    if len(rate_limit_storage[client_ip]) >= 60:
-        from fastapi.responses import JSONResponse
-        return JSONResponse(
-            status_code=429,
-            content={"detail": "Too many requests. Please wait before trying again."},
-            headers={"Retry-After": "60"}
-        )
-    
-    # Add current request
-    rate_limit_storage[client_ip].append(current_time)
-    
-    # Add security headers
+        
+    # Process request
     response = await call_next(request)
+    
+    # Add Security Headers
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["X-XSS-Protection"] = "1; mode=block"
     response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     response.headers["Permissions-Policy"] = "geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()"
-    response.headers["Content-Security-Policy"] = "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data: https:; connect-src 'self' https:;"
+    response.headers["Content-Security-Policy"] = "default-src 'self'; img-src 'self' data: https: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data: https:; connect-src 'self' https:;"
     
     return response
 
