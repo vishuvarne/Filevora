@@ -15,7 +15,7 @@ export default function Breadcrumbs({ items, dark }: BreadcrumbsProps) {
     const separatorColor = dark ? "text-slate-600" : "text-slate-400";
 
     return (
-        <nav className={`flex mb-6 text-sm ${baseColor}`} aria-label="Breadcrumb">
+        <nav className={`flex mb-2 text-sm ${baseColor}`} aria-label="Breadcrumb">
             <ol className="inline-flex items-center space-x-1 md:space-x-3">
                 {items.map((item, index) => (
                     <li key={index} className="inline-flex items-center">

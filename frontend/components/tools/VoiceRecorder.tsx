@@ -57,8 +57,8 @@ export default function VoiceRecorder() {
 
     return (
         <div className="flex flex-col items-center justify-center p-8 gap-6 h-full">
-            <div className={`w-32 h-32 rounded-full flex items-center justify-center transition-all duration-500 ${isRecording ? "bg-red-100 shadow-[0_0_30px_rgba(239,68,68,0.5)]" : "bg-slate-100"}`}>
-                <div className={`w-20 h-20 rounded-full flex items-center justify-center transition-all ${isRecording ? "bg-red-500 animate-pulse" : "bg-slate-300"}`}>
+            <div className={`w-32 h-32 rounded-full flex items-center justify-center transition-all duration-500 ${isRecording ? "bg-red-500/10 shadow-[0_0_30px_rgba(239,68,68,0.5)]" : "bg-muted"}`}>
+                <div className={`w-20 h-20 rounded-full flex items-center justify-center transition-all ${isRecording ? "bg-red-500 animate-pulse" : "bg-muted-foreground/30"}`}>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-10 h-10 text-white">
                         <path d="M8.25 4.5a3.75 3.75 0 117.5 0v8.25a3.75 3.75 0 11-7.5 0V4.5z" />
                         <path d="M6 10.5a.75.75 0 01.75.75v1.5a5.25 5.25 0 1010.5 0v-1.5a.75.75 0 011.5 0v1.5a6.751 6.751 0 01-6 6.709v2.291h3a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5h3v-2.291a6.751 6.751 0 01-6-6.709v-1.5A.75.75 0 016 10.5z" />
@@ -66,7 +66,7 @@ export default function VoiceRecorder() {
                 </div>
             </div>
 
-            <div className="text-3xl font-mono font-bold text-slate-700">
+            <div className="text-3xl font-mono font-bold text-primary">
                 {formatTime(recordingTime)}
             </div>
 
@@ -74,7 +74,7 @@ export default function VoiceRecorder() {
                 {!isRecording ? (
                     <button
                         onClick={startRecording}
-                        className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all transform hover:scale-105"
+                        className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-full font-bold shadow-lg transition-all transform hover:scale-105"
                     >
                         Start Recording
                     </button>
@@ -89,13 +89,13 @@ export default function VoiceRecorder() {
             </div>
 
             {audioURL && (
-                <div className="w-full max-w-md bg-slate-50 p-4 rounded-xl border border-slate-200 mt-4 animate-in fade-in slide-in-from-bottom-4">
-                    <h3 className="font-bold text-slate-700 mb-2">Recording Ready</h3>
+                <div className="w-full max-w-md bg-card p-4 rounded-xl border border-border mt-4 animate-in fade-in slide-in-from-bottom-4 shadow-sm">
+                    <h3 className="font-bold text-foreground mb-2">Recording Ready</h3>
                     <audio controls src={audioURL} className="w-full mb-4" />
                     <a
                         href={audioURL}
                         download={`recording-${new Date().toISOString()}.webm`}
-                        className="flex items-center justify-center w-full bg-slate-900 text-white py-2.5 rounded-lg font-bold hover:bg-slate-800 transition-colors"
+                        className="flex items-center justify-center w-full bg-primary text-primary-foreground py-2.5 rounded-lg font-bold hover:bg-primary/90 transition-colors"
                     >
                         Download Recording
                     </a>

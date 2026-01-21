@@ -30,30 +30,30 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
     ];
 
     return (
-        <div className="mt-16 space-y-20 max-w-5xl mx-auto px-4 font-sans text-slate-800">
+        <div className="mt-16 space-y-20 max-w-5xl mx-auto px-4 font-sans text-foreground">
 
             {/* 1. Instructions & Highlights Block */}
-            <section className="bg-white rounded-3xl p-5 sm:p-8 md:p-12 shadow-sm border border-slate-100">
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-8 text-center text-slate-900">How to convert {tool.name.toLowerCase()} files?</h2>
+            <section className="bg-card rounded-3xl p-5 sm:p-8 md:p-12 shadow-sm border border-border">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-8 text-center text-foreground">How to convert {tool.name.toLowerCase()} files?</h2>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-12 items-center mb-8 md:mb-16">
                     {/* Text Instructions */}
                     <div className="order-2 lg:order-1">
-                        <ol className="relative border-l-2 border-slate-200 ml-4 space-y-6 sm:space-y-8">
+                        <ol className="relative border-l-2 border-border ml-4 space-y-6 sm:space-y-8">
                             <li className="mb-10 ml-6">
-                                <span className="absolute flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full -left-4 ring-4 ring-white text-blue-600 font-bold">1</span>
-                                <h3 className="flex items-center mb-1 text-lg font-bold text-slate-900">Click the "Choose Files" button</h3>
-                                <p className="mb-4 text-base font-normal text-slate-500">Select your files from your computer, Google Drive, Dropbox or URL.</p>
+                                <span className="absolute flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full -left-4 ring-4 ring-card text-blue-600 dark:text-blue-400 font-bold">1</span>
+                                <h3 className="flex items-center mb-1 text-lg font-bold text-foreground">Click the "Choose Files" button</h3>
+                                <p className="mb-4 text-base font-normal text-muted-foreground">Select your files from your computer, Google Drive, Dropbox or URL.</p>
                             </li>
                             <li className="mb-10 ml-6">
-                                <span className="absolute flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full -left-4 ring-4 ring-white text-blue-600 font-bold">2</span>
-                                <h3 className="flex items-center mb-1 text-lg font-bold text-slate-900">Choose Output Format</h3>
-                                <p className="mb-4 text-base font-normal text-slate-500">Select target format from the "Convert To" dropdown list.</p>
+                                <span className="absolute flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full -left-4 ring-4 ring-card text-blue-600 dark:text-blue-400 font-bold">2</span>
+                                <h3 className="flex items-center mb-1 text-lg font-bold text-foreground">Choose Output Format</h3>
+                                <p className="mb-4 text-base font-normal text-muted-foreground">Select target format from the "Convert To" dropdown list.</p>
                             </li>
                             <li className="ml-6">
-                                <span className="absolute flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full -left-4 ring-4 ring-white text-blue-600 font-bold">3</span>
-                                <h3 className="flex items-center mb-1 text-lg font-bold text-slate-900">Download Your File</h3>
-                                <p className="mb-4 text-base font-normal text-slate-500">
+                                <span className="absolute flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full -left-4 ring-4 ring-card text-blue-600 dark:text-blue-400 font-bold">3</span>
+                                <h3 className="flex items-center mb-1 text-lg font-bold text-foreground">Download Your File</h3>
+                                <p className="mb-4 text-base font-normal text-muted-foreground">
                                     Click the blue "Convert" button to start processing, then download your file.
                                 </p>
                             </li>
@@ -62,32 +62,32 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
 
                     {/* Feature Icons (Right side or top on mobile) */}
                     <div className="order-1 lg:order-2 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4 md:gap-6 text-center">
-                        <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100">
-                            <div className="w-16 h-16 mx-auto bg-white rounded-full flex items-center justify-center shadow-sm mb-4 text-purple-600">
+                        <div className="p-6 rounded-2xl bg-secondary border border-border">
+                            <div className="w-16 h-16 mx-auto bg-card rounded-full flex items-center justify-center shadow-sm mb-4 text-purple-600 dark:text-purple-400">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
                                 </svg>
                             </div>
-                            <h3 className="text-lg font-bold mb-2">Convert Any File</h3>
-                            <p className="text-slate-500 text-sm">Supports 200+ formats for all your needs.</p>
+                            <h3 className="text-lg font-bold mb-2 text-foreground">Convert Any File</h3>
+                            <p className="text-muted-foreground text-sm">Supports 200+ formats for all your needs.</p>
                         </div>
-                        <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100">
-                            <div className="w-16 h-16 mx-auto bg-white rounded-full flex items-center justify-center shadow-sm mb-4 text-blue-600">
+                        <div className="p-6 rounded-2xl bg-secondary border border-border">
+                            <div className="w-16 h-16 mx-auto bg-card rounded-full flex items-center justify-center shadow-sm mb-4 text-blue-600 dark:text-blue-400">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                             </div>
-                            <h3 className="text-lg font-bold mb-2">Best Quality</h3>
-                            <p className="text-slate-500 text-sm">High fidelity conversion with advanced algorithms.</p>
+                            <h3 className="text-lg font-bold mb-2 text-foreground">Best Quality</h3>
+                            <p className="text-muted-foreground text-sm">High fidelity conversion with advanced algorithms.</p>
                         </div>
-                        <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100">
-                            <div className="w-16 h-16 mx-auto bg-white rounded-full flex items-center justify-center shadow-sm mb-4 text-green-600">
+                        <div className="p-6 rounded-2xl bg-secondary border border-border">
+                            <div className="w-16 h-16 mx-auto bg-card rounded-full flex items-center justify-center shadow-sm mb-4 text-green-600 dark:text-green-400">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-12.25v10m-3.75 3.25H6a2.25 2.25 0 00-2.25 2.25V21h13.5V6.75a2.25 2.25 0 00-2.25-2.25H15M10.5 4.5h3m-3-2.25h3" />
                                 </svg>
                             </div>
-                            <h3 className="text-lg font-bold mb-2">Free & Secure</h3>
-                            <p className="text-slate-500 text-sm">Files deleted after 1 hour. 256-bit SSL encryption.</p>
+                            <h3 className="text-lg font-bold mb-2 text-foreground">Free & Secure</h3>
+                            <p className="text-muted-foreground text-sm">Files deleted after 1 hour. 256-bit SSL encryption.</p>
                         </div>
                     </div>
                 </div>
@@ -95,23 +95,23 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
 
             {/* 2. Supported Formats (NEW) */}
             <section className="text-center">
-                <h2 className="text-2xl font-bold text-slate-900 mb-8">Supported Formats</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-8">Supported Formats</h2>
                 <div className="inline-grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
                     {["PDF", "DOCX", "JPG", "PNG", "XLS", "PPT", "EPUB", "MP4", "GIF", "WEBP", "SVG", "TXT"].map((fmt) => (
-                        <div key={fmt} className="bg-white border border-slate-200 rounded-lg py-3 px-6 text-sm font-bold text-slate-600 shadow-sm hover:border-blue-400 hover:text-blue-600 cursor-default transition-colors">
+                        <div key={fmt} className="bg-card border border-border rounded-lg py-3 px-6 text-sm font-bold text-muted-foreground shadow-sm hover:border-primary hover:text-primary cursor-default transition-colors">
                             {fmt}
                         </div>
                     ))}
                 </div>
-                <p className="mt-6 text-slate-500 text-sm">And many more! We support over 200+ file formats.</p>
+                <p className="mt-6 text-muted-foreground text-sm">And many more! We support over 200+ file formats.</p>
             </section>
 
             {/* 3. Use Cases (NEW) */}
             <section>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {useCases.map((useCase, i) => (
-                        <div key={i} className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                            <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-6">
+                        <div key={i} className="bg-card p-8 rounded-3xl border border-border shadow-sm hover:shadow-md transition-shadow">
+                            <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center mb-6">
                                 {useCase.icon === "briefcase" && (
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.066v1.75m-4.5 0v1.75m0-1.75a48.11 48.11 0 01-3.413.387m-4.5-8.006c0-1.116.775-2.034 1.846-2.193 1.503-.21 3.037-.342 4.591-.342 1.554 0 3.088.132 4.591.342 1.071.159 1.846 1.077 1.846 2.193v.448m-16.5 0a2.18 2.18 0 00-1.624 3.791m1.624-3.343a48.12 48.12 0 013.413-.387m-4.5 3.86a48.115 48.115 0 013.413-.387m4.5 0c1.064-.144 1.836-1.08 1.836-2.157V8.706c0-1.065-.758-2.012-1.815-2.17A48.122 48.122 0 0012 6.372c-1.35 0-2.68.04-3.993.118-1.057.158-1.815 1.105-1.815 2.17v.448c0 1.076.772 2.013 1.836 2.157m0 0a48.112 48.112 0 013.413.387m-4.5 0A2.18 2.18 0 003.75 12.81m16.5 0a2.18 2.18 0 01-2.18 2.18H5.93A2.18 2.18 0 013.75 12.81" /></svg>
                                 )}
@@ -122,21 +122,21 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" /></svg>
                                 )}
                             </div>
-                            <h3 className="text-xl font-bold text-slate-900 mb-3">{useCase.title}</h3>
-                            <p className="text-slate-500 leading-relaxed">{useCase.desc}</p>
+                            <h3 className="text-xl font-bold text-foreground mb-3">{useCase.title}</h3>
+                            <p className="text-muted-foreground leading-relaxed">{useCase.desc}</p>
                         </div>
                     ))}
                 </div>
             </section>
 
             {/* 4. Security Section (Your Data, Our Priority) */}
-            <section className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-100 shadow-sm flex flex-col lg:flex-row items-center gap-10 md:gap-12">
+            <section className="bg-card rounded-3xl p-6 sm:p-10 border border-border shadow-sm flex flex-col lg:flex-row items-center gap-10 md:gap-12">
                 <div className="flex-1 text-center lg:text-left">
-                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 mb-4">Your Data, Our Priority</h2>
-                    <p className="text-slate-600 leading-relaxed mb-6 text-sm sm:text-base">
+                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-4">Your Data, Our Priority</h2>
+                    <p className="text-muted-foreground leading-relaxed mb-6 text-sm sm:text-base">
                         At FileVora, we go beyond just converting files—we protect them. Our robust security framework ensures that your data is always safe, whether you're converting an image, video, or document. With advanced encryption, secure data centers, and vigilant monitoring, we've covered every aspect of your data's safety.
                     </p>
-                    <button className="text-blue-600 font-bold border border-blue-100 hover:bg-blue-50 px-6 py-3 rounded-xl transition-colors text-sm">
+                    <button className="text-primary font-bold border border-primary/20 hover:bg-primary/5 px-6 py-3 rounded-xl transition-colors text-sm">
                         Learn more about our security
                     </button>
                 </div>
@@ -147,7 +147,7 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
                         { icon: "shield", title: "Access Control", desc: "Strict authentication protocols." }
                     ].map((item, i) => (
                         <div key={i} className="flex items-start gap-4">
-                            <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center text-slate-700 shrink-0">
+                            <div className="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center text-muted-foreground shrink-0">
                                 {item.icon === "lock" && (
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
                                 )}
@@ -159,8 +159,8 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
                                 )}
                             </div>
                             <div>
-                                <h4 className="font-bold text-slate-800">{item.title}</h4>
-                                <p className="text-sm text-slate-500">{item.desc}</p>
+                                <h4 className="font-bold text-foreground">{item.title}</h4>
+                                <p className="text-sm text-muted-foreground">{item.desc}</p>
                             </div>
                         </div>
                     ))}
@@ -182,14 +182,14 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
             {relatedTools.length > 0 && (
                 <section>
                     <div className="flex items-center justify-between mb-8 cursor-pointer group">
-                        <h2 className="text-2xl font-bold text-slate-800">Specific {tool.category} converters</h2>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors">
+                        <h2 className="text-2xl font-bold text-foreground">Specific {tool.category} converters</h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                         </svg>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-8">
                         {relatedTools.map(t => (
-                            <Link key={t.id} href={`/tools/${t.id}`} className="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium transition-colors">
+                            <Link key={t.id} href={`/tools/${t.id}`} className="text-primary hover:text-primary/80 hover:underline text-sm font-medium transition-colors">
                                 {t.name}
                             </Link>
                         ))}
@@ -198,8 +198,8 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
             )}
 
             {/* 7. FAQ */}
-            <section className="max-w-4xl mx-auto border-t border-slate-200 pt-16">
-                <h2 className="text-3xl font-bold text-slate-800 mb-8 text-center">Frequently Asked Questions</h2>
+            <section className="max-w-4xl mx-auto border-t border-border pt-16">
+                <h2 className="text-3xl font-bold text-foreground mb-8 text-center">Frequently Asked Questions</h2>
                 <div className="space-y-4">
                     {[
                         { q: "Is it safe to use?", a: "Yes. Use HTTPS encryption and delete all files automatically after 1 hour." },
@@ -207,9 +207,9 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
                         { q: "Can I use it on mobile?", a: "Absolutely. Our website is fully responsive and works on all devices." },
                         { q: "How long does it take?", a: "Most conversions finish in under 10 seconds thanks to our high-performance cloud servers." }
                     ].map((faq, i) => (
-                        <div key={i} className="border-b border-slate-200 pb-6 mb-2">
-                            <h3 className="text-lg font-bold text-slate-800 mb-2 cursor-pointer">{faq.q}</h3>
-                            <p className="text-slate-600">{faq.a}</p>
+                        <div key={i} className="border-b border-border pb-6 mb-2">
+                            <h3 className="text-lg font-bold text-foreground mb-2 cursor-pointer">{faq.q}</h3>
+                            <p className="text-muted-foreground">{faq.a}</p>
                         </div>
                     ))}
                 </div>

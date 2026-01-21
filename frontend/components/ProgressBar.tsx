@@ -1,3 +1,4 @@
+
 interface ProgressBarProps {
     progress: number;
     className?: string;
@@ -5,11 +6,14 @@ interface ProgressBarProps {
 
 export default function ProgressBar({ progress, className }: ProgressBarProps) {
     return (
-        <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mt-4 overflow-hidden">
+        <div className="w-full bg-secondary/50 rounded-full h-3 mt-6 overflow-hidden relative shadow-inner">
             <div
-                className={`${className || "bg-blue-600"} h-2.5 rounded-full transition-all duration-300 ease-out`}
+                className={`${className || "bg-gradient-to-r from-blue-500 to-purple-600"} h-full rounded-full transition-all duration-300 ease-out relative overflow-hidden`}
                 style={{ width: `${Math.max(0, Math.min(100, progress))}%` }}
-            ></div>
+            >
+                {/* Shimmer Effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent w-full -translate-x-full animate-shimmer"></div>
+            </div>
         </div>
     );
 }

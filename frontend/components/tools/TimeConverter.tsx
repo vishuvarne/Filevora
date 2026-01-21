@@ -40,22 +40,22 @@ export default function TimeConverter() {
     const destDisplay = formatAmPm(destTime);
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8 max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-center text-slate-800 mb-4">Time Zone Converter</h2>
-            <p className="text-center text-slate-500 mb-10 max-w-xl mx-auto">
+        <div className="bg-card rounded-3xl shadow-xl border border-border p-8 max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-center text-foreground mb-4">Time Zone Converter</h2>
+            <p className="text-center text-muted-foreground mb-10 max-w-xl mx-auto">
                 Convert between Central Standard Time (CST) and Eastern Standard Time (EST). Click on the time field to change time.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Source Card */}
-                <div className="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                    <div className="bg-red-500 text-white text-center py-3 font-bold uppercase tracking-wider">
+                <div className="border border-border rounded-2xl overflow-hidden shadow-sm">
+                    <div className="bg-primary text-primary-foreground text-center py-3 font-bold uppercase tracking-wider">
                         {fromZone.split(' ')[0]}
                     </div>
-                    <div className="p-8 text-center bg-white">
+                    <div className="p-8 text-center bg-card">
                         <div className="flex items-baseline justify-center gap-1 mb-2">
-                            <span className="text-5xl font-extrabold text-slate-900">{srcDisplay.time}</span>
-                            <span className="text-2xl font-bold text-slate-500">{srcDisplay.ampm}</span>
+                            <span className="text-5xl font-extrabold text-foreground">{srcDisplay.time}</span>
+                            <span className="text-2xl font-bold text-muted-foreground">{srcDisplay.ampm}</span>
                         </div>
 
                         <div className="relative">
@@ -63,7 +63,7 @@ export default function TimeConverter() {
                                 type="date"
                                 value={date}
                                 onChange={(e) => setDate(e.target.value)}
-                                className="block w-full text-center mt-4 p-2 bg-slate-50 rounded-lg text-sm font-medium text-slate-600 border border-slate-200 cursor-pointer hover:bg-slate-100"
+                                className="block w-full text-center mt-4 p-2 bg-muted/30 rounded-xl text-sm font-medium text-foreground border border-border cursor-pointer hover:bg-muted/50 transition-colors"
                             />
                         </div>
 
@@ -71,14 +71,14 @@ export default function TimeConverter() {
                             <select
                                 value={fromZone}
                                 onChange={(e) => setFromZone(e.target.value)}
-                                className="w-full text-xs text-slate-500 border-none bg-transparent text-center cursor-pointer"
+                                className="w-full text-xs text-muted-foreground border-none bg-transparent text-center cursor-pointer focus:ring-0"
                             >
                                 {TIMEZONES.map(z => <option key={z} value={z}>{z}</option>)}
                             </select>
                         </div>
                     </div>
-                    <div className="bg-slate-50 p-3 border-t border-slate-100 flex justify-center">
-                        <button className="text-blue-600 text-xs font-bold flex items-center gap-1 hover:underline">
+                    <div className="bg-muted/30 p-3 border-t border-border flex justify-center">
+                        <button className="text-primary text-xs font-bold flex items-center gap-1 hover:underline">
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>
                             Copy to clipboard
                         </button>
@@ -86,14 +86,14 @@ export default function TimeConverter() {
                 </div>
 
                 {/* Dest Card */}
-                <div className="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                    <div className="bg-red-500 text-white text-center py-3 font-bold uppercase tracking-wider">
+                <div className="border border-border rounded-2xl overflow-hidden shadow-sm">
+                    <div className="bg-primary text-primary-foreground text-center py-3 font-bold uppercase tracking-wider">
                         {toZone.split(' ')[0]}
                     </div>
-                    <div className="p-8 text-center bg-white">
+                    <div className="p-8 text-center bg-card">
                         <div className="flex items-baseline justify-center gap-1 mb-2">
-                            <span className="text-5xl font-extrabold text-slate-900">{destDisplay.time}</span>
-                            <span className="text-2xl font-bold text-slate-500">{destDisplay.ampm}</span>
+                            <span className="text-5xl font-extrabold text-foreground">{destDisplay.time}</span>
+                            <span className="text-2xl font-bold text-muted-foreground">{destDisplay.ampm}</span>
                         </div>
 
                         <div className="relative">
@@ -101,7 +101,7 @@ export default function TimeConverter() {
                                 type="date"
                                 value={date}
                                 readOnly
-                                className="block w-full text-center mt-4 p-2 bg-slate-50 rounded-lg text-sm font-medium text-slate-600 border border-slate-200"
+                                className="block w-full text-center mt-4 p-2 bg-muted/30 rounded-xl text-sm font-medium text-foreground border border-border"
                             />
                         </div>
 
@@ -109,14 +109,14 @@ export default function TimeConverter() {
                             <select
                                 value={toZone}
                                 onChange={(e) => setToZone(e.target.value)}
-                                className="w-full text-xs text-slate-500 border-none bg-transparent text-center cursor-pointer"
+                                className="w-full text-xs text-muted-foreground border-none bg-transparent text-center cursor-pointer focus:ring-0"
                             >
                                 {TIMEZONES.map(z => <option key={z} value={z}>{z}</option>)}
                             </select>
                         </div>
                     </div>
-                    <div className="bg-slate-50 p-3 border-t border-slate-100 flex justify-center">
-                        <button className="text-blue-600 text-xs font-bold flex items-center gap-1 hover:underline">
+                    <div className="bg-muted/30 p-3 border-t border-border flex justify-center">
+                        <button className="text-primary text-xs font-bold flex items-center gap-1 hover:underline">
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>
                             Copy to clipboard
                         </button>
@@ -124,7 +124,7 @@ export default function TimeConverter() {
                 </div>
             </div>
 
-            <button className="w-full mt-6 bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-blue-700 transition-all">
+            <button className="w-full mt-6 bg-primary text-primary-foreground font-bold py-4 rounded-2xl shadow-lg hover:bg-primary/90 transition-all">
                 Copy Link
             </button>
         </div>

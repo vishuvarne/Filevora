@@ -72,15 +72,15 @@ export default function UnitConverter({ initialCategory }: UnitConverterProps) {
     }, [value, fromUnit, toUnit, measure]);
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8 max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-center text-slate-800 mb-8">{category} Converter</h2>
+        <div className="bg-card rounded-3xl shadow-xl border border-border p-8 max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-center text-foreground mb-8">{category} Converter</h2>
 
             <div className="mb-8">
-                <label className="block text-sm font-bold text-slate-700 mb-2">Select Converter Type</label>
+                <label className="block text-sm font-bold text-muted-foreground mb-2">Select Converter Type</label>
                 <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full p-4 rounded-xl border border-slate-200 bg-slate-50 text-lg font-medium focus:ring-2 focus:ring-blue-500 outline-none"
+                    className="w-full p-4 rounded-2xl border border-border bg-muted/40 text-lg font-medium text-foreground focus:ring-2 focus:ring-primary outline-none"
                 >
                     {Object.keys(MEASURE_MAP).map(cat => (
                         <option key={cat} value={cat}>{cat} Converter</option>
@@ -91,18 +91,18 @@ export default function UnitConverter({ initialCategory }: UnitConverterProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 {/* From */}
                 <div className="space-y-4">
-                    <label className="block text-sm font-bold text-slate-500 uppercase tracking-wide">From</label>
+                    <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wide">From</label>
                     <div className="flex flex-col gap-2">
                         <input
                             type="number"
                             value={value}
                             onChange={(e) => setValue(parseFloat(e.target.value))}
-                            className="w-full text-4xl font-bold p-4 rounded-xl border border-slate-200 focus:border-blue-500 outline-none transition-colors"
+                            className="w-full text-4xl font-bold p-4 rounded-2xl border border-border bg-background text-foreground focus:border-primary outline-none transition-colors"
                         />
                         <select
                             value={fromUnit}
                             onChange={(e) => setFromUnit(e.target.value)}
-                            className="w-full p-3 rounded-lg bg-slate-100 border-none font-medium text-slate-600"
+                            className="w-full p-3 rounded-xl bg-muted/40 border-none font-medium text-muted-foreground"
                         >
                             {possibilities.map(u => <option key={u} value={u}>{u}</option>)}
                         </select>
@@ -110,7 +110,7 @@ export default function UnitConverter({ initialCategory }: UnitConverterProps) {
                 </div>
 
                 {/* Swap Icon (Visual) */}
-                <div className="hidden md:flex justify-center pt-8 text-slate-300">
+                <div className="hidden md:flex justify-center pt-8 text-muted-foreground/30">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
                     </svg>
@@ -118,15 +118,15 @@ export default function UnitConverter({ initialCategory }: UnitConverterProps) {
 
                 {/* To */}
                 <div className="space-y-4">
-                    <label className="block text-sm font-bold text-slate-500 uppercase tracking-wide">To</label>
+                    <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wide">To</label>
                     <div className="flex flex-col gap-2">
-                        <div className="w-full text-4xl font-bold p-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 break-all">
+                        <div className="w-full text-4xl font-bold p-4 rounded-2xl bg-muted/30 border border-border text-foreground break-all">
                             {result || "..."}
                         </div>
                         <select
                             value={toUnit}
                             onChange={(e) => setToUnit(e.target.value)}
-                            className="w-full p-3 rounded-lg bg-slate-100 border-none font-medium text-slate-600"
+                            className="w-full p-3 rounded-xl bg-muted/40 border-none font-medium text-muted-foreground"
                         >
                             {possibilities.map(u => <option key={u} value={u}>{u}</option>)}
                         </select>
@@ -134,9 +134,9 @@ export default function UnitConverter({ initialCategory }: UnitConverterProps) {
                 </div>
             </div>
 
-            <div className="mt-12 p-6 bg-slate-50 rounded-xl border border-slate-100">
-                <h4 className="font-bold text-slate-900 mb-2">Formula</h4>
-                <p className="text-slate-500 font-mono text-sm">
+            <div className="mt-12 p-6 bg-muted/30 rounded-2xl border border-border">
+                <h4 className="font-bold text-foreground mb-2">Formula</h4>
+                <p className="text-muted-foreground font-mono text-sm">
                     {value} {fromUnit} = {result} {toUnit}
                 </p>
             </div>

@@ -96,8 +96,8 @@ export default function ImageCompressor() {
         : null;
 
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 max-w-5xl mx-auto">
-            <h2 className="text-2xl font-bold text-slate-800 mb-6">Image Compressor</h2>
+        <div className="bg-card rounded-3xl shadow-xl border border-border p-8 max-w-5xl mx-auto">
+            <h2 className="text-2xl font-bold text-foreground mb-6">Image Compressor</h2>
 
             {!imageSrc ? (
                 <Dropzone
@@ -110,11 +110,11 @@ export default function ImageCompressor() {
                 <div className="flex flex-col lg:flex-row gap-8">
                     <div className="space-y-6 w-full lg:w-80">
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-2">Output format</label>
+                            <label className="block text-sm font-bold text-muted-foreground mb-2">Output format</label>
                             <select
                                 value={format}
                                 onChange={(e) => setFormat(e.target.value as OutputFormat)}
-                                className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                                className="w-full rounded-2xl border border-border bg-muted/30 p-3 focus:ring-2 focus:ring-primary outline-none text-foreground"
                             >
                                 <option value="jpeg">JPEG (smallest, lossy)</option>
                                 <option value="webp">WebP (small, lossy)</option>
@@ -123,8 +123,8 @@ export default function ImageCompressor() {
                         </div>
                         {(format === "jpeg" || format === "webp") && (
                             <div>
-                                <label className="flex justify-between text-sm font-bold text-slate-700 mb-2">
-                                    Quality <span className="font-normal text-slate-500">{quality}%</span>
+                                <label className="flex justify-between text-sm font-bold text-muted-foreground mb-2">
+                                    Quality <span className="font-normal text-muted-foreground">{quality}%</span>
                                 </label>
                                 <input
                                     type="range"
@@ -132,12 +132,12 @@ export default function ImageCompressor() {
                                     max={100}
                                     value={quality}
                                     onChange={(e) => setQuality(parseInt(e.target.value))}
-                                    className="w-full accent-blue-600"
+                                    className="w-full accent-primary"
                                 />
                             </div>
                         )}
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-2">Max longest side (px, 0 = no resize)</label>
+                            <label className="block text-sm font-bold text-muted-foreground mb-2">Max longest side (px, 0 = no resize)</label>
                             <input
                                 type="number"
                                 min={0}
@@ -145,15 +145,15 @@ export default function ImageCompressor() {
                                 value={maxLongest || ""}
                                 onChange={(e) => { const v = parseInt(e.target.value); setMaxLongest(isNaN(v) ? 0 : v); }}
                                 placeholder="e.g. 1920"
-                                className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                                className="w-full rounded-2xl border border-border bg-muted/30 p-3 focus:ring-2 focus:ring-primary outline-none text-foreground"
                             />
-                            <p className="text-xs text-slate-500 mt-1">Resizing reduces file size by lowering resolution.</p>
+                            <p className="text-xs text-muted-foreground mt-1">Resizing reduces file size by lowering resolution.</p>
                         </div>
 
                         {compressedSize != null && (
-                            <div className="bg-slate-50 rounded-xl p-4 border border-slate-100 space-y-1">
-                                <p className="text-sm text-slate-600">Original: <strong>{formatBytes(origBytes)}</strong></p>
-                                <p className="text-sm text-slate-600">Compressed: <strong>{formatBytes(compressedSize)}</strong></p>
+                            <div className="bg-muted/30 rounded-2xl p-4 border border-border space-y-1">
+                                <p className="text-sm text-foreground">Original: <strong>{formatBytes(origBytes)}</strong></p>
+                                <p className="text-sm text-foreground">Compressed: <strong>{formatBytes(compressedSize)}</strong></p>
                                 {saved != null && (
                                     <p className={`text-sm font-bold ${saved >= 0 ? "text-green-600" : "text-amber-600"}`}>
                                         {saved >= 0 ? `Saved ${saved}%` : `+${-saved}% (format changed)`}
@@ -166,24 +166,24 @@ export default function ImageCompressor() {
                             <button
                                 onClick={download}
                                 disabled={!compressedDataUrl}
-                                className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl transition-colors"
+                                className="flex-1 bg-primary hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed text-primary-foreground font-bold py-3 rounded-2xl transition-colors"
                             >
                                 Download
                             </button>
-                            <button onClick={reset} className="px-4 py-3 border border-slate-200 rounded-xl font-medium text-slate-600 hover:bg-slate-50">
+                            <button onClick={reset} className="px-4 py-3 border border-border rounded-2xl font-medium text-muted-foreground hover:bg-secondary transition-all">
                                 New Image
                             </button>
                         </div>
                     </div>
                     <div className="flex-1 space-y-4">
                         <canvas ref={canvasRef} className="hidden" aria-hidden="true" />
-                        <div className="bg-slate-100 rounded-xl p-4 flex items-center justify-center min-h-[260px]">
-                            <img src={imageSrc} alt="Preview" className="max-w-full max-h-[50vh] object-contain rounded-lg shadow" />
+                        <div className="bg-muted/30 rounded-3xl p-4 flex items-center justify-center min-h-[260px] border border-border">
+                            <img src={imageSrc} alt="Preview" className="max-w-full max-h-[50vh] object-contain rounded-xl shadow-lg" />
                         </div>
                         {compressedDataUrl && (
-                            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
-                                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Compressed preview</p>
-                                <img src={compressedDataUrl} alt="Compressed" className="max-w-full max-h-40 object-contain rounded" />
+                            <div className="bg-muted/30 rounded-2xl p-4 border border-border">
+                                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Compressed preview</p>
+                                <img src={compressedDataUrl} alt="Compressed" className="max-w-full max-h-40 object-contain rounded-lg" />
                             </div>
                         )}
                     </div>

@@ -68,8 +68,8 @@ export default function MemeGenerator() {
     };
 
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 max-w-5xl mx-auto">
-            <h2 className="text-2xl font-bold text-slate-800 mb-6">Meme Generator</h2>
+        <div className="bg-card rounded-3xl shadow-xl border border-border p-8 max-w-5xl mx-auto">
+            <h2 className="text-2xl font-bold text-foreground mb-6">Meme Generator</h2>
 
             {!imageSrc ? (
                 <Dropzone
@@ -82,73 +82,73 @@ export default function MemeGenerator() {
                 <div className="flex flex-col lg:flex-row gap-8">
                     <div className="space-y-6 w-full lg:w-80">
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-2">Top text</label>
+                            <label className="block text-sm font-bold text-muted-foreground mb-2">Top text</label>
                             <input
                                 type="text"
                                 value={topText}
                                 onChange={(e) => setTopText(e.target.value)}
                                 placeholder="TOP TEXT"
-                                className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                                className="w-full rounded-2xl border border-border bg-muted/30 p-3 focus:ring-2 focus:ring-primary outline-none text-foreground"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-2">Bottom text</label>
+                            <label className="block text-sm font-bold text-muted-foreground mb-2">Bottom text</label>
                             <input
                                 type="text"
                                 value={bottomText}
                                 onChange={(e) => setBottomText(e.target.value)}
                                 placeholder="BOTTOM TEXT"
-                                className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                                className="w-full rounded-2xl border border-border bg-muted/30 p-3 focus:ring-2 focus:ring-primary outline-none text-foreground"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-2">Font size: {fontSize}px</label>
+                            <label className="block text-sm font-bold text-muted-foreground mb-2">Font size: {fontSize}px</label>
                             <input
                                 type="range"
                                 min={16}
                                 max={120}
                                 value={fontSize}
                                 onChange={(e) => setFontSize(parseInt(e.target.value))}
-                                className="w-full accent-blue-600"
+                                className="w-full accent-primary"
                             />
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">Text color</label>
+                                <label className="block text-sm font-bold text-muted-foreground mb-2">Text color</label>
                                 <input
                                     type="color"
                                     value={textColor}
                                     onChange={(e) => setTextColor(e.target.value)}
-                                    className="w-full h-10 rounded-lg cursor-pointer border border-slate-200"
+                                    className="w-full h-10 rounded-xl cursor-pointer border border-border"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">Outline</label>
+                                <label className="block text-sm font-bold text-muted-foreground mb-2">Outline</label>
                                 <input
                                     type="color"
                                     value={strokeColor}
                                     onChange={(e) => setStrokeColor(e.target.value)}
-                                    className="w-full h-10 rounded-lg cursor-pointer border border-slate-200"
+                                    className="w-full h-10 rounded-xl cursor-pointer border border-border"
                                 />
                             </div>
                         </div>
                         <div className="flex gap-3">
                             <button
                                 onClick={download}
-                                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl"
+                                className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 rounded-2xl transition-all"
                             >
                                 Download Meme
                             </button>
                             <button
                                 onClick={() => setImageSrc(null)}
-                                className="px-4 py-3 border border-slate-200 rounded-xl font-medium text-slate-600 hover:bg-slate-50"
+                                className="px-4 py-3 border border-border rounded-2xl font-medium text-muted-foreground hover:bg-secondary transition-all"
                             >
                                 New Image
                             </button>
                         </div>
                     </div>
-                    <div className="flex-1 bg-slate-100 rounded-xl p-4 flex items-center justify-center min-h-[280px] overflow-auto">
-                        <canvas ref={canvasRef} className="max-w-full max-h-[60vh] shadow-lg rounded-lg bg-white" />
+                    <div className="flex-1 bg-muted/30 rounded-3xl p-4 flex items-center justify-center min-h-[280px] overflow-auto border border-border">
+                        <canvas ref={canvasRef} className="max-w-full max-h-[60vh] shadow-lg rounded-xl bg-white" />
                     </div>
                 </div>
             )}

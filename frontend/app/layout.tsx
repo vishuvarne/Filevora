@@ -1,17 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ChatWidget from "@/components/ChatWidget";
+import GoogleAdsense from "@/components/GoogleAdsense";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+  variable: "--font-inter",
 });
 
 export const viewport: Viewport = {
@@ -121,9 +118,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         suppressHydrationWarning
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-50 dark:bg-slate-950 flex flex-col min-h-screen`}
+        className={`${inter.variable} antialiased bg-slate-50 dark:bg-slate-950 flex flex-col min-h-screen font-sans overflow-x-hidden`}
       >
         <Navbar />
+        {/* AdSense Script - Global */}
+        {/* <GoogleAdsense pId={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID || "ca-pub-0000000000000000"} /> */}
         <div className="flex-1">
           {children}
         </div>

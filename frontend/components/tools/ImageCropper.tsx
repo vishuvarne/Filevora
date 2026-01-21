@@ -96,13 +96,13 @@ export default function ImageCropper() {
     };
 
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 max-w-5xl mx-auto">
+        <div className="bg-card rounded-3xl shadow-xl border border-border p-8 max-w-5xl mx-auto">
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-slate-800">Crop Image</h2>
+                <h2 className="text-2xl font-bold text-foreground">Crop Image</h2>
                 <button
                     onClick={crop}
                     disabled={!selection || selection.w === 0}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded-xl disabled:opacity-50"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-6 py-2 rounded-2xl disabled:opacity-50 transition-all"
                 >
                     Crop & Download
                 </button>
@@ -113,20 +113,20 @@ export default function ImageCropper() {
                     <Dropzone onFilesSelected={handleFiles} acceptedTypes="image/*" multiple={false} label="Upload Image to Crop" />
                 </div>
             ) : (
-                <div className="overflow-auto bg-slate-900 rounded-xl flex justify-center p-4 cursor-crosshair">
+                <div className="overflow-auto bg-slate-900 rounded-3xl flex justify-center p-4 cursor-crosshair border border-border">
                     <canvas
                         ref={canvasRef}
                         onMouseDown={handleMouseDown}
                         onMouseMove={handleMouseMove}
                         onMouseUp={() => setDrag(false)}
                         onMouseLeave={() => setDrag(false)}
-                        className="max-w-full h-auto shadow-2xl"
+                        className="max-w-full h-auto shadow-2xl rounded-lg"
                         style={{ maxHeight: '70vh' }}
                     />
                 </div>
             )}
 
-            {imageSrc && <p className="text-center text-slate-500 mt-4 text-sm">Click and drag on the image to select crop area.</p>}
+            {imageSrc && <p className="text-center text-muted-foreground mt-4 text-sm">Click and drag on the image to select crop area.</p>}
         </div>
     );
 }

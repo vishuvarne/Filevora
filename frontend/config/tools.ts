@@ -209,7 +209,7 @@ export const TOOLS: ToolDef[] = [
         theme: THEMES.yellow,
         endpoint: "/process/pdf-to-image",
         acceptedTypes: ".pdf,application/pdf",
-        multiple: false,
+        multiple: false, // Backend expects single file
         presetOptions: { format: "jpeg" }
     },
     {
@@ -230,7 +230,7 @@ export const TOOLS: ToolDef[] = [
         category: "PDF & Documents",
         iconPath: "M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25",
         theme: THEMES.red,
-        endpoint: "/coming-soon",
+        endpoint: "/process/epub-to-pdf",
         acceptedTypes: ".epub",
         multiple: false
     },
@@ -468,7 +468,7 @@ export const TOOLS: ToolDef[] = [
         category: "GIF",
         iconPath: "M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z",
         theme: THEMES.gray,
-        endpoint: "/coming-soon",
+        endpoint: "/process/webm-to-gif",
         acceptedTypes: "video/webm",
         multiple: false
     },
@@ -490,7 +490,7 @@ export const TOOLS: ToolDef[] = [
         category: "GIF",
         iconPath: "M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z",
         theme: THEMES.gray,
-        endpoint: "/coming-soon",
+        endpoint: "/process/gif-to-mp4",
         acceptedTypes: "image/gif",
         multiple: false
     },
@@ -512,7 +512,7 @@ export const TOOLS: ToolDef[] = [
         category: "GIF",
         iconPath: "M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z",
         theme: THEMES.gray,
-        endpoint: "/coming-soon",
+        endpoint: "/process/images-to-gif",
         acceptedTypes: "image/*",
         multiple: true
     },
@@ -523,7 +523,7 @@ export const TOOLS: ToolDef[] = [
         category: "GIF",
         iconPath: "M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z",
         theme: THEMES.gray,
-        endpoint: "/coming-soon",
+        endpoint: "/process/mov-to-gif",
         acceptedTypes: "video/quicktime",
         multiple: false
     },
@@ -534,7 +534,7 @@ export const TOOLS: ToolDef[] = [
         category: "GIF",
         iconPath: "M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z",
         theme: THEMES.gray,
-        endpoint: "/coming-soon",
+        endpoint: "/process/avi-to-gif",
         acceptedTypes: "video/x-msvideo",
         multiple: false
     },
@@ -795,7 +795,7 @@ export const TOOLS: ToolDef[] = [
         category: "Video & Audio",
         iconPath: "M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z",
         theme: THEMES.orange,
-        endpoint: "/coming-soon",
+        endpoint: "/process/trim-video",
         acceptedTypes: "video/*",
         multiple: false
     },
@@ -808,7 +808,7 @@ export const TOOLS: ToolDef[] = [
         category: "Video & Audio",
         iconPath: "M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z",
         theme: THEMES.green,
-        endpoint: "/coming-soon",
+        endpoint: "/process/compress-audio",
         acceptedTypes: "audio/*",
         multiple: false,
         seoTitle: "Audio Converter Online – Free & Secure | FileVora",
@@ -833,7 +833,7 @@ export const TOOLS: ToolDef[] = [
         category: "Video & Audio",
         iconPath: "M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z",
         theme: THEMES.purple,
-        endpoint: "/coming-soon",
+        endpoint: "/process/volume-booster",
         acceptedTypes: "audio/*",
         multiple: false
     },

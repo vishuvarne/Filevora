@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Dropzone from "@/components/Dropzone"; // Reusing existing dropzone
+import Dropzone from "@/components/SmartDropzone"; // Reusing smart dropzone
 
 export default function CollageMaker() {
     const [images, setImages] = useState<string[]>([]);
@@ -104,14 +104,14 @@ export default function CollageMaker() {
     };
 
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 max-w-5xl mx-auto">
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-slate-800">Collage Maker</h2>
-                <div className="flex gap-2">
-                    <button onClick={() => setLayout('grid')} className={`px-4 py-2 rounded-lg text-sm font-bold border ${layout === 'grid' ? 'bg-blue-50 border-blue-200 text-blue-600' : 'border-slate-200'}`}>Grid</button>
-                    <button onClick={() => setLayout('vertical')} className={`px-4 py-2 rounded-lg text-sm font-bold border ${layout === 'vertical' ? 'bg-blue-50 border-blue-200 text-blue-600' : 'border-slate-200'}`}>Vertical</button>
-                    <button onClick={() => setLayout('horizontal')} className={`px-4 py-2 rounded-lg text-sm font-bold border ${layout === 'horizontal' ? 'bg-blue-50 border-blue-200 text-blue-600' : 'border-slate-200'}`}>Horizontal</button>
-                    <button onClick={() => setImages([])} className="px-4 py-2 rounded-lg text-sm font-bold text-red-500 hover:bg-red-50">Reset</button>
+        <div className="bg-card rounded-3xl shadow-xl border border-border p-4 md:p-8 max-w-5xl mx-auto">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                <h2 className="text-2xl font-bold text-foreground">Collage Maker</h2>
+                <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+                    <button onClick={() => setLayout('grid')} className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-sm font-bold border ${layout === 'grid' ? 'bg-primary/10 border-primary text-primary' : 'border-border text-muted-foreground hover:bg-secondary'}`}>Grid</button>
+                    <button onClick={() => setLayout('vertical')} className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-sm font-bold border ${layout === 'vertical' ? 'bg-primary/10 border-primary text-primary' : 'border-border text-muted-foreground hover:bg-secondary'}`}>Vertical</button>
+                    <button onClick={() => setLayout('horizontal')} className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-sm font-bold border ${layout === 'horizontal' ? 'bg-primary/10 border-primary text-primary' : 'border-border text-muted-foreground hover:bg-secondary'}`}>Horizontal</button>
+                    <button onClick={() => setImages([])} className="flex-1 sm:flex-none px-4 py-2 rounded-xl text-sm font-bold text-destructive hover:bg-destructive/10 border border-transparent hover:border-destructive/20">Reset</button>
                 </div>
             </div>
 
@@ -120,11 +120,11 @@ export default function CollageMaker() {
                 <div className="w-full md:w-1/3 space-y-6">
                     <Dropzone onFilesSelected={handleFiles} acceptedTypes="image/*" multiple={true} label="Add Images (Max 4)" />
 
-                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                        <h3 className="font-bold text-slate-700 mb-2">Images ({images.length}/4)</h3>
+                    <div className="bg-muted/30 p-4 rounded-2xl border border-border">
+                        <h3 className="font-bold text-foreground mb-2">Images ({images.length}/4)</h3>
                         <div className="grid grid-cols-4 gap-2">
                             {images.map((src, i) => (
-                                <div key={i} className="aspect-square rounded-lg overflow-hidden border border-slate-200 relative group">
+                                <div key={i} className="aspect-square rounded-xl overflow-hidden border border-border relative group bg-card">
                                     <img src={src} className="w-full h-full object-cover" />
                                 </div>
                             ))}
@@ -134,18 +134,18 @@ export default function CollageMaker() {
                     <button
                         onClick={download}
                         disabled={images.length === 0}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-blue-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 rounded-2xl shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                     >
                         Download Collage
                     </button>
                 </div>
 
                 {/* Canvas Preview */}
-                <div className="flex-1 bg-slate-100 rounded-xl flex items-center justify-center p-4 min-h-[400px]">
+                <div className="flex-1 bg-muted/30 rounded-3xl flex items-center justify-center p-4 min-h-[400px] border border-border">
                     {images.length > 0 ? (
-                        <canvas ref={canvasRef} className="max-w-full h-auto shadow-xl rounded-lg bg-white" />
+                        <canvas ref={canvasRef} className="max-w-full h-auto shadow-xl rounded-xl bg-white" />
                     ) : (
-                        <div className="text-slate-400 text-center">
+                        <div className="text-muted-foreground text-center">
                             <p>Add images to start</p>
                         </div>
                     )}

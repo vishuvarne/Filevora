@@ -6,6 +6,8 @@ import Dropzone from "@/components/Dropzone";
 import { processJob, getDownloadUrl } from "@/lib/api";
 import { TOOLS, ToolDef } from "@/config/tools";
 
+import ErrorBoundary from "../ErrorBoundary";
+
 // Lazy load interactive tools
 const CollageMaker = lazy(() => import("./CollageMaker"));
 const ColorPicker = lazy(() => import("./ColorPicker"));
@@ -269,7 +271,9 @@ export default function ChatInterface({ className }: { className?: string }) {
                                 <div className="font-bold text-sm tracking-widest uppercase">Initializing Tool...</div>
                             </div>
                         }>
-                            <ToolComponent />
+                            <ErrorBoundary>
+                                <ToolComponent />
+                            </ErrorBoundary>
                         </Suspense>
                     </div>
                 </div>

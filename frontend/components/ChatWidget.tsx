@@ -5,30 +5,64 @@ import ChatInterface from "./tools/ChatInterface";
 
 export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
+    const [isClosing, setIsClosing] = useState(false); // New state for exit animation
     const widgetRef = useRef<HTMLDivElement>(null);
 
+    // Handle closing with animation
+    const closeWidget = () => {
+        setIsClosing(true);
+        setTimeout(() => {
+            setIsOpen(false);
+            setIsClosing(false);
+        }, 200); // Match animation duration (200ms)
+    };
+
+    const toggleWidget = () => {
+        if (isOpen) {
+            closeWidget();
+        } else {
+            setIsOpen(true);
+        }
+    };
+
     useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
+        function handleClickOutside(event: MouseEvent | TouchEvent) {
             if (widgetRef.current && !widgetRef.current.contains(event.target as Node)) {
-                setIsOpen(false);
+                // Only close if currently open and not already closing
+                if (isOpen && !isClosing) {
+                    closeWidget();
+                }
             }
         }
 
         if (isOpen) {
             document.addEventListener("mousedown", handleClickOutside);
+            document.addEventListener("touchstart", handleClickOutside); // Mobile support
         }
 
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("touchstart", handleClickOutside);
         };
-    }, [isOpen]);
+    }, [isOpen, isClosing]);
+
+    // Keep rendered during closing animation
+    const shouldRender = isOpen || isClosing;
 
     return (
-        <div ref={widgetRef} className="hidden sm:flex fixed bottom-6 right-6 z-50 flex-col items-end gap-2">
+        <div ref={widgetRef} className="flex fixed bottom-24 right-4 sm:bottom-6 sm:right-6 z-50 flex-col items-end gap-2">
 
             {/* Popover Window */}
-            {isOpen && (
-                <div className="w-[400px] h-[600px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden mb-2 animate-in slide-in-from-bottom-5 fade-in duration-200 flex flex-col">
+            {shouldRender && (
+                <div
+                    className={`
+                        w-[400px] h-[600px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden mb-2 flex flex-col
+                        ${isClosing
+                            ? "animate-out slide-out-to-bottom-5 fade-out duration-200 fill-mode-forwards"
+                            : "animate-in slide-in-from-bottom-5 fade-in duration-200"
+                        }
+                    `}
+                >
                     <div className="p-4 bg-purple-600 text-white flex justify-between items-center shadow-sm">
                         <div className="font-bold flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
@@ -36,7 +70,7 @@ export default function ChatWidget() {
                             </svg>
                             Smart Action Bot
                         </div>
-                        <button onClick={() => setIsOpen(false)} className="hover:bg-purple-700 p-1 rounded-lg transition-colors">
+                        <button onClick={closeWidget} className="hover:bg-purple-700 p-1 rounded-lg transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
@@ -48,16 +82,20 @@ export default function ChatWidget() {
             )}
 
             {/* Info Bubble (Shown when closed) */}
-            {!isOpen && (
-                <div className="bg-white px-4 py-2 rounded-xl shadow-lg border border-slate-100 mb-2 animate-bounce cursor-pointer items-center gap-2 hidden md:flex" onClick={() => setIsOpen(true)}>
+            {!isOpen && !isClosing && (
+                <div
+                    className="bg-white px-4 py-2 rounded-xl shadow-lg border border-slate-100 mb-2 animate-bounce cursor-pointer items-center gap-2 hidden md:flex"
+                    onClick={() => setIsOpen(true)}
+                >
                     <span className="text-sm font-bold text-slate-700">Let me do it for you 🤖</span>
                 </div>
             )}
 
             {/* Floating Toggle Button */}
             <button
-                onClick={() => setIsOpen(!isOpen)}
-                className={`w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-all transform hover:scale-105 ${isOpen ? 'bg-slate-800 rotate-90' : 'bg-purple-600 hover:bg-purple-700'}`}
+                onClick={toggleWidget}
+                className={`w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-all transform hover:scale-105 duration-200 ${isOpen ? 'bg-slate-800 rotate-90' : 'bg-purple-600 hover:bg-purple-700'}`}
+                aria-label={isOpen ? "Close Chat" : "Open Chat"}
             >
                 {isOpen ? (
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6 text-white">

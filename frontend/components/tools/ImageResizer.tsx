@@ -62,8 +62,8 @@ export default function ImageResizer() {
     };
 
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 max-w-5xl mx-auto">
-            <h2 className="text-2xl font-bold text-slate-800 mb-6">Image Resizer</h2>
+        <div className="bg-card rounded-3xl shadow-xl border border-border p-8 max-w-5xl mx-auto">
+            <h2 className="text-2xl font-bold text-foreground mb-6">Image Resizer</h2>
 
             {!imageSrc ? (
                 <Dropzone
@@ -76,18 +76,18 @@ export default function ImageResizer() {
                 <div className="flex flex-col lg:flex-row gap-8">
                     <div className="space-y-6 w-full lg:w-80">
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-2">Width (px)</label>
+                            <label className="block text-sm font-bold text-muted-foreground mb-2">Width (px)</label>
                             <input
                                 type="number"
                                 min={1}
                                 max={4096}
                                 value={width}
                                 onChange={(e) => setWidth(parseInt(e.target.value) || 1)}
-                                className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                                className="w-full rounded-2xl border border-border bg-muted/30 p-3 focus:ring-2 focus:ring-primary outline-none text-foreground"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-2">Height (px)</label>
+                            <label className="block text-sm font-bold text-muted-foreground mb-2">Height (px)</label>
                             <input
                                 type="number"
                                 min={1}
@@ -95,7 +95,7 @@ export default function ImageResizer() {
                                 value={height}
                                 onChange={(e) => setHeight(parseInt(e.target.value) || 1)}
                                 disabled={keepAspect}
-                                className={`w-full rounded-xl border border-slate-200 p-3 focus:ring-2 focus:ring-blue-500 outline-none ${keepAspect ? "bg-slate-100 text-slate-500" : "bg-slate-50"}`}
+                                className={`w-full rounded-2xl border border-border p-3 focus:ring-2 focus:ring-primary outline-none ${keepAspect ? "bg-muted text-muted-foreground" : "bg-muted/30 text-foreground"}`}
                             />
                         </div>
                         <label className="flex items-center gap-2 cursor-pointer">
@@ -103,27 +103,27 @@ export default function ImageResizer() {
                                 type="checkbox"
                                 checked={keepAspect}
                                 onChange={(e) => setKeepAspect(e.target.checked)}
-                                className="rounded border-slate-300"
+                                className="rounded border-border bg-card text-primary focus:ring-primary"
                             />
-                            <span className="text-sm font-medium text-slate-700">Keep aspect ratio</span>
+                            <span className="text-sm font-medium text-foreground">Keep aspect ratio</span>
                         </label>
                         {origSize && (
-                            <p className="text-xs text-slate-500">Original: {origSize.w} × {origSize.h}</p>
+                            <p className="text-xs text-muted-foreground">Original: {origSize.w} × {origSize.h}</p>
                         )}
                         <div className="flex gap-3">
                             <button
                                 onClick={download}
-                                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl"
+                                className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 rounded-2xl transition-all"
                             >
                                 Download
                             </button>
-                            <button onClick={reset} className="px-4 py-3 border border-slate-200 rounded-xl font-medium text-slate-600 hover:bg-slate-50">
+                            <button onClick={reset} className="px-4 py-3 border border-border rounded-2xl font-medium text-muted-foreground hover:bg-secondary transition-all">
                                 New Image
                             </button>
                         </div>
                     </div>
-                    <div className="flex-1 bg-slate-100 rounded-xl p-4 flex items-center justify-center min-h-[280px]">
-                        <canvas ref={canvasRef} className="max-w-full max-h-[60vh] shadow-lg rounded-lg bg-white" />
+                    <div className="flex-1 bg-muted/30 rounded-3xl p-4 flex items-center justify-center min-h-[280px] border border-border">
+                        <canvas ref={canvasRef} className="max-w-full max-h-[60vh] shadow-lg rounded-xl bg-white" />
                     </div>
                 </div>
             )}

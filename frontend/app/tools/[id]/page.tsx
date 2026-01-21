@@ -144,12 +144,12 @@ export default async function ToolPage({ params }: Props) {
     };
 
     return (
-        <main className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-blue-100 pb-20 pt-8">
+        <main className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/20 pb-20 pt-4">
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <ToolInterface tool={tool} />
+            <ToolInterface tool={tool} key={tool.id} />
         </main>
     );
 }
