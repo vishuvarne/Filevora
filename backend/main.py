@@ -60,7 +60,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=config.ALLOWED_ORIGINS if len(config.ALLOWED_ORIGINS) > 0 else ["https://filevora.web.app", "https://filevora.com"],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "DELETE"],  # Only allow needed methods
+    allow_methods=["*"],  # Allow all methods to prevent CORS preflight issues
     allow_headers=["Content-Type", "Authorization"],  # Restrict headers
     max_age=3600,  # Cache preflight for 1 hour
 )
