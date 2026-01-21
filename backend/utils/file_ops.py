@@ -1,11 +1,12 @@
 import shutil
 import uuid
 import time
+import os
 import magic
 from pathlib import Path
 from typing import List, Union, IO
 import logging
-from ..config import config
+from config import config
 
 logger = logging.getLogger(__name__)
 
@@ -161,5 +162,63 @@ class FileOps:
     def schedule_cleanup(job_dir: Path):
         """Placeholder for any specific cleanup scheduling if needed"""
         pass
+
+    @staticmethod
+    def get_s3_client():
+        try:
+            import boto3
+            from botocore.exceptions import NoCredentialsError
+            
+            # Check for AWS credentials in env
+            if not os.getenv("AWS_ACCESS_KEY_ID") or not os.getenv("AWS_SECRET_ACCESS_KEY"):
+                return None
+                
+            s3 = boto3.client(
+                's3',
+                aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+                aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+                region_name=os.getenv("AWS_REGION", "us-east-1")
+            )
+            return s3
+        except ImportError:
+            logger.warning("boto3 not installed, S3 disabled")
+            return None
+        except Exception as e:
+            logger.error(f"S3 Init Error: {e}")
+            return None
+
+    @staticmethod
+    def upload_to_storage(local_path: Path, remote_key: str) -> str:
+        """
+        Uploads a file to S3/GCS if configured, otherwise returns local path.
+        Returns the download URL.
+        """
+        bucket = os.getenv("AWS_BUCKET_NAME")
+        s3 = FileOps.get_s3_client()
+        
+        if s3 and bucket:
+            try:
+                # Upload
+                s3.upload_file(str(local_path), bucket, remote_key)
+                
+                # Generate Presigned URL (valid for 1 hour by default, matching retention)
+                # Or if public:
+                # url = f"https://{bucket}.s3.amazonaws.com/{remote_key}"
+                
+                url = s3.generate_presigned_url(
+                    'get_object',
+                    Params={'Bucket': bucket, 'Key': remote_key},
+                    ExpiresIn=config.FILE_RETENTION_SECONDS
+                )
+                logger.info(f"Uploaded {local_path} to S3: {remote_key}")
+                return url
+            except Exception as e:
+                logger.error(f"S3 Upload Failed: {e}")
+                # Fallback to local
+                return f"/download/{remote_key}"
+        else:
+            # Local Storage
+            # Remote key is usually "job_id/filename"
+            return f"/download/{remote_key}"
 
 file_ops = FileOps()

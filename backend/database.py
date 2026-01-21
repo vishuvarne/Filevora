@@ -3,7 +3,7 @@ from pathlib import Path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from contextlib import contextmanager
-from .models.database import Base
+from models.database import Base
 
 # Database setup
 # Default to SQLite if DATABASE_URL is not set

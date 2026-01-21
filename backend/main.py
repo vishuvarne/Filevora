@@ -10,17 +10,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from .config import config, Config
-from .utils.file_ops import file_ops
-from .routers import processor, auth, cloud_import
-from .database import init_db
-from .admin import setup_admin
+from config import config, Config
+from utils.file_ops import file_ops
+from routers import processor, auth, cloud_import
+from database import init_db
+from admin import setup_admin
 
 # ... (existing code)
 
-app.include_router(processor.router)
-app.include_router(auth.router)
-app.include_router(cloud_import.router)
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("filevora")
@@ -90,14 +88,14 @@ async def rate_limit_middleware(request: Request, call_next):
     auth_header = request.headers.get("Authorization")
     try:
         if auth_header and auth_header.startswith("Bearer "):
-            from .utils.auth import auth_utils
+            from utils.auth import auth_utils
             token = auth_header.split(" ")[1]
             if auth_utils.decode_access_token(token):
                 is_authenticated = True
     except Exception:
         pass # Fail closed to anonymous limits
 
-    from .middleware.rate_limiter import rate_limiter
+    from middleware.rate_limiter import rate_limiter
     
     # Check limit (returns tuple: allowed, current, limit)
     allowed, current, limit = rate_limiter.is_allowed(request, is_authenticated)
@@ -151,6 +149,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 app.include_router(processor.router)
 app.include_router(auth.router)
+app.include_router(cloud_import.router)
 
 @app.get("/")
 def health_check():

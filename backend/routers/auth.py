@@ -6,9 +6,9 @@ from pydantic import BaseModel, EmailStr
 from datetime import datetime, timedelta
 from typing import Optional
 
-from ..database import get_db_session
-from ..models.database import User, Session as DBSession
-from ..utils.auth import auth_utils
+from database import get_db_session
+from models.database import User, Session as DBSession
+from utils.auth import auth_utils
 
 router = APIRouter(prefix="/api/auth", tags=["authentication"])
 security = HTTPBearer()

@@ -2,7 +2,7 @@ import fitz  # PyMuPDF
 from pathlib import Path
 from typing import List, IO, Union
 
-from ..config import config
+from config import config
 
 class PDFService:
     @staticmethod
@@ -197,72 +197,6 @@ class PDFService:
             doc.close()
         except Exception as e:
             raise ValueError(f"Failed to convert PDF to image: {e}")
-                page = doc[page_num]
-                image_list = page.get_images(full=True)
-                
-                for img_index, img in enumerate(image_list):
-                    xref = img[0]  # xref number
-                    
-                    try:
-                        # Extract image
-                        base_image = doc.extract_image(xref)
-                        image_bytes = base_image["image"]
-                        image_ext = base_image["ext"]
-                        
-                        # Open with PIL
-                        pil_image = Image.open(io.BytesIO(image_bytes))
-                        
-                        # Calculate new dimensions based on DPI target
-                        orig_width, orig_height = pil_image.size
-                        
-                        # Only downsample if image is large
-                        if orig_width > settings["max_dpi"] or orig_height > settings["max_dpi"]:
-                            # Calculate scaling factor
-                            scale_factor = min(
-                                settings["max_dpi"] / orig_width,
-                                settings["max_dpi"] / orig_height
-                            )
-                            
-                            new_width = int(orig_width * scale_factor)
-                            new_height = int(orig_height * scale_factor)
-                            
-                            # Resize image
-                            pil_image = pil_image.resize((new_width, new_height), Image.Resampling.LANCZOS)
-                        
-                        # Convert RGBA to RGB if necessary
-                        if pil_image.mode == 'RGBA':
-                            pil_image = pil_image.convert('RGB')
-                        
-                        # Save compressed image to bytes
-                        img_buffer = io.BytesIO()
-                        pil_image.save(
-                            img_buffer, 
-                            format="JPEG", 
-                            quality=settings["jpeg_quality"],
-                            optimize=True
-                        )
-                        img_buffer.seek(0)
-                        
-                        # Replace image in PDF
-                        doc.replace_image(xref, stream=img_buffer.read())
-                        
-                    except Exception as e:
-                        # If image processing fails, continue with next image
-                        print(f"Warning: Could not compress image {img_index} on page {page_num}: {e}", flush=True)
-                        continue
-            
-            # Save with appropriate options based on level
-            if level == "basic":
-                doc.save(output_path, garbage=4, deflate=True)
-            elif level == "strong":
-                doc.save(output_path, garbage=4, deflate=True, clean=True)
-            else:  # extreme
-                doc.save(output_path, garbage=4, deflate=True, clean=True)
-
-            doc.close()
-            return output_path
-        except Exception as e:
-            raise ValueError(f"Failed to compress PDF: {e}")
 
     @staticmethod
     def compress_pdf_manual(job_input: Union[Path, IO[bytes], bytes], output_path: Path, jpeg_quality:int = 85, max_dpi: int = 150):
@@ -477,3 +411,179 @@ class PDFService:
         except Exception as e:
             print(f"Error extracting text: {e}")
             raise ValueError("Failed to extract text from PDF")
+
+    @staticmethod
+    def pdf_to_epub(job_input: Union[Path, IO[bytes], bytes], output_path: Path):
+        """
+        Convert PDF to EPUB format.
+        Extracts text from PDF and creates an EPUB e-book.
+        """
+        from ebooklib import epub
+        import tempfile
+        import os
+        
+        try:
+            # Open PDF
+            if isinstance(job_input, (bytes, bytearray)):
+                doc = fitz.open(stream=job_input, filetype="pdf")
+            elif hasattr(job_input, "read"):
+                if hasattr(job_input, "seek"):
+                    job_input.seek(0)
+                doc = fitz.open(stream=job_input.read(), filetype="pdf")
+            else:
+                doc = fitz.open(job_input)
+            
+            # Create EPUB book
+            book = epub.EpubBook()
+            
+            # Set metadata
+            book.set_identifier('pdf_conversion_' + str(output_path.stem))
+            book.set_title(output_path.stem)
+            book.set_language('en')
+            
+            # Extract content from each page
+            chapters = []
+            for page_num in range(len(doc)):
+                page = doc[page_num]
+                text = page.get_text()
+                
+                # Create chapter
+                chapter = epub.EpubHtml(
+                    title=f'Page {page_num + 1}',
+                    file_name=f'page_{page_num + 1}.xhtml',
+                    lang='en'
+                )
+                
+                # Format text as HTML
+                html_content = f'<h2>Page {page_num + 1}</h2>'
+                
+                # Split text into paragraphs and wrap in HTML
+                paragraphs = text.split('\n\n')
+                for para in paragraphs:
+                    if para.strip():
+                        html_content += f'<p>{para.strip()}</p>'
+                
+                chapter.content = html_content
+                book.add_item(chapter)
+                chapters.append(chapter)
+            
+            # Add table of contents
+            book.toc = tuple(chapters)
+            
+            # Add navigation files
+            book.add_item(epub.EpubNcx())
+            book.add_item(epub.EpubNav())
+            
+            # Create spine
+            book.spine = ['nav'] + chapters
+            
+            # Write EPUB file
+            epub.write_epub(str(output_path), book)
+            
+            doc.close()
+            return output_path
+            
+        except Exception as e:
+            raise ValueError(f"Failed to convert PDF to EPUB: {e}")
+
+    @staticmethod
+    def epub_to_pdf(job_input: Union[Path, IO[bytes], bytes], output_path: Path):
+        """
+        Convert EPUB to PDF format.
+        Extracts text from EPUB and creates a PDF document.
+        """
+        from ebooklib import epub
+        from reportlab.lib.pagesizes import letter
+        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak
+        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+        from reportlab.lib.units import inch
+        from reportlab.lib.enums import TA_JUSTIFY
+        from bs4 import BeautifulSoup
+        import tempfile
+        import os
+        
+        try:
+            # Save to temp file if bytes/stream
+            temp_epub_path = None
+            
+            if isinstance(job_input, (bytes, bytearray)):
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".epub") as tmp:
+                    tmp.write(job_input)
+                    temp_epub_path = tmp.name
+            elif hasattr(job_input, "read"):
+                if hasattr(job_input, "seek"):
+                    job_input.seek(0)
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".epub") as tmp:
+                    tmp.write(job_input.read())
+                    temp_epub_path = tmp.name
+            else:
+                temp_epub_path = str(job_input)
+            
+            # Read EPUB
+            book = epub.read_epub(temp_epub_path)
+            
+            # Create PDF
+            doc = SimpleDocTemplate(str(output_path), pagesize=letter)
+            story = []
+            styles = getSampleStyleSheet()
+            
+            # Custom styles
+            title_style = ParagraphStyle(
+                'CustomTitle',
+                parent=styles['Heading1'],
+                fontSize=24,
+                spaceAfter=30,
+            )
+            
+            heading_style = ParagraphStyle(
+                'CustomHeading',
+                parent=styles['Heading2'],
+                fontSize=16,
+                spaceAfter=12,
+            )
+            
+            body_style = ParagraphStyle(
+                'CustomBody',
+                parent=styles['BodyText'],
+                fontSize=12,
+                alignment=TA_JUSTIFY,
+                spaceAfter=12,
+            )
+            
+            # Add title
+            title = book.get_metadata('DC', 'title')
+            if title:
+                story.append(Paragraph(title[0][0], title_style))
+                story.append(Spacer(1, 0.2*inch))
+            
+            # Extract text from each document in EPUB
+            for item in book.get_items():
+                if item.get_type() == 9:  # EBOOKLIB_ITEM_DOCUMENT type
+                    content = item.get_content()
+                    
+                    # Parse HTML content
+                    soup = BeautifulSoup(content, 'html.parser')
+                    
+                    # Extract text and preserve some formatting
+                    for element in soup.find_all(['h1', 'h2', 'h3', 'p']):
+                        text = element.get_text().strip()
+                        if text:
+                            if element.name in ['h1', 'h2', 'h3']:
+                                story.append(Paragraph(text, heading_style))
+                            else:
+                                story.append(Paragraph(text, body_style))
+                    
+                    story.append(PageBreak())
+            
+            # Build PDF
+            doc.build(story)
+            
+            # Cleanup temp file
+            if temp_epub_path and temp_epub_path != str(job_input):
+                if os.path.exists(temp_epub_path):
+                    os.remove(temp_epub_path)
+            
+            return output_path
+            
+        except Exception as e:
+            raise ValueError(f"Failed to convert EPUB to PDF: {e}")

@@ -1,7 +1,7 @@
 from sqladmin import Admin, ModelView
 from fastapi import FastAPI
-from .database import engine
-from .models.database import User, Session, ConversionHistory
+from database import engine
+from models.database import User, Session, ConversionHistory
 
 class UserAdmin(ModelView, model=User):
     column_list = [

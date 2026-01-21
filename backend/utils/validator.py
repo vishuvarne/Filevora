@@ -2,7 +2,7 @@
 import magic
 from pathlib import Path
 from typing import Optional, Tuple
-from ..config import config
+from config import config
 
 class FileValidator:
     """Validates uploaded files for security and size constraints."""

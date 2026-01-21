@@ -5,9 +5,9 @@ from typing import Optional, Dict
 import logging
 from fastapi import HTTPException
 
-from ..config import config
-from ..utils.ssrf_guard import SSRFGuard
-from ..utils.file_ops import file_ops
+from config import config
+from utils.ssrf_guard import SSRFGuard
+from utils.file_ops import file_ops
 
 logger = logging.getLogger("filevora")
 

@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Body
 from pydantic import BaseModel
 from typing import Optional
 
-from .services.cloud_service import cloud_service
+from services.cloud_service import cloud_service
 
 router = APIRouter(prefix="/api/cloud", tags=["cloud"])
 
