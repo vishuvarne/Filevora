@@ -2,7 +2,7 @@
 import os
 import zipfile
 import tarfile
-import py7zr
+# import py7zr # Lazy imported
 from pathlib import Path
 from typing import Union, IO
 import shutil
@@ -37,6 +37,7 @@ class ArchiveService:
                 with zipfile.ZipFile(input_path, 'r') as zip_ref:
                     zip_ref.extractall(extract_dir)
             elif suffix == ".7z":
+                import py7zr
                 with py7zr.SevenZipFile(input_path, mode='r') as z:
                     z.extractall(path=extract_dir)
             elif suffix in [".tar", ".gz", ".tgz"]:
@@ -54,6 +55,7 @@ class ArchiveService:
             if target_format == "zip":
                 shutil.make_archive(str(output_file.with_suffix('')), 'zip', extract_dir)
             elif target_format == "7z":
+                import py7zr
                 with py7zr.SevenZipFile(output_file, 'w') as z:
                     z.writeall(extract_dir, arcname="")
             elif target_format == "tar.gz":
