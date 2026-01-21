@@ -2,8 +2,9 @@ import subprocess
 import logging
 from pathlib import Path
 import shutil
-import pypandoc
-from pdf2docx import Converter
+import shutil
+# import pypandoc # Lazy imported
+# from pdf2docx import Converter # Lazy imported
 
 logger = logging.getLogger("filevora")
 
@@ -18,12 +19,14 @@ class DocumentService:
         try:
             # Step 1: PDF to DOCX
             docx_path = job_input.parent / f"{job_input.stem}_temp.docx"
+            from pdf2docx import Converter
             cv = Converter(str(job_input))
             cv.convert(str(docx_path))
             cv.close()
 
             # Step 2: DOCX to EPUB using pypandoc
             # Ensure pypandoc can find the binary (in Docker it's installed via apt)
+            import pypandoc
             pypandoc.convert_file(
                 str(docx_path),
                 'epub',
