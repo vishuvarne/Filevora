@@ -22,4 +22,7 @@ COPY backend /app/backend
 # Create storage directory
 RUN mkdir -p storage
 
+# Add backend to PYTHONPATH so imports like 'from config import ...' work
+ENV PYTHONPATH=/app/backend
+
 CMD sh -c "uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-8080}"
