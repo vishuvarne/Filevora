@@ -24,7 +24,7 @@ export default function LiveStats() {
     if (!isVisible) return null;
 
     return (
-        <div className="fixed bottom-24 left-4 sm:bottom-6 sm:left-6 z-50 animate-in fade-in slide-in-from-bottom-8 duration-700">
+        <div className="hidden sm:block fixed bottom-6 left-6 z-50 animate-in fade-in slide-in-from-bottom-8 duration-700">
             <div className="bg-card/90 dark:bg-slate-900/90 backdrop-blur-md border border-border/50 shadow-xl rounded-full pl-3 pr-4 py-2 flex items-center gap-3 transition-all hover:scale-105 group">
                 <span className="relative flex h-3 w-3">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>

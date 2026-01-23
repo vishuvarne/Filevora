@@ -1,13 +1,19 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { TOOLS } from "@/config/tools";
 import ToolCard from "@/components/ToolCard";
+import SkeletonLoader from "@/components/SkeletonLoader";
 
 const CATEGORIES = ["All", "PDF & Documents", "Image", "Video & Audio", "GIF", "Web Apps", "Others"];
+const INITIAL_LOAD = 12; // 3 rows of 4 on xl screens (Neuro-UX: Progressive Disclosure)
+const LOAD_MORE = 12; // Load 12 more at a time
 
 export default function ToolsGrid() {
     const [searchQuery, setSearchQuery] = useState("");
     const [activeCategory, setActiveCategory] = useState("All");
+    const [visibleCount, setVisibleCount] = useState(INITIAL_LOAD);
+    const [isLoading, setIsLoading] = useState(false);
+    const observerRef = useRef<HTMLDivElement>(null);
 
     const filteredTools = TOOLS.filter((tool) => {
         const matchesSearch = tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -17,6 +23,28 @@ export default function ToolsGrid() {
 
         return matchesSearch && matchesCategory;
     });
+
+    const visibleTools = filteredTools.slice(0, visibleCount);
+    const hasMore = visibleCount < filteredTools.length;
+
+    // Load more tools (Manual trigger for Progressive Disclosure)
+    const loadMore = () => {
+        if (isLoading || !hasMore) return;
+
+        setIsLoading(true);
+        // Simulate slight delay for smooth loading
+        setTimeout(() => {
+            setVisibleCount(prev => Math.min(prev + LOAD_MORE, filteredTools.length));
+            setIsLoading(false);
+        }, 300);
+    };
+
+    // Removed automatically triggered Infinite Scroll to give user autonomy (Neuro-UX 3.2.3)
+
+    // Reset visible count when filters change
+    useEffect(() => {
+        setVisibleCount(INITIAL_LOAD);
+    }, [searchQuery, activeCategory]);
 
     return (
         <section id="tools" className="scroll-mt-24 py-8">
@@ -56,13 +84,39 @@ export default function ToolsGrid() {
                 </div>
             </div>
 
-            {/* Results Grid */}
+            {/* Results Grid - Visual Chunking: Increased gap to 8 (Neuro-UX 3.1.1.C) */}
             {filteredTools.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both">
-                    {filteredTools.map((tool) => (
-                        <ToolCard key={tool.id} tool={tool} />
-                    ))}
-                </div>
+                <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both">
+                        {visibleTools.map((tool) => (
+                            <ToolCard key={tool.id} tool={tool} />
+                        ))}
+
+                        {/* Show skeleton loaders while loading more */}
+                        {isLoading && Array.from({ length: Math.min(LOAD_MORE, filteredTools.length - visibleCount) }).map((_, i) => (
+                            <SkeletonLoader key={`skeleton-${i}`} />
+                        ))}
+                    </div>
+
+                    {/* Show More Button (Progressive Disclosure) */}
+                    {hasMore && (
+                        <div className="flex flex-col items-center justify-center mt-12 space-y-4">
+                            {!isLoading && (
+                                <>
+                                    <p className="text-sm text-muted-foreground">
+                                        Showing {visibleCount} of {filteredTools.length} tools
+                                    </p>
+                                    <button
+                                        onClick={loadMore}
+                                        className="rounded-xl bg-secondary px-8 py-3 text-sm font-semibold text-foreground border border-border/50 hover:bg-secondary/80 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                                    >
+                                        Show More Tools
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    )}
+                </>
             ) : (
                 <div className="text-center py-24 bg-secondary/20 rounded-3xl border border-dashed border-border/60 animate-in fade-in zoom-in-95 duration-300">
                     <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-secondary mb-6 shadow-inner">

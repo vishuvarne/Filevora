@@ -61,6 +61,7 @@ const config: Config = {
                 'shimmer': 'shimmer 2.5s linear infinite',
                 'blob': 'blob 7s infinite',
                 'shine': 'shine 1.5s infinite',
+                'pulse-subtle': 'pulseSubtle 3s ease-in-out infinite',
             },
             keyframes: {
                 fadeIn: {
@@ -87,6 +88,10 @@ const config: Config = {
                 shine: {
                     '0%': { transform: 'translateX(-100%) skewX(-12deg)' },
                     '100%': { transform: 'translateX(200%) skewX(-12deg)' },
+                },
+                pulseSubtle: {
+                    '0%, 100%': { transform: 'scale(1)' },
+                    '50%': { transform: 'scale(1.02)' },
                 },
             },
         },

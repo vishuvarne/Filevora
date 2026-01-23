@@ -16,7 +16,7 @@ export default function Breadcrumbs({ items, dark }: BreadcrumbsProps) {
 
     return (
         <nav className={`flex mb-2 text-sm ${baseColor}`} aria-label="Breadcrumb">
-            <ol className="inline-flex items-center space-x-1 md:space-x-3">
+            <ol className="inline-flex flex-wrap items-center gap-1 md:gap-3">
                 {items.map((item, index) => (
                     <li key={index} className="inline-flex items-center">
                         {index > 0 && (

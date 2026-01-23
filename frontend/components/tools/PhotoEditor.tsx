@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import Dropzone from "@/components/Dropzone";
+import BeforeAfterSlider from "@/components/shared/BeforeAfterSlider";
 
 export default function PhotoEditor() {
     const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -9,6 +10,7 @@ export default function PhotoEditor() {
     const [contrast, setContrast] = useState(100);
     const [saturation, setSaturation] = useState(100);
     const [blur, setBlur] = useState(0);
+    const [editedDataUrl, setEditedDataUrl] = useState<string | null>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     const handleFiles = (files: File[]) => {
@@ -28,6 +30,7 @@ export default function PhotoEditor() {
             canvas.height = img.height;
             ctx.filter = `brightness(${brightness}%) contrast(${contrast}%) saturate(${saturation}%) blur(${blur}px)`;
             ctx.drawImage(img, 0, 0);
+            setEditedDataUrl(canvas.toDataURL("image/png"));
         };
     }, [imageSrc, brightness, contrast, saturation, blur]);
 
@@ -40,6 +43,35 @@ export default function PhotoEditor() {
         setContrast(100);
         setSaturation(100);
         setBlur(0);
+    };
+
+    const applyPreset = (preset: string) => {
+        switch (preset) {
+            case 'vivid':
+                setBrightness(110);
+                setContrast(120);
+                setSaturation(130);
+                setBlur(0);
+                break;
+            case 'bw':
+                setBrightness(100);
+                setContrast(110);
+                setSaturation(0);
+                setBlur(0);
+                break;
+            case 'vintage':
+                setBrightness(95);
+                setContrast(90);
+                setSaturation(70);
+                setBlur(0);
+                break;
+            case 'soft':
+                setBrightness(105);
+                setContrast(85);
+                setSaturation(90);
+                setBlur(1);
+                break;
+        }
     };
 
     const download = () => {
@@ -116,6 +148,37 @@ export default function PhotoEditor() {
                                 className="w-full accent-primary"
                             />
                         </div>
+
+                        {/* Filter Presets */}
+                        <div className="bg-muted/30 rounded-2xl p-4 border border-border">
+                            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">Presets</p>
+                            <div className="grid grid-cols-2 gap-2">
+                                <button
+                                    onClick={() => applyPreset('vivid')}
+                                    className="px-3 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-xs font-medium text-foreground transition-colors"
+                                >
+                                    ✨ Vivid
+                                </button>
+                                <button
+                                    onClick={() => applyPreset('bw')}
+                                    className="px-3 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-xs font-medium text-foreground transition-colors"
+                                >
+                                    ⚫ B&W
+                                </button>
+                                <button
+                                    onClick={() => applyPreset('vintage')}
+                                    className="px-3 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-xs font-medium text-foreground transition-colors"
+                                >
+                                    📷 Vintage
+                                </button>
+                                <button
+                                    onClick={() => applyPreset('soft')}
+                                    className="px-3 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-xs font-medium text-foreground transition-colors"
+                                >
+                                    ✨ Soft
+                                </button>
+                            </div>
+                        </div>
                         <div className="flex gap-3 pt-2">
                             <button onClick={reset} className="flex-1 border border-border rounded-2xl py-2.5 font-medium text-muted-foreground hover:bg-secondary transition-all">
                                 Reset
@@ -134,8 +197,21 @@ export default function PhotoEditor() {
                             Choose different image
                         </button>
                     </div>
-                    <div className="flex-1 bg-muted/30 rounded-3xl p-4 flex items-center justify-center min-h-[300px] overflow-auto border border-border">
-                        <canvas ref={canvasRef} className="max-w-full max-h-[60vh] shadow-lg rounded-xl bg-white" />
+                    <div className="flex-1 space-y-4">
+                        <canvas ref={canvasRef} className="hidden" aria-hidden="true" />
+                        {editedDataUrl ? (
+                            <BeforeAfterSlider
+                                beforeImage={imageSrc}
+                                afterImage={editedDataUrl}
+                                beforeLabel="Original"
+                                afterLabel="Edited"
+                                className="min-h-[400px]"
+                            />
+                        ) : (
+                            <div className="flex-1 bg-muted/30 rounded-3xl p-4 flex items-center justify-center min-h-[400px] overflow-auto border border-border">
+                                <img src={imageSrc} alt="Preview" className="max-w-full max-h-[60vh] shadow-lg rounded-xl" />
+                            </div>
+                        )}
                     </div>
                 </div>
             )}

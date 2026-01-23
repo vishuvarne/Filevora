@@ -1,0 +1,66 @@
+services:
+  # Wrapper for the Web Service (FastAPI)
+  - type: web
+    name: filevora-backend
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: |
+      cd backend
+      pip install -r requirements.txt
+    startCommand: |
+      cd backend
+      gunicorn -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:10000
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: filevora-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: filevora-redis
+          property: connectionString
+      - key: JWT_SECRET_KEY
+        generateValue: true
+
+  # Wrapper for the Worker Service (Celery)
+  - type: worker
+    name: filevora-worker
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: |
+      cd backend
+      pip install -r requirements.txt
+    startCommand: |
+      cd backend
+      celery -A celery_worker worker --loglevel=info --concurrency=2
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: filevora-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: filevora-redis
+          property: connectionString
+
+databases:
+  - name: filevora-db
+    region: oregon
+    plan: free
+    databaseName: filevora
+    user: filevora
+
+services:
+  - type: redis
+    name: filevora-redis
+    region: oregon
+    plan: free
+    ipAllowList: [] # Allow internal connections only

@@ -4,11 +4,13 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ChatWidget from "@/components/ChatWidget";
 import GoogleAdsense from "@/components/GoogleAdsense";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap", // Prevent font blocking, faster FCP
 });
 
 export const viewport: Viewport = {
@@ -116,10 +118,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* MUST be first script - prevents dark mode flash on ALL builds including static */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme'),d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d)){document.documentElement.classList.add('dark')}}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body
         suppressHydrationWarning
         className={`${inter.variable} antialiased bg-slate-50 dark:bg-slate-950 flex flex-col min-h-screen font-sans overflow-x-hidden`}
       >
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ""} />
         <Navbar />
         {/* AdSense Script - Global */}
         {/* <GoogleAdsense pId={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID || "ca-pub-0000000000000000"} /> */}

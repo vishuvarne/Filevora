@@ -1,8 +1,14 @@
 import { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { TOOLS } from "@/config/tools";
 import ToolCard from "@/components/ToolCard";
 import ToolsGrid from "@/components/ToolsGrid";
-import SecuritySection from "@/components/SecuritySection";
+import RecentlyUsed from "@/components/RecentlyUsed";
+import TypewriterEffect from "@/components/TypewriterEffect";
+
+// Lazy load heavy below-fold components for better performance
+const SecuritySection = dynamic(() => import("@/components/SecuritySection"));
+const ProcessingFAQ = dynamic(() => import("@/components/ProcessingFAQ"));
 
 export const metadata: Metadata = {
   title: "FileVora - Premium Online File Converter | PDF, Image, Video Tools",
@@ -24,21 +30,21 @@ export default function Home() {
       {/* Hero Section */}
       <div className="relative isolate pt-14 dark:bg-slate-900">
         <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
-          <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style={{ clipPath: 'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)' }}></div>
+          <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-primary/20 opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style={{ clipPath: 'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)' }}></div>
         </div>
 
-        <div className="py-24 sm:py-32 lg:pb-40">
+        <div className="py-16 sm:py-20 lg:pb-24">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mx-auto max-w-4xl text-center">
               <h1 className="text-4xl font-black tracking-tight text-foreground sm:text-7xl mb-8 leading-[1.1]">
-                Every tool you need to <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 animate-gradient-x">process your files.</span>
+                Process Files <TypewriterEffect words={["Instantly.", "Securely.", "Privately.", "Fast."]} /> <br className="hidden sm:block" /> No Limits. No Watermarks.
               </h1>
               <p className="mt-6 text-xl leading-8 text-muted-foreground max-w-2xl mx-auto">
-                Merge, split, compress, convert, and more. Simple, secure, and 100% free to use. No limits, no watermarks.
+                60+ tools. Bank-grade encryption. Free forever.
               </p>
 
               <div className="mt-10 flex items-center justify-center gap-x-6">
-                <a href="#tools" className="rounded-xl bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-200 ease-out hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-xl hover:brightness-110 active:scale-[0.98] active:translate-y-0 active:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+                <a href="#tools" className="rounded-xl bg-primary px-10 py-5 text-xl font-bold text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-200 ease-out hover:scale-[1.05] hover:-translate-y-1 hover:shadow-xl hover:brightness-110 active:scale-[0.98] active:translate-y-0 active:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary animate-pulse-subtle">
                   Explore Tools
                 </a>
                 <a href="/about" className="text-sm font-semibold leading-6 text-foreground hover:text-primary transition-colors">
@@ -67,14 +73,19 @@ export default function Home() {
         </div>
 
         <div className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]" aria-hidden="true">
-          <div className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-20 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]" style={{ clipPath: 'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)' }}></div>
+          <div className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-primary/20 opacity-20 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]" style={{ clipPath: 'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)' }}></div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
+        {/* Recently Used Tools */}
+        <div className="relative z-30 mb-8">
+          <RecentlyUsed />
+        </div>
+
         {/* Tools Grid Section */}
-        <div className="relative -mt-20 z-30">
+        <div className="relative z-30">
           <ToolsGrid />
         </div>
 
@@ -141,7 +152,7 @@ export default function Home() {
         {/* Stats Section */}
         <section className="relative isolate overflow-hidden bg-slate-900 py-24 sm:py-32 rounded-3xl mb-24">
           <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2850&q=80&blend=111827&sat=-100&exp=15&blend-mode=multiply" alt="" className="absolute inset-0 -z-10 h-full w-full object-cover object-center opacity-20" />
-          <div className="absolute inset-0 -z-10 bg-gradient-to-t from-slate-900 via-slate-900/40"></div>
+          <div className="absolute inset-0 -z-10 bg-slate-900/90"></div>
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mx-auto max-w-2xl lg:max-w-none">
               <div className="text-center">
@@ -166,6 +177,9 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* FAQ Section */}
+        <ProcessingFAQ />
 
         <div className="mb-24">
           <SecuritySection />

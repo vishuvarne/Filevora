@@ -127,7 +127,7 @@ export const TOOLS: ToolDef[] = [
     {
         id: "compress-pdf",
         name: "Compress PDF",
-        description: "Reduce file size while analyzing quality.",
+        description: "Reduce file size while maintaining quality.",
         category: "PDF & Documents",
         iconPath: "M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15h4.5M9 15l5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h-4.5M15 15v4.5M15 15l-5.25 5.25",
         theme: THEMES.green,
@@ -136,6 +136,43 @@ export const TOOLS: ToolDef[] = [
         multiple: false,
         seoTitle: "Compress PDF Online – Reduce PDF Size Free | FileVora",
         seoDescription: "Reduce PDF file size online without losing quality. Free, fast, and secure PDF compression with FileVora."
+    },
+    {
+        id: "rotate-pdf",
+        name: "Rotate PDF",
+        description: "Rotate PDF pages.",
+        category: "PDF & Documents",
+        iconPath: "M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99",
+        theme: THEMES.purple,
+        endpoint: "/process/rotate-pdf",
+        acceptedTypes: ".pdf,application/pdf",
+        multiple: false
+    },
+    {
+        id: "pdf-password-protect",
+        name: "PDF Password Protect",
+        description: "Protect your PDF with a password. Zero-knowledge encryption - password never leaves your device.",
+        category: "PDF & Documents",
+        iconPath: "M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z",
+        theme: THEMES.red,
+        endpoint: "/process/pdf-password-protect",
+        acceptedTypes: ".pdf,application/pdf",
+        multiple: false,
+        seoTitle: "Password Protect PDF - Secure PDF Encryption Online | FileVora",
+        seoDescription: "Protect your PDF files with password encryption. Your password never leaves your device. Free, secure, and private PDF password protection."
+    },
+    {
+        id: "pdf-remove-password",
+        name: "PDF Remove Password",
+        description: "Remove password protection from PDF files. Decryption happens locally on your device.",
+        category: "PDF & Documents",
+        iconPath: "M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z",
+        theme: THEMES.green,
+        endpoint: "/process/pdf-remove-password",
+        acceptedTypes: ".pdf,application/pdf",
+        multiple: false,
+        seoTitle: "Remove PDF Password - Unlock PDF Online | FileVora",
+        seoDescription: "Remove password protection from PDF files securely. Unlock encrypted PDFs locally in your browser. No upload required."
     },
     {
         id: "pdf-converter",
@@ -337,7 +374,7 @@ export const TOOLS: ToolDef[] = [
         category: "Image",
         iconPath: "M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15",
         theme: THEMES.green,
-        endpoint: "/coming-soon",
+        endpoint: "/webapp",
         acceptedTypes: "image/*",
         multiple: true,
         type: "interactive",
@@ -436,6 +473,47 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/convert-image",
         acceptedTypes: "image/*,image/svg+xml",
         multiple: true
+    },
+
+    // --- Video & Audio Tools ---
+    {
+        id: "mp4-to-mp3",
+        name: "MP4 to MP3",
+        description: "Extract audio from video files. Processed locally - no upload required.",
+        category: "Video & Audio",
+        iconPath: "M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z",
+        theme: THEMES.purple,
+        endpoint: "/process/mp4-to-mp3",
+        acceptedTypes: "video/*,.mp4,.mov,.avi,.mkv,.webm",
+        multiple: false,
+        seoTitle: "MP4 to MP3 Converter – Free Audio Extractor | FileVora",
+        seoDescription: "Extract audio from MP4 videos to MP3 format. Free, fast, and secure conversion processed locally in your browser."
+    },
+    {
+        id: "audio-trim",
+        name: "Audio Trim",
+        description: "Cut and trim audio files. Works offline in your browser.",
+        category: "Video & Audio",
+        iconPath: "M7.848 8.25l1.536.887M7.848 8.25a3 3 0 11-5.196-3 3 3 0 015.196 3zm1.536.887a2.165 2.165 0 011.083 1.839c.005.351.054.695.14 1.024M9.384 9.137l2.077 1.199M7.848 15.75l1.536-.887m-1.536.887a3 3 0 11-5.196 3 3 3 0 015.196-3zm1.536-.887a2.165 2.165 0 001.083-1.838c.005-.352.054-.695.14-1.025m-1.223 2.863l2.077-1.199m0-3.328a4.323 4.323 0 012.068-1.379l5.325-1.628a4.5 4.5 0 012.48-.044l.803.215-7.794 4.5m-2.882-1.664A4.33 4.33 0 0010.607 12m3.736 0l7.794 4.5-.802.215a4.5 4.5 0 01-2.48-.043l-5.326-1.629a4.324 4.324 0 01-2.068-1.379M14.343 12l-2.882 1.664",
+        theme: THEMES.blue,
+        endpoint: "/process/audio-trim",
+        acceptedTypes: "audio/*,.mp3,.wav,.m4a,.aac,.ogg",
+        multiple: false,
+        seoTitle: "Audio Trimmer Online – Cut Audio Files Free | FileVora",
+        seoDescription: "Trim and cut audio files online for free. Fast audio editing in your browser with FileVora."
+    },
+    {
+        id: "audio-compress",
+        name: "Audio Compress",
+        description: "Reduce audio file size while maintaining quality.",
+        category: "Video & Audio",
+        iconPath: "M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15h4.5M9 15l5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h-4.5M15 15v4.5M15 15l-5.25 5.25",
+        theme: THEMES.green,
+        endpoint: "/process/audio-compress",
+        acceptedTypes: "audio/*,.mp3,.wav,.m4a,.aac",
+        multiple: false,
+        seoTitle: "Compress Audio Files Online – Free | FileVora",
+        seoDescription: "Compress audio files to reduce size without quality loss. Free online audio compression with FileVora."
     },
 
     // --- GIF Tools (Placeholder) ---

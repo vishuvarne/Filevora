@@ -63,7 +63,7 @@ def test_pdf_to_image():
     pdf_bytes = create_dummy_pdf()
     response = client.post(
         "/process/pdf-to-image",
-        files={"file": ("test.pdf", pdf_bytes, "application/pdf")},
+        files={"files": ("test.pdf", pdf_bytes, "application/pdf")},
         data={"format": "png"}
     )
     if response.status_code != 200:

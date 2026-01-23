@@ -72,7 +72,7 @@ app.add_middleware(GZipMiddleware, minimum_size=1000)
 # Trusted Host - Prevent host header attacks
 app.add_middleware(
     TrustedHostMiddleware,
-    allowed_hosts=["*.filevora.com", "*.filevora.web.app", "*.onrender.com", "localhost", "127.0.0.1"]
+    allowed_hosts=["*.filevora.com", "*.filevora.web.app", "*.onrender.com", "localhost", "127.0.0.1", "testserver"]
 )
 
 # Rate limiting storage

@@ -2,6 +2,9 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import Dropzone from "@/components/Dropzone";
+import BeforeAfterSlider from "@/components/shared/BeforeAfterSlider";
+import FileSizeCard from "@/components/shared/FileSizeCard";
+import FormatInfo from "@/components/shared/FormatInfo";
 
 type OutputFormat = "jpeg" | "webp" | "png";
 
@@ -151,16 +154,17 @@ export default function ImageCompressor() {
                         </div>
 
                         {compressedSize != null && (
-                            <div className="bg-muted/30 rounded-2xl p-4 border border-border space-y-1">
-                                <p className="text-sm text-foreground">Original: <strong>{formatBytes(origBytes)}</strong></p>
-                                <p className="text-sm text-foreground">Compressed: <strong>{formatBytes(compressedSize)}</strong></p>
-                                {saved != null && (
-                                    <p className={`text-sm font-bold ${saved >= 0 ? "text-green-600" : "text-amber-600"}`}>
-                                        {saved >= 0 ? `Saved ${saved}%` : `+${-saved}% (format changed)`}
-                                    </p>
-                                )}
-                            </div>
+                            <FileSizeCard
+                                originalSize={origBytes}
+                                compressedSize={compressedSize}
+                                showSavings={true}
+                            />
                         )}
+
+                        <FormatInfo
+                            currentFormat={originalFile?.type.split('/')[1] || format}
+                            supportedFormats={['JPEG', 'PNG', 'WebP', 'GIF']}
+                        />
 
                         <div className="flex gap-3">
                             <button
@@ -177,13 +181,18 @@ export default function ImageCompressor() {
                     </div>
                     <div className="flex-1 space-y-4">
                         <canvas ref={canvasRef} className="hidden" aria-hidden="true" />
-                        <div className="bg-muted/30 rounded-3xl p-4 flex items-center justify-center min-h-[260px] border border-border">
-                            <img src={imageSrc} alt="Preview" className="max-w-full max-h-[50vh] object-contain rounded-xl shadow-lg" />
-                        </div>
-                        {compressedDataUrl && (
-                            <div className="bg-muted/30 rounded-2xl p-4 border border-border">
-                                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Compressed preview</p>
-                                <img src={compressedDataUrl} alt="Compressed" className="max-w-full max-h-40 object-contain rounded-lg" />
+
+                        {compressedDataUrl ? (
+                            <BeforeAfterSlider
+                                beforeImage={imageSrc}
+                                afterImage={compressedDataUrl}
+                                beforeLabel="Original"
+                                afterLabel="Compressed"
+                                className="min-h-[400px]"
+                            />
+                        ) : (
+                            <div className="bg-muted/30 rounded-3xl p-4 flex items-center justify-center min-h-[400px] border border-border">
+                                <img src={imageSrc} alt="Preview" className="max-w-full max-h-[50vh] object-contain rounded-xl shadow-lg" />
                             </div>
                         )}
                     </div>

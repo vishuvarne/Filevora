@@ -1,5 +1,39 @@
+'use client';
+
+import { useFileHistory } from '@/hooks/useFileHistory';
+import { useState } from 'react';
 
 export default function SecuritySection() {
+    const { clearHistory } = useFileHistory();
+    const [isWiping, setIsWiping] = useState(false);
+
+    const handleWipeData = async () => {
+        if (!confirm("Are you sure? This will delete all local history, cached files, and settings from this browser.")) return;
+
+        setIsWiping(true);
+        try {
+            // 1. Clear IDB History
+            await clearHistory();
+
+            // 2. Clear LocalStorage/SessionStorage
+            localStorage.clear();
+            sessionStorage.clear();
+
+            // 3. Clear Service Worker Cache (next-pwa caches)
+            if ('caches' in window) {
+                const keys = await caches.keys();
+                await Promise.all(keys.map(key => caches.delete(key)));
+            }
+
+            // 4. Reload to flush memory
+            window.location.reload();
+        } catch (e) {
+            console.error("Wipe failed", e);
+            alert("Failed to wipe some data. Please clear browser history manually.");
+            setIsWiping(false);
+        }
+    };
+
     return (
         <section className="bg-card rounded-3xl p-6 sm:p-10 border border-border shadow-sm flex flex-col md:flex-row items-center gap-10 md:gap-16 my-12 relative overflow-hidden">
             {/* Background Decor */}
@@ -20,8 +54,12 @@ export default function SecuritySection() {
                     <button className="bg-primary text-primary-foreground font-bold px-6 py-3 rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/25 active:scale-95">
                         Read Security Policy
                     </button>
-                    <button className="text-foreground font-bold border border-border hover:bg-secondary px-6 py-3 rounded-xl transition-colors">
-                        Learn more
+                    <button
+                        onClick={handleWipeData}
+                        disabled={isWiping}
+                        className="text-red-600 dark:text-red-400 font-bold border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/30 px-6 py-3 rounded-xl transition-colors flex items-center gap-2"
+                    >
+                        {isWiping ? 'Wiping...' : 'Wipe All Local Data'}
                     </button>
                 </div>
             </div>

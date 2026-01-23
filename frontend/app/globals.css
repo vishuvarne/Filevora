@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 210 40% 98%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -14,7 +14,6 @@
     --popover-foreground: 222.2 84% 4.9%;
 
     --primary: 221.2 83.2% 53.3%;
-    /* Interstellar Blue */
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -37,35 +36,54 @@
   }
 
   .dark {
-    --background: 220 15% 10%;
-    /* Softer dark gray instead of nearly black */
+    /* Deep Indigo Background (Architect Theme) */
+    --background: 230 35% 7%;
+    /* #0b0c15 - Very deep indigo/black */
     --foreground: 210 40% 98%;
 
-    --card: 220 15% 12%;
+    /* Solid Card Surfaces - Deep Indigo Lighter */
+    --card: 229 25% 15%;
+    /* #1c1e2e */
     --card-foreground: 210 40% 98%;
 
-    --popover: 220 15% 12%;
+    --popover: 229 25% 15%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 217.2 91.2% 59.8%;
-    /* Nebula Blue */
-    --primary-foreground: 210 40% 98%;
+    /* Vibrant Cyber Lime Primary */
+    --primary: 84 81% 55%;
+    /* #a3e635 (Lime 400) - "Cyber Lime" */
+    --primary-foreground: 230 35% 7%;
+    /* Dark text on lime */
 
-    --secondary: 220 15% 18%;
+    /* Secondary - Muted Indigo */
+    --secondary: 228 15% 25%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 220 15% 18%;
-    --muted-foreground: 215 20.2% 70%;
+    /* Muted Text */
+    --muted: 228 15% 25%;
+    --muted-foreground: 228 10% 65%;
 
-    --accent: 217.2 50% 35%;
+    /* Accents - Cyan/Blue for secondary actions */
+    --accent: 190 90% 50%;
     --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 62.8% 50%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 220 15% 25%;
-    --input: 220 15% 20%;
-    --ring: 217.2 91.2% 59.8%;
+    --border: 229 20% 20%;
+    --input: 229 20% 20%;
+    --ring: 84 81% 55%;
+    /* Lime Ring */
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 shadow-xl;
+  }
+
+  .glass-panel-dark {
+    @apply bg-black/20 backdrop-blur-lg border border-white/5 shadow-2xl;
   }
 }
 

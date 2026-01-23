@@ -26,6 +26,59 @@ export default function SmartDropzone({
     const [analyzedFiles, setAnalyzedFiles] = useState<File[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    const [showGlobalOverlay, setShowGlobalOverlay] = useState(false);
+    const dragCounter = useRef(0);
+
+    // Global Drag & Drop Handlers
+    useEffect(() => {
+        const handleWindowDragEnter = (e: globalThis.DragEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dragCounter.current += 1;
+            if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
+                setShowGlobalOverlay(true);
+            }
+        };
+
+        const handleWindowDragLeave = (e: globalThis.DragEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dragCounter.current -= 1;
+            if (dragCounter.current === 0) {
+                setShowGlobalOverlay(false);
+            }
+        };
+
+        const handleWindowDragOver = (e: globalThis.DragEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
+        };
+
+        const handleWindowDrop = (e: globalThis.DragEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dragCounter.current = 0;
+            setShowGlobalOverlay(false);
+
+            // If dropped on the overlay (handled here) or bubbled up
+            if (e.dataTransfer?.files && e.dataTransfer.files.length > 0) {
+                processFilesWithAnalysis(Array.from(e.dataTransfer.files));
+            }
+        };
+
+        window.addEventListener('dragenter', handleWindowDragEnter);
+        window.addEventListener('dragleave', handleWindowDragLeave);
+        window.addEventListener('dragover', handleWindowDragOver);
+        window.addEventListener('drop', handleWindowDrop);
+
+        return () => {
+            window.removeEventListener('dragenter', handleWindowDragEnter);
+            window.removeEventListener('dragleave', handleWindowDragLeave);
+            window.removeEventListener('dragover', handleWindowDragOver);
+            window.removeEventListener('drop', handleWindowDrop);
+        };
+    }, []);
+
     const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault();
         setIsDragging(true);
@@ -38,7 +91,11 @@ export default function SmartDropzone({
 
     const handleDrop = async (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault();
+        e.stopPropagation(); // Stop bubbling to window
         setIsDragging(false);
+        dragCounter.current = 0;
+        setShowGlobalOverlay(false);
+
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
             await processFilesWithAnalysis(Array.from(e.dataTransfer.files));
         }
@@ -55,9 +112,8 @@ export default function SmartDropzone({
         setIsAnalyzing(true);
         setAnalyzedFiles(files);
 
-        // Simulate "Real-time analysis" with a delay
-        // In a real app, we might check magic bytes here
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        // Simulate "Real-time analysis" - shortened for local speed
+        await new Promise(resolve => setTimeout(resolve, 400));
 
         onFilesSelected(files);
         setIsAnalyzing(false);
@@ -68,6 +124,13 @@ export default function SmartDropzone({
         if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
             if (!isAnalyzing) fileInputRef.current?.click();
+        }
+    };
+
+    const handlePaste = async (e: React.ClipboardEvent) => {
+        if (e.clipboardData.files && e.clipboardData.files.length > 0) {
+            e.preventDefault();
+            await processFilesWithAnalysis(Array.from(e.clipboardData.files));
         }
     };
 
@@ -134,6 +197,7 @@ export default function SmartDropzone({
             <div
                 onClick={() => !isAnalyzing && fileInputRef.current?.click()}
                 onKeyDown={handleKeyDown}
+                onPaste={handlePaste}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
@@ -145,7 +209,7 @@ export default function SmartDropzone({
                 className={`
                     relative w-full min-h-[300px] h-auto rounded-3xl transition-all duration-500 [transform-style:preserve-3d] cursor-pointer outline-none
                     bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900
-                    border-2 ${isDragging || isHovered ? "border-primary shadow-[0_20px_50px_rgba(var(--primary-rgb),0.2)] scale-[1.02]" : "border-dashed border-slate-300 dark:border-slate-700 hover:border-primary/50"}
+                    border-2 ${isDragging || isHovered ? "border-primary shadow-[0_20px_50px_rgba(59,130,246,0.2)] scale-[1.02]" : "border-dashed border-slate-300 dark:border-slate-700 hover:border-primary/50"}
                     flex flex-col items-center justify-center
                     overflow-visible
                 `}
@@ -187,18 +251,21 @@ export default function SmartDropzone({
                         {/* Floating particles/icons when dragging */}
                         {isDragging && (
                             <>
-                                <div className="absolute top-0 right-0 w-4 h-4 rounded bg-blue-400 animate-bounce delay-100"></div>
-                                <div className="absolute bottom-2 left-2 w-3 h-3 rounded-full bg-green-400 animate-bounce delay-300"></div>
+                                <div className="absolute top-0 right-0 w-4 h-4 rounded bg-primary animate-bounce delay-100"></div>
+                                <div className="absolute bottom-2 left-2 w-3 h-3 rounded-full bg-primary/60 animate-bounce delay-300"></div>
                             </>
                         )}
                     </div>
 
                     <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 mb-2">
-                        {isDragging ? "Drop to Analyze" : label}
+                        {isDragging ? "Release to process locally" : label}
                     </h3>
                     <div className="text-slate-500 dark:text-slate-400 text-sm max-w-xs mx-auto px-4">
-                        <p className="line-clamp-2 break-words leading-relaxed text-xs opacity-80">
+                        <p className="line-clamp-2 break-words leading-relaxed text-xs opacity-80 mb-1">
                             {acceptedTypes ? `Supports ${acceptedTypes.replace(/application\/vnd\.openxmlformats-officedocument\.wordprocessingml\.document/g, "DOCX").replace(/application\/pdf/g, "PDF")}` : "Securely process your files"}
+                        </p>
+                        <p className="text-[10px] font-bold opacity-60 uppercase tracking-widest">
+                            or paste (Ctrl+V)
                         </p>
                     </div>
 
@@ -283,6 +350,24 @@ export default function SmartDropzone({
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                     <div style={{ position: 'absolute', inset: 0, zIndex: -1, pointerEvents: 'auto' }} onClick={(e) => { e.stopPropagation(); cancelGooglePicker(); }}></div>
+                </div>,
+                document.body
+            )}
+
+            {/* Global Drag Overlay Portal */}
+            {showGlobalOverlay && typeof document !== 'undefined' && createPortal(
+                <div
+                    className="fixed inset-0 z-[9999] bg-primary/10 backdrop-blur-md flex flex-col items-center justify-center animate-in fade-in duration-200 pointer-events-none"
+                >
+                    <div className="bg-background/80 p-8 rounded-3xl shadow-2xl border-4 border-primary flex flex-col items-center gap-4 animate-in zoom-in-95 duration-200">
+                        <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center animate-bounce">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-12 h-12 text-primary">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                            </svg>
+                        </div>
+                        <h2 className="text-3xl font-black text-foreground">Drop files to start!</h2>
+                        <p className="text-muted-foreground font-medium">Release anywhere to process</p>
+                    </div>
                 </div>,
                 document.body
             )}

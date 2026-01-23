@@ -1,5 +1,13 @@
 import type { NextConfig } from "next";
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development',
+});
+
 const nextConfig: NextConfig = {
   /* config options here */
   output: "export",
@@ -14,6 +22,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   poweredByHeader: false,
+  turbopack: {}, // Next.js 16 requires explicit turbopack config
 };
 
-export default nextConfig;
+export default withPWA(nextConfig);

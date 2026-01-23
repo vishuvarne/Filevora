@@ -26,31 +26,89 @@ export default function Footer() {
         <footer className="bg-secondary/30 border-t border-border pt-16 pb-12 mt-auto font-sans">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                {/* Newsletter Section */}
-                <div className="mb-16 pb-12 border-b border-border/50 flex flex-col md:flex-row items-center justify-between gap-8">
-                    <div className="max-w-xl text-center md:text-left">
-                        <h2 className="text-2xl font-bold text-foreground mb-2">Subscribe to our newsletter</h2>
-                        <p className="text-muted-foreground">Get the latest updates, new tools, and tips directly to your inbox.</p>
+                {/* Newsletter Section - Optimized */}
+                <div className="mb-16 pb-12 border-b border-border/50">
+                    <div className="max-w-4xl mx-auto">
+                        <div className="text-center mb-8">
+                            <h2 className="text-3xl font-bold text-foreground mb-3">
+                                Get notified when we add new tools
+                            </h2>
+                            <p className="text-lg text-muted-foreground mb-4">
+                                No spam. Unsubscribe anytime. <span className="font-semibold text-foreground">10K+ subscribers</span>
+                            </p>
+
+                            {/* Benefits List */}
+                            <div className="flex flex-wrap justify-center gap-4 mb-8 text-sm">
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-primary">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span>Early access to beta features</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-primary">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span>Processing tips & tricks</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-primary">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span>Monthly tool updates</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Form */}
+                        <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+                            <input
+                                type="email"
+                                placeholder="Enter your email address"
+                                aria-label="Email address for newsletter"
+                                className="flex-1 bg-background border border-input text-foreground px-5 py-3.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary placeholder:text-muted-foreground transition-all"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                disabled={status === "loading" || status === "success"}
+                                required
+                            />
+                            <button
+                                type="submit"
+                                aria-label="Subscribe to newsletter"
+                                disabled={status === "loading" || status === "success"}
+                                className={`px-8 py-3.5 rounded-xl font-bold transition-all shadow-lg active:scale-95 whitespace-nowrap ${status === "success"
+                                        ? "bg-green-600 text-white shadow-green-200"
+                                        : "bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 shadow-primary/25"
+                                    }`}
+                            >
+                                {status === "loading" ? (
+                                    <span className="flex items-center gap-2">
+                                        <svg className="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        Subscribing...
+                                    </span>
+                                ) : status === "success" ? (
+                                    <span className="flex items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Subscribed!
+                                    </span>
+                                ) : (
+                                    "Subscribe"
+                                )}
+                            </button>
+                        </form>
+
+                        {/* Error Message */}
+                        {status === "error" && (
+                            <p className="text-center mt-4 text-sm text-red-500">
+                                Something went wrong. Please try again.
+                            </p>
+                        )}
                     </div>
-                    <form onSubmit={handleSubscribe} className="flex w-full md:w-auto gap-3">
-                        <input
-                            type="email"
-                            placeholder="Enter your email"
-                            aria-label="Email address for newsletter"
-                            className="flex-1 bg-background border border-input text-foreground px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary w-full md:w-80 placeholder:text-muted-foreground transition-all"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            disabled={status === "loading" || status === "success"}
-                        />
-                        <button
-                            type="submit"
-                            aria-label="Subscribe"
-                            disabled={status === "loading" || status === "success"}
-                            className={`px-6 py-3 rounded-xl font-bold transition-all shadow-lg active:scale-95 ${status === "success" ? "bg-green-600 text-white shadow-green-200" : "bg-primary text-primary-foreground hover:bg-primary/90 shadow-primary/25"}`}
-                        >
-                            {status === "loading" ? "..." : status === "success" ? "Subscribed!" : "Subscribe"}
-                        </button>
-                    </form>
                 </div>
 
                 {/* Main Grid: 6 Columns */}

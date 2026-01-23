@@ -3,9 +3,19 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { TOOLS } from "@/config/tools";
 import AuthButtons from "./AuthButtons";
+
+// Lazy load Mega Menu for performance
+const MegaMenu = dynamic(() => import("./MegaMenu"), {
+    loading: () => <div className="h-64 w-full bg-background animate-pulse" />,
+    ssr: false
+});
 import ThemeToggle from "./ThemeToggle";
+import GlobalSearch from "./GlobalSearch";
+import { useFavorites } from "@/hooks/useFavorites";
+import { useFileHistory } from "@/hooks/useFileHistory";
 
 const CATEGORIES = [
     "Video & Audio",
@@ -32,8 +42,46 @@ export default function Navbar() {
     const pathname = usePathname();
     const [activeCategory, setActiveCategory] = useState<string | null>(null);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [desktopSearchOpen, setDesktopSearchOpen] = useState(false);
+    const [favoritesOpen, setFavoritesOpen] = useState(false);
+    const [historyOpen, setHistoryOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(["Web Apps"]));
+    const [showAllTools, setShowAllTools] = useState(false);
+    const { favorites } = useFavorites();
+    const { history, clearHistory } = useFileHistory();
+
+    // Unified Global Event Listeners (Click Outside + Keyboard Shortcuts)
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            const target = e.target as HTMLElement;
+
+            // Close favorites (Library) if open and not clicking inside
+            if (favoritesOpen && !target.closest('[data-favorites-dropdown]')) {
+                setFavoritesOpen(false);
+            }
+            // Close mega menu if open and not clicking inside a category
+            if (activeCategory && !target.closest('.navbar-category') && !target.closest('.mega-menu-content')) {
+                setActiveCategory(null);
+                setShowAllTools(false);
+            }
+        };
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                setDesktopSearchOpen(true);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [favoritesOpen, activeCategory]);
 
     // Filter tools based on search query
     const filteredTools = searchQuery
@@ -72,7 +120,6 @@ export default function Navbar() {
     return (
         <nav
             className="border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-50 transition-all font-sans duration-300"
-            onMouseLeave={() => setActiveCategory(null)}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-20">
@@ -92,31 +139,190 @@ export default function Navbar() {
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex flex-1 items-center justify-center gap-1 min-w-0">
-                        {CATEGORIES.map((category) => (
-                            <div
-                                key={category}
-                                className="relative group px-3 lg:px-4 py-8 cursor-pointer shrink-0"
-                                onMouseEnter={() => setActiveCategory(category)}
-                                onClick={() => setActiveCategory(activeCategory === category ? null : category)}
-                            >
-                                <div className={`flex items-center gap-1.5 text-[15px] font-semibold transition-all duration-200 ${activeCategory === category ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`}>
-                                    {category === "Web Apps" && (
-                                        <span className={`w-2 h-2 rounded-full transition-colors ${activeCategory === category ? "bg-green-500 animate-pulse" : "bg-green-500/70"}`} aria-hidden />
-                                    )}
-                                    <span className="truncate tracking-wide">{category}</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className={`w-3.5 h-3.5 transition-transform duration-300 ${activeCategory === category ? "rotate-180 text-primary" : "text-muted-foreground/50 group-hover:text-primary"}`}>
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                                    </svg>
+                        {CATEGORIES.map((category) => {
+                            const labelMap: Record<string, string> = {
+                                "Video & Audio": "Video",
+                                "Image": "Image",
+                                "PDF & Documents": "PDF",
+                                "GIF": "GIF",
+                                "Others": "More",
+                                "Web Apps": "Apps"
+                            };
+                            return (
+                                <div
+                                    key={category}
+                                    className="navbar-category relative group px-3 lg:px-4 py-8 cursor-pointer shrink-0"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        if (activeCategory !== category) setShowAllTools(false);
+                                        setActiveCategory(activeCategory === category ? null : category);
+                                    }}
+                                    onMouseEnter={() => {
+                                        if (activeCategory && activeCategory !== category) {
+                                            setShowAllTools(false);
+                                            setActiveCategory(category);
+                                        }
+                                    }}
+                                >
+                                    <div className={`flex items-center gap-1.5 text-[15px] font-semibold transition-all duration-200 ${activeCategory === category ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`}>
+                                        {category === "Web Apps" && (
+                                            <span className={`w-2 h-2 rounded-full transition-colors ${activeCategory === category ? "bg-green-500 animate-pulse" : "bg-green-500/70"}`} aria-hidden />
+                                        )}
+                                        <span className="truncate tracking-wide">{labelMap[category] || category}</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className={`w-3.5 h-3.5 transition-transform duration-300 ${activeCategory === category ? "rotate-180 text-primary" : "text-muted-foreground/50 group-hover:text-primary"}`}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                        </svg>
+                                    </div>
+                                    {/* Highlight Bar */}
+                                    <div className={`absolute bottom-0 left-0 w-full h-[2px] bg-primary transform transition-transform duration-300 origin-left ${activeCategory === category ? "scale-x-100" : "scale-x-0"}`} />
                                 </div>
-                                {/* Highlight Bar */}
-                                <div className={`absolute bottom-0 left-0 w-full h-[2px] bg-primary transform transition-transform duration-300 origin-left ${activeCategory === category ? "scale-x-100" : "scale-x-0"}`} />
-                            </div>
-                        ))}
+                            )
+                        })}
                     </div>
 
-                    <div className="hidden md:flex items-center gap-4 shrink-0">
+                    <div className="hidden md:flex items-center gap-2 shrink-0">
+                        {/* Library Dropdown (Combined Favorites & History) */}
+                        <div className="relative" data-favorites-dropdown>
+                            <button
+                                onClick={() => setFavoritesOpen(!favoritesOpen)}
+                                className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-secondary/50 transition-all relative"
+                                aria-label="My Library"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                                </svg>
+                                {(favorites.length > 0 || history.length > 0) && (
+                                    <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[10px] min-w-[1.125rem] h-4.5 px-0.5 rounded-full flex items-center justify-center font-bold shadow-sm ring-2 ring-background">
+                                        {favorites.length + history.length}
+                                    </span>
+                                )}
+                            </button>
+
+                            {/* Dropdown Content */}
+                            {favoritesOpen && (
+                                <div className="absolute right-0 mt-2 w-80 bg-background border border-border rounded-xl shadow-xl z-[250] animate-in fade-in slide-in-from-top-2 duration-200 overflow-hidden">
+                                    {/* Tabs */}
+                                    <div className="flex border-b border-border bg-secondary/30">
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setHistoryOpen(false);
+                                            }}
+                                            className={`flex-1 py-3 text-sm font-bold transition-colors border-b-2 ${!historyOpen ? "border-primary text-primary bg-background" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+                                        >
+                                            Favorites ({favorites.length})
+                                        </button>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setHistoryOpen(true);
+                                            }}
+                                            className={`flex-1 py-3 text-sm font-bold transition-colors border-b-2 ${historyOpen ? "border-primary text-primary bg-background" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+                                        >
+                                            History ({history.length})
+                                        </button>
+                                    </div>
+
+                                    {/* Content Area */}
+                                    <div className="max-h-96 overflow-y-auto bg-background">
+                                        {!historyOpen ? (
+                                            // Favorites View
+                                            <div className="p-1">
+                                                {favorites.length === 0 ? (
+                                                    <div className="p-8 text-center">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 mx-auto text-muted-foreground/40 mb-3">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                                                        </svg>
+                                                        <p className="text-xs text-muted-foreground">Star tools to save them</p>
+                                                    </div>
+                                                ) : (
+                                                    favorites.map(toolId => {
+                                                        const tool = TOOLS.find(t => t.id === toolId);
+                                                        if (!tool) return null;
+                                                        return (
+                                                            <Link
+                                                                key={tool.id}
+                                                                href={`/tools/${tool.id}`}
+                                                                onClick={() => setFavoritesOpen(false)}
+                                                                className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-secondary transition-colors m-1"
+                                                            >
+                                                                <div className={`w-8 h-8 rounded-lg shrink-0 flex items-center justify-center ${tool.theme.bgLight} ${tool.theme.text}`}>
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" d={tool.iconPath} />
+                                                                    </svg>
+                                                                </div>
+                                                                <div className="flex-1 min-w-0">
+                                                                    <div className="text-sm font-bold text-foreground truncate">{tool.name}</div>
+                                                                    <div className="text-[10px] text-muted-foreground truncate">{tool.category}</div>
+                                                                </div>
+                                                            </Link>
+                                                        );
+                                                    })
+                                                )}
+                                            </div>
+                                        ) : (
+                                            // History View
+                                            <div className="p-1">
+                                                {history.length > 0 && (
+                                                    <div className="px-3 py-2 border-b border-border flex justify-end">
+                                                        <button
+                                                            onClick={(e) => { e.stopPropagation(); clearHistory(); }}
+                                                            className="text-[10px] text-red-500 hover:text-red-600 font-medium"
+                                                        >
+                                                            Clear History
+                                                        </button>
+                                                    </div>
+                                                )}
+                                                {history.length === 0 ? (
+                                                    <div className="p-8 text-center">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 mx-auto text-muted-foreground/40 mb-3">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                        </svg>
+                                                        <p className="text-xs text-muted-foreground">Processed files appear here</p>
+                                                    </div>
+                                                ) : (
+                                                    history.map(item => (
+                                                        <a
+                                                            key={item.id}
+                                                            href={item.downloadUrl}
+                                                            download
+                                                            className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-secondary transition-colors m-1 group/item"
+                                                        >
+                                                            <div className="w-8 h-8 rounded-lg shrink-0 flex items-center justify-center bg-primary/10 text-primary">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                                                </svg>
+                                                            </div>
+                                                            <div className="flex-1 min-w-0">
+                                                                <div className="text-sm font-bold text-foreground truncate">{item.fileName}</div>
+                                                                <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+                                                                    <span>{new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                                                    <span>•</span>
+                                                                    <span>{item.size || 'Done'}</span>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    ))
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Search Icon - Opens Overlay */}
+                        <button
+                            onClick={() => setDesktopSearchOpen(true)}
+                            className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-secondary/50 transition-all"
+                            aria-label="Search tools"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                            </svg>
+                        </button>
                         <ThemeToggle />
-                        <div className="h-6 w-[1px] bg-border mx-2"></div>
+                        <div className="h-5 w-[1px] bg-border mx-1"></div>
                         <AuthButtons />
                     </div>
 
@@ -145,33 +351,44 @@ export default function Navbar() {
 
             {/* Desktop Mega Menu Dropdown */}
             <div
-                className={`hidden md:block absolute left-0 w-full bg-background border-b border-border shadow-xl shadow-black/5 transition-all duration-300 ease-out origin-top z-40 ${activeCategory ? "opacity-100 translate-y-0 visible" : "opacity-0 -translate-y-2 pointer-events-none invisible"}`}
+                className={`hidden md:block absolute left-0 w-full bg-background border-b border-border shadow-xl shadow-black/5 transition-all duration-300 ease-out origin-top z-[45] ${activeCategory ? "opacity-100 translate-y-0 visible" : "opacity-0 -translate-y-2 pointer-events-none invisible"}`}
             >
-                <div className="max-w-7xl mx-auto px-8 py-10">
-                    {activeCategory && (
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
-                            {getToolsForCategory(activeCategory).map((tool) => (
-                                <Link
-                                    key={tool.id}
-                                    href={`/tools/${tool.id}`}
-                                    onClick={() => setActiveCategory(null)}
-                                    className="flex items-start gap-4 p-4 rounded-xl hover:bg-secondary/60 active:bg-secondary transition-all group border border-transparent hover:border-border/50"
-                                >
-                                    <div className={`w-10 h-10 rounded-xl shrink-0 flex items-center justify-center ${tool.theme.bgLight} ${tool.theme.text} group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-sm`}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d={tool.iconPath} />
-                                        </svg>
-                                    </div>
-                                    <div className="min-w-0">
-                                        <div className="text-sm font-bold text-foreground group-hover:text-primary transition-colors truncate">{tool.name}</div>
-                                        <div className="text-xs text-muted-foreground line-clamp-2 mt-1 leading-relaxed group-hover:text-foreground/80 transition-colors">{tool.description}</div>
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
-                    )}
-                </div>
+                {activeCategory && (
+                    <MegaMenu
+                        activeCategory={activeCategory}
+                        showAllTools={showAllTools}
+                        setShowAllTools={setShowAllTools}
+                        setActiveCategory={setActiveCategory}
+                    />
+                )}
             </div>
+
+            {/* Desktop Search Overlay */}
+            {desktopSearchOpen && (
+                <>
+                    <div
+                        className="hidden md:block fixed inset-0 bg-black/40 z-[200] animate-in fade-in duration-200"
+                        onClick={() => setDesktopSearchOpen(false)}
+                    />
+                    <div className="hidden md:block fixed top-24 left-1/2 -translate-x-1/2 w-full max-w-2xl z-[201] px-4 animate-in slide-in-from-top-4 duration-300">
+                        <div className="bg-background rounded-2xl shadow-2xl border border-border p-6">
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-lg font-bold text-foreground">Search Tools</h3>
+                                <button
+                                    onClick={() => setDesktopSearchOpen(false)}
+                                    className="p-2 rounded-lg hover:bg-secondary transition-colors"
+                                    aria-label="Close search"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <GlobalSearch className="w-full" />
+                        </div>
+                    </div>
+                </>
+            )}
 
             {/* Mobile: Backdrop */}
             {mobileMenuOpen && (
@@ -233,6 +450,83 @@ export default function Navbar() {
                                 ) : (
                                     <p className="text-sm text-muted-foreground px-3 py-4 text-center">No tools found</p>
                                 )}
+                            </div>
+                        )}
+
+                        {/* My Favorites (mobile) */}
+                        {!searchQuery && favorites.length > 0 && (
+                            <div className="bg-secondary rounded-2xl p-4 border border-border">
+                                <h3 className="font-bold text-foreground mb-3 text-sm flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-yellow-500">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                                    </svg>
+                                    My Favorites
+                                    <span className="text-xs font-normal text-muted-foreground ml-auto">{favorites.length} / 10</span>
+                                </h3>
+                                <div className="space-y-1">
+                                    {favorites.map(toolId => {
+                                        const tool = TOOLS.find(t => t.id === toolId);
+                                        if (!tool) return null;
+                                        return (
+                                            <Link
+                                                key={tool.id}
+                                                href={`/tools/${tool.id}`}
+                                                onClick={() => setMobileMenuOpen(false)}
+                                                className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-background active:bg-secondary transition-colors border border-border/50 hover:border-border shadow-sm"
+                                            >
+                                                <div className={`w-8 h-8 rounded-lg shrink-0 flex items-center justify-center ${tool.theme.bgLight} ${tool.theme.text}`}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d={tool.iconPath} />
+                                                    </svg>
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="text-sm font-bold text-foreground truncate">{tool.name}</div>
+                                                    <div className="text-xs text-muted-foreground truncate">{tool.category}</div>
+                                                </div>
+                                            </Link>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Recent History (mobile) */}
+                        {!searchQuery && history.length > 0 && (
+                            <div className="bg-secondary rounded-2xl p-4 border border-border">
+                                <h3 className="font-bold text-foreground mb-3 text-sm flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-primary">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Recent Files
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); clearHistory(); }}
+                                        className="ml-auto text-xs text-red-500 hover:text-red-700"
+                                    >
+                                        Clear
+                                    </button>
+                                </h3>
+                                <div className="space-y-1">
+                                    {history.map(item => (
+                                        <a
+                                            key={item.id}
+                                            href={item.downloadUrl}
+                                            download
+                                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-background active:bg-secondary transition-colors border border-border/50 hover:border-border shadow-sm"
+                                        >
+                                            <div className="w-8 h-8 rounded-lg shrink-0 flex items-center justify-center bg-primary/10 text-primary">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                                </svg>
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <div className="text-sm font-bold text-foreground truncate">{item.fileName}</div>
+                                                <div className="text-[10px] text-muted-foreground truncate">
+                                                    {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {item.size || 'Done'}
+                                                </div>
+                                            </div>
+                                        </a>
+                                    ))}
+                                </div>
                             </div>
                         )}
 

@@ -2,6 +2,7 @@ import { Metadata, ResolvingMetadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { TOOLS, ToolDef } from "@/config/tools";
 import ToolInterface from "@/components/ToolInterface";
+import StructuredData from "@/components/StructuredData";
 
 interface Props {
     params: Promise<{ id: string }>;
@@ -74,81 +75,9 @@ export default async function ToolPage({ params }: Props) {
         redirect("/coming-soon");
     }
 
-    // JSON-LD Structured Data
-    const jsonLd = {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "SoftwareApplication",
-                "name": tool.name,
-                "description": tool.description,
-                "applicationCategory": tool.category,
-                "operatingSystem": "All",
-                "offers": {
-                    "@type": "Offer",
-                    "price": "0",
-                    "priceCurrency": "USD"
-                },
-                "aggregateRating": {
-                    "@type": "AggregateRating",
-                    "ratingValue": "4.8",
-                    "ratingCount": "1250",
-                    "bestRating": "5",
-                    "worstRating": "1"
-                },
-                "featureList": [
-                    "Fast processing",
-                    "Secure auto-deletion",
-                    "No signup required",
-                    "No watermark"
-                ]
-            },
-            {
-                "@type": "FAQPage",
-                "mainEntity": [
-                    {
-                        "@type": "Question",
-                        "name": "Is it safe to use FileVora?",
-                        "acceptedAnswer": {
-                            "@type": "Answer",
-                            "text": "Yes. We use standard 256-bit SSL encryption for all data transfers. Your files are automatically deleted from our servers permanently after 1 hour."
-                        }
-                    },
-                    {
-                        "@type": "Question",
-                        "name": "Is there a file size limit?",
-                        "acceptedAnswer": {
-                            "@type": "Answer",
-                            "text": "FileVora supports files up to 500MB for free users. We handle large files efficiently using advanced cloud processing."
-                        }
-                    },
-                    {
-                        "@type": "Question",
-                        "name": "Can I use this tool on mobile?",
-                        "acceptedAnswer": {
-                            "@type": "Answer",
-                            "text": "Absolutely. FileVora is fully responsive and works perfectly on iPhone, Android, tablets, and desktop computers."
-                        }
-                    },
-                    {
-                        "@type": "Question",
-                        "name": `How does ${tool.name} work?`,
-                        "acceptedAnswer": {
-                            "@type": "Answer",
-                            "text": `Simply upload your file, choose your desired settings (if applicable), and click 'Process'. Your file will be ready for download in seconds.`
-                        }
-                    }
-                ]
-            }
-        ]
-    };
-
     return (
         <main className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/20 pb-20 pt-4">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
+            <StructuredData tool={tool} />
             <ToolInterface tool={tool} key={tool.id} />
         </main>
     );

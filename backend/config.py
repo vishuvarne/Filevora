@@ -44,6 +44,10 @@ class Config:
     DROPBOX_APP_KEY = os.getenv("DROPBOX_APP_KEY", "")
     ONEDRIVE_CLIENT_ID = os.getenv("ONEDRIVE_CLIENT_ID", "")
 
+    # Celery / Redis
+    CELERY_BROKER_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+    CELERY_RESULT_BACKEND = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+
     @staticmethod
     def setup_storage():
         Config.STORAGE_PATH.mkdir(parents=True, exist_ok=True)

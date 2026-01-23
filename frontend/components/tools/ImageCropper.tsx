@@ -2,16 +2,26 @@
 
 import { useState, useRef, useEffect } from "react";
 import Dropzone from "@/components/Dropzone";
+import FileSizeCard from "@/components/shared/FileSizeCard";
 
 export default function ImageCropper() {
     const [imageSrc, setImageSrc] = useState<string | null>(null);
+    const [imageSize, setImageSize] = useState<{ w: number; h: number } | null>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [drag, setDrag] = useState(false);
     const [selection, setSelection] = useState<{ x: number, y: number, w: number, h: number } | null>(null);
     const [startPos, setStartPos] = useState({ x: 0, y: 0 });
 
     const handleFiles = (files: File[]) => {
-        if (files.length > 0) setImageSrc(URL.createObjectURL(files[0]));
+        if (files.length > 0) {
+            const url = URL.createObjectURL(files[0]);
+            setImageSrc(url);
+            const img = new Image();
+            img.src = url;
+            img.onload = () => {
+                setImageSize({ w: img.width, h: img.height });
+            };
+        }
     };
 
     const draw = () => {
@@ -95,6 +105,46 @@ export default function ImageCropper() {
         link.click();
     };
 
+    const setAspectRatio = (ratio: string) => {
+        if (!imageSize) return;
+        const { w: imgW, h: imgH } = imageSize;
+        let w, h;
+
+        // Start from center
+        const centerX = imgW / 2;
+        const centerY = imgH / 2;
+
+        switch (ratio) {
+            case '16:9':
+                w = Math.min(imgW, imgH * 16 / 9);
+                h = w * 9 / 16;
+                break;
+            case '4:3':
+                w = Math.min(imgW, imgH * 4 / 3);
+                h = w * 3 / 4;
+                break; case '1:1':
+                w = h = Math.min(imgW, imgH);
+                break;
+            case '9:16':
+                h = Math.min(imgH, imgW * 16 / 9);
+                w = h * 9 / 16;
+                break;
+            default:
+                return;
+        }
+
+        setSelection({
+            x: Math.round(centerX - w / 2),
+            y: Math.round(centerY - h / 2),
+            w: Math.round(w),
+            h: Math.round(h)
+        });
+    };
+
+    const estimateFileSize = (w: number, h: number) => w * h * 4;
+    const originalSize = imageSize ? estimateFileSize(imageSize.w, imageSize.h) : 0;
+    const croppedSize = selection ? estimateFileSize(selection.w, selection.h) : 0;
+
     return (
         <div className="bg-card rounded-3xl shadow-xl border border-border p-8 max-w-5xl mx-auto">
             <div className="flex justify-between items-center mb-6">
@@ -113,16 +163,79 @@ export default function ImageCropper() {
                     <Dropzone onFilesSelected={handleFiles} acceptedTypes="image/*" multiple={false} label="Upload Image to Crop" />
                 </div>
             ) : (
-                <div className="overflow-auto bg-slate-900 rounded-3xl flex justify-center p-4 cursor-crosshair border border-border">
-                    <canvas
-                        ref={canvasRef}
-                        onMouseDown={handleMouseDown}
-                        onMouseMove={handleMouseMove}
-                        onMouseUp={() => setDrag(false)}
-                        onMouseLeave={() => setDrag(false)}
-                        className="max-w-full h-auto shadow-2xl rounded-lg"
-                        style={{ maxHeight: '70vh' }}
-                    />
+                <div className="flex flex-col lg:flex-row gap-8">
+                    {/* Sidebar with info and aspect ratio buttons */}
+                    <div className="w-full lg:w-80 space-y-4">
+                        {/* Resolution Display */}
+                        {imageSize && (
+                            <div className="bg-muted/30 rounded-2xl p-4 border border-border space-y-2">
+                                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Resolution</p>
+                                <div className="flex justify-between text-xs">
+                                    <span className="text-muted-foreground">Original:</span>
+                                    <span className="font-bold text-foreground">{imageSize.w} × {imageSize.h}</span>
+                                </div>
+                                {selection && selection.w > 0 && (
+                                    <div className="flex justify-between text-xs">
+                                        <span className="text-muted-foreground">Cropped:</span>
+                                        <span className="font-bold text-primary">{Math.round(selection.w)} × {Math.round(selection.h)}</span>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* File Size Estimation */}
+                        {selection && selection.w > 0 && (
+                            <FileSizeCard
+                                originalSize={originalSize}
+                                compressedSize={croppedSize}
+                                showSavings={true}
+                            />
+                        )}
+
+                        {/* Aspect Ratio Helpers */}
+                        <div className="bg-muted/30 rounded-2xl p-4 border border-border">
+                            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">Aspect Ratios</p>
+                            <div className="grid grid-cols-2 gap-2">
+                                <button
+                                    onClick={() => setAspectRatio('16:9')}
+                                    className="px-3 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-xs font-medium text-foreground transition-colors"
+                                >
+                                    16:9 (Wide)
+                                </button>
+                                <button
+                                    onClick={() => setAspectRatio('4:3')}
+                                    className="px-3 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-xs font-medium text-foreground transition-colors"
+                                >
+                                    4:3 (Standard)
+                                </button>
+                                <button
+                                    onClick={() => setAspectRatio('1:1')}
+                                    className="px-3 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-xs font-medium text-foreground transition-colors"
+                                >
+                                    1:1 (Square)
+                                </button>
+                                <button
+                                    onClick={() => setAspectRatio('9:16')}
+                                    className="px-3 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-xs font-medium text-foreground transition-colors"
+                                >
+                                    9:16 (Story)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Canvas Area */}
+                    <div className="flex-1 overflow-auto bg-slate-900 rounded-3xl flex justify-center p-4 cursor-crosshair border border-border">
+                        <canvas
+                            ref={canvasRef}
+                            onMouseDown={handleMouseDown}
+                            onMouseMove={handleMouseMove}
+                            onMouseUp={() => setDrag(false)}
+                            onMouseLeave={() => setDrag(false)}
+                            className="max-w-full h-auto shadow-2xl rounded-lg"
+                            style={{ maxHeight: '70vh' }}
+                        />
+                    </div>
                 </div>
             )}
 

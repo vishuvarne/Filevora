@@ -62,7 +62,7 @@ export default function AuthButtons() {
             <Link href="/login" className="text-[13px] lg:text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors">
                 Log In
             </Link>
-            <Link href="/signup" className="px-4 lg:px-5 py-2 lg:py-2.5 bg-blue-600 text-white text-[13px] lg:text-sm font-bold rounded-full hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all">
+            <Link href="/signup" className="px-4 lg:px-5 py-2 lg:py-2.5 bg-primary text-primary-foreground text-[13px] lg:text-sm font-bold rounded-full hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all">
                 Sign Up
             </Link>
         </div>
