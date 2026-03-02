@@ -112,6 +112,7 @@ import { inter, poppins, spaceGrotesk, jetbrainsMono } from "@/lib/fonts";
 import "./globals.css";
 import { SpeculationRules } from "@/components/SpeculationRules";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 
 
 export default function RootLayout({
@@ -238,6 +239,7 @@ export default function RootLayout({
           </ThemeStyleProvider>
         </AppNavigationProvider>
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
