@@ -41,6 +41,7 @@ export default function ComingSoon() {
 
                     <Link
                         href="/"
+                        prefetch={false}
                         className="block w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-3 px-4 rounded-xl transition-colors"
                     >
                         Back to Home

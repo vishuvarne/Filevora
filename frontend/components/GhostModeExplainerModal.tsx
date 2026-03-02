@@ -10,28 +10,28 @@ export default function GhostModeExplainerModal({ onClose }: GhostModeExplainerM
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-200" onClick={onClose}>
             <div
-                className="bg-white dark:bg-slate-900 rounded-3xl max-w-2xl w-full flex flex-col shadow-2xl overflow-hidden relative animate-in zoom-in-95 duration-200"
+                className="bg-white dark:bg-slate-900 rounded-3xl max-w-2xl w-full flex flex-col shadow-2xl overflow-hidden relative animate-in zoom-in-95 duration-200 max-h-[90vh]"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Header with Green Gradient */}
-                <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/10 p-8 pb-6 border-b border-green-100 dark:border-green-900/30">
-                    <div className="flex items-start justify-between">
+                <div className="shrink-0 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/10 p-5 sm:p-8 pb-5 sm:pb-6 border-b border-green-100 dark:border-green-900/30 flex-none">
+                    <div className="flex items-start justify-between gap-2">
                         <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/50 rounded-2xl flex items-center justify-center text-green-600 dark:text-green-400 border border-green-200 dark:border-green-800 shadow-sm">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                            <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-green-100 dark:bg-green-900/50 rounded-2xl flex items-center justify-center text-green-600 dark:text-green-400 border border-green-200 dark:border-green-800 shadow-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 sm:w-6 sm:h-6">
                                     <path fillRule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clipRule="evenodd" />
                                 </svg>
                             </div>
                             <div>
-                                <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Ghost Mode Active</h3>
-                                <p className="text-sm text-green-700 dark:text-green-400 font-medium">Your privacy is guaranteed by code.</p>
+                                <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white leading-tight">Ghost Mode Active</h3>
+                                <p className="text-xs sm:text-sm text-green-700 dark:text-green-400 font-medium sm:mt-1">Your privacy is guaranteed by code.</p>
                             </div>
                         </div>
                         <button
                             onClick={onClose}
-                            className="p-2 -mr-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-white/50 dark:hover:bg-black/20 rounded-full transition-all"
+                            className="shrink-0 p-2 -mr-1 sm:-mr-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-white/50 dark:hover:bg-black/20 rounded-full transition-all"
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 sm:w-6 sm:h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
@@ -39,7 +39,7 @@ export default function GhostModeExplainerModal({ onClose }: GhostModeExplainerM
                 </div>
 
                 {/* Content */}
-                <div className="p-8 space-y-8">
+                <div className="p-5 sm:p-8 space-y-6 sm:space-y-8 overflow-y-auto flex-1">
                     <div className="space-y-4">
                         <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
                             FileVora uses <strong className="text-slate-900 dark:text-white">WebAssembly</strong> technology to process your files directly inside your browser. This means your data never leaves your device.

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Metadata } from "next";
 import { TOOLS } from "@/config/tools";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import ApiSection from "@/components/api/ApiSection";
 
 export const metadata: Metadata = {
@@ -101,7 +101,7 @@ export default function ApiPage() {
                                     Rate Limited
                                 </li>
                             </ul>
-                            <Link href="/signup" className="block w-full text-center py-4 bg-slate-100 text-slate-800 rounded-2xl font-bold hover:bg-slate-200 transition-all">
+                            <Link href="/signup" prefetch={false} className="block w-full text-center py-4 bg-slate-100 text-slate-800 rounded-2xl font-bold hover:bg-slate-200 transition-all">
                                 Get Started
                             </Link>
                         </div>
@@ -129,7 +129,7 @@ export default function ApiPage() {
                                     24/7 Slack Support
                                 </li>
                             </ul>
-                            <Link href="/signup" className="block w-full text-center py-4 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-xl shadow-blue-500/40">
+                            <Link href="/signup" prefetch={false} className="block w-full text-center py-4 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-xl shadow-blue-500/40">
                                 Rent Now
                             </Link>
                         </div>
@@ -152,7 +152,7 @@ export default function ApiPage() {
                                     Custom Endpoints
                                 </li>
                             </ul>
-                            <Link href="/contact" className="block w-full text-center py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all">
+                            <Link href="/contact" prefetch={false} className="block w-full text-center py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all">
                                 Talk to Sales
                             </Link>
                         </div>

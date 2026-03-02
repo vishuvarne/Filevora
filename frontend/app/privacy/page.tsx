@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
 export const metadata = {
     title: "Privacy Policy - FileVora",
@@ -92,7 +92,7 @@ export default function PrivacyPage() {
                     </section>
 
                     <div className="mt-10 pt-6 border-t border-slate-200">
-                        <Link href="/" className="text-blue-600 font-semibold hover:underline">
+                        <Link href="/" prefetch={false} className="text-blue-600 font-semibold hover:underline">
                             ← Back to tools
                         </Link>
                     </div>

@@ -50,7 +50,7 @@ export default function ChatWidget() {
     const shouldRender = isOpen || isClosing;
 
     return (
-        <div ref={widgetRef} className="hidden sm:flex fixed bottom-6 right-6 z-50 flex-col items-end gap-2">
+        <div ref={widgetRef} className="hidden sm:flex fixed bottom-24 right-6 z-50 flex-col items-end gap-2">
 
             {/* Popover Window */}
             {shouldRender && (
@@ -81,15 +81,6 @@ export default function ChatWidget() {
                 </div>
             )}
 
-            {/* Info Bubble (Shown when closed) */}
-            {!isOpen && !isClosing && (
-                <div
-                    className="bg-white px-4 py-2 rounded-xl shadow-lg border border-slate-100 mb-2 animate-bounce cursor-pointer items-center gap-2 hidden md:flex"
-                    onClick={() => setIsOpen(true)}
-                >
-                    <span className="text-sm font-bold text-slate-700">Let me do it for you 🤖</span>
-                </div>
-            )}
 
             {/* Floating Toggle Button */}
             <button

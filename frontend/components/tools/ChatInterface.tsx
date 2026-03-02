@@ -2,9 +2,10 @@
 
 import { useState, useRef, useEffect, Suspense, lazy } from "react";
 import Link from "next/link";
-import Dropzone from "@/components/Dropzone";
+import Dropzone from "@/components/ui/Dropzone";
 import { processJob, getDownloadUrl } from "@/lib/api";
 import { TOOLS, ToolDef } from "@/config/tools";
+import DOMPurify from "dompurify";
 
 import ErrorBoundary from "../ErrorBoundary";
 
@@ -343,7 +344,7 @@ export default function ChatInterface({ className }: { className?: string }) {
                                         : "bg-white border border-slate-200 text-slate-800 rounded-bl-none"
                                         }`}>
                                         <div dangerouslySetInnerHTML={{
-                                            __html: msg.content
+                                            __html: DOMPurify.sanitize(msg.content
                                                 .replace(/&/g, "&amp;")
                                                 .replace(/</g, "&lt;")
                                                 .replace(/>/g, "&gt;")
@@ -353,6 +354,7 @@ export default function ChatInterface({ className }: { className?: string }) {
                                                 .replace(/\*\*(.*?)\*\*/g, '<b class="font-bold text-inherit">$1</b>')
                                                 .replace(/&lt;br\/&gt;/g, '<br/>') // Restore our own br tags
                                                 .replace(/&lt;b class=&quot;font-bold text-inherit&quot;&gt;(.*?)&lt;\/b&gt;/g, '<b class="font-bold text-inherit">$1</b>') // Restore our own b tags
+                                            )
                                         }} />
 
                                         {msg.attachment && (

@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { TOOLS, ToolDef } from "@/config/tools";
 import ToolInterface from "@/components/ToolInterface";
 import StructuredData from "@/components/StructuredData";
-
+import { getToolSEOContent } from "@/config/seo-content";
 interface Props {
     params: Promise<{ id: string }>;
 }
@@ -21,18 +21,9 @@ export async function generateMetadata(
         };
     }
 
-    // Map keywords based on category and tool ID
-    const baseKeywords = [tool.name, "online", "free", "file converter", "FileVora"];
-    let focusKeywords: string[] = [];
-
-    if (tool.category === "PDF & Documents") {
-        focusKeywords = ["pdf editor online", "compress pdf", "merge pdf", "split pdf", "pdf converter"];
-        if (id === "merge-pdf") focusKeywords.unshift("combine pdf files online");
-    } else if (tool.category === "Image") {
-        focusKeywords = ["image to pdf", "jpg to png", "png to jpg", "webp to jpg", "image converter online", "compress image online", "image resizer online"];
-    } else if (tool.category === "Video & Audio") {
-        focusKeywords = ["video converter online", "mp4 to mp3", "video to audio", "audio converter online", "mp3 converter"];
-    }
+    const seoContent = getToolSEOContent(id);
+    const baseKeywords = [tool.name, "online", "free", "file converter", "FileVora", "no signup", "no watermark"];
+    const focusKeywords = seoContent.keywords;
 
     // Enhanced Title & Description
     const title = tool.seoTitle || `${tool.name} Online - Free, Fast & Secure | FileVora`;
@@ -45,7 +36,7 @@ export async function generateMetadata(
         openGraph: {
             title,
             description,
-            url: `https://filevora.com/tools/${tool.id}`,
+            url: `https://filevora.web.app/tools/${tool.id}`,
             images: [`/og/tools/${tool.id}.png`],
             siteName: "FileVora",
             locale: "en_US",
@@ -55,10 +46,10 @@ export async function generateMetadata(
             card: "summary_large_image",
             title,
             description,
-            images: [`/og/tools/${tool.id}.png`], // Fallback to OG image
+            images: [`/og/tools/${tool.id}.png`],
         },
         alternates: {
-            canonical: `https://filevora.com/tools/${tool.id}`,
+            canonical: `https://filevora.web.app/tools/${tool.id}`,
         }
     };
 }
@@ -85,7 +76,9 @@ export default async function ToolPage({ params }: Props) {
 
 // Generate static params for faster at-edge delivery and SEO
 export async function generateStaticParams() {
-    return TOOLS.map((tool) => ({
-        id: tool.id,
-    }));
+    return TOOLS
+        .filter(tool => tool.endpoint !== "/coming-soon")
+        .map((tool) => ({
+            id: tool.id,
+        }));
 }

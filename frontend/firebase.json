@@ -1,10 +1,25 @@
 {
     "hosting": {
+        "site": "filevora",
         "public": "out",
         "ignore": [
             "firebase.json",
             "**/.*",
-            "**/node_modules/**"
+            "**/node_modules/**",
+            "**/wasm/libreoffice/**"
+        ],
+        "cleanUrls": true,
+        "redirects": [
+            {
+                "source": "/tools/protect-pdf{,/**}",
+                "destination": "/tools/pdf-password-protect/",
+                "type": 301
+            },
+            {
+                "source": "/wasm/libreoffice/**",
+                "destination": "/",
+                "type": 302
+            }
         ],
         "rewrites": [
             {
@@ -12,8 +27,6 @@
                 "destination": "/index.html"
             }
         ],
-        "cleanUrls": true,
-        "trailingSlash": true,
         "headers": [
             {
                 "source": "**",
@@ -44,30 +57,59 @@
                     },
                     {
                         "key": "Content-Security-Policy",
-                        "value": "default-src 'self'; img-src 'self' data: https: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://accounts.google.com https://www.googletagmanager.com https://www.dropbox.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https: wss:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'self' https://docs.google.com https://accounts.google.com https://www.dropbox.com blob:;"
+                        "value": "default-src 'self'; img-src 'self' data: https: blob: https://www.google-analytics.com https://region1.google-analytics.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' https://apis.google.com https://accounts.google.com https://www.googletagmanager.com https://www.google-analytics.com https://www.dropbox.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://cdn.zetaoffice.net blob: data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https: wss: blob: https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://cdn.zetaoffice.net; worker-src 'self' blob: data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'self' https://docs.google.com https://accounts.google.com https://www.dropbox.com blob:;"
                     }
                 ]
             },
             {
-                "source": "**/*.@(jpg|jpeg|gif|png|webp|svg)",
+                "source": "**/*.wasm",
+                "headers": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/wasm"
+                    },
+                    {
+                        "key": "Cache-Control",
+                        "value": "public, max-age=31536000, immutable"
+                    },
+                    {
+                        "key": "Access-Control-Allow-Origin",
+                        "value": "*"
+                    },
+                    {
+                        "key": "Cross-Origin-Resource-Policy",
+                        "value": "cross-origin"
+                    }
+                ]
+            },
+            {
+                "source": "**/*.@(js|css|woff2|woff|ttf|otf|svg|png|jpg|jpeg|webp|ico|bcmap|pfb)",
                 "headers": [
                     {
                         "key": "Cache-Control",
                         "value": "public, max-age=31536000, immutable"
+                    },
+                    {
+                        "key": "Access-Control-Allow-Origin",
+                        "value": "*"
+                    },
+                    {
+                        "key": "Cross-Origin-Resource-Policy",
+                        "value": "cross-origin"
                     }
                 ]
             },
             {
-                "source": "_next/static/**/*.@(js|css)",
+                "source": "**/*.html",
                 "headers": [
                     {
                         "key": "Cache-Control",
-                        "value": "public, max-age=31536000, immutable"
+                        "value": "public, max-age=0, stale-while-revalidate=86400"
                     }
                 ]
             },
             {
-                "source": "**/*.@(html|json)",
+                "source": "**/*.@(json|txt)",
                 "headers": [
                     {
                         "key": "Cache-Control",
@@ -76,7 +118,7 @@
                 ]
             },
             {
-                "source": "service-worker.js",
+                "source": "sw.js",
                 "headers": [
                     {
                         "key": "Cache-Control",

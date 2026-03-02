@@ -1,6 +1,3 @@
-import { db } from "./firebase";
-import { collection, doc, setDoc, addDoc, serverTimestamp, getDoc, query, where, orderBy, limit, getDocs } from "firebase/firestore";
-
 export interface UserProfile {
     uid: string;
     email: string;
@@ -24,12 +21,10 @@ export interface ConversionLog {
 }
 
 export const FirestoreService = {
-    /**
-     * Creates or updates a user profile in the 'users' collection.
-     * Uses the Auth UID as the document ID.
-     */
     async saveUserProfile(user: UserProfile) {
         try {
+            const { db } = await import("./firebase");
+            const { doc, setDoc, serverTimestamp } = await import("firebase/firestore");
             const userRef = doc(db, "users", user.uid);
             await setDoc(userRef, {
                 ...user,
@@ -40,11 +35,10 @@ export const FirestoreService = {
         }
     },
 
-    /**
-     * Logs a file conversion event to the 'conversions' collection.
-     */
     async logConversion(log: ConversionLog) {
         try {
+            const { db } = await import("./firebase");
+            const { collection, addDoc, serverTimestamp } = await import("firebase/firestore");
             await addDoc(collection(db, "conversions"), {
                 ...log,
                 timestamp: serverTimestamp()
@@ -54,11 +48,10 @@ export const FirestoreService = {
         }
     },
 
-    /**
-     * Fetches conversion history for a specific user.
-     */
     async getUserHistory(userId: string) {
         try {
+            const { db } = await import("./firebase");
+            const { collection, query, where, orderBy, limit, getDocs } = await import("firebase/firestore");
             const q = query(
                 collection(db, "conversions"),
                 where("userId", "==", userId),
@@ -72,18 +65,14 @@ export const FirestoreService = {
             });
         } catch (error) {
             console.error("Error fetching history:", error);
-            // Fallback for missing index or other errors
             return [];
         }
     },
 
-    /**
-     * Adds an email to the 'subscribers' collection.
-     */
     async subscribeToNewsletter(email: string) {
         try {
-            // Check if already subscribed to avoid duplicates (optional but good practice)
-            // For simplicity in this demo, we just add.
+            const { db } = await import("./firebase");
+            const { collection, addDoc, serverTimestamp } = await import("firebase/firestore");
             await addDoc(collection(db, "subscribers"), {
                 email,
                 subscribedAt: serverTimestamp(),

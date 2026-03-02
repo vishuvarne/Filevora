@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { useState } from "react";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";

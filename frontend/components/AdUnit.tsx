@@ -22,10 +22,13 @@ export default function AdUnit({ slotId, format = 'auto', responsive = true, cla
         if (adRef.current && !initialized.current) {
             // Check if ad was already pushed to this slot to avoid duplicates in strict mode
             try {
+                // Ensure array exists and push silently
                 (window.adsbygoogle = window.adsbygoogle || []).push({});
                 initialized.current = true;
             } catch (e: any) {
-                console.error("AdSense Error: ", e);
+                // Silent catch: AdSense being blocked is expected for some users
+                console.debug("AdSense restricted:", e.message);
+                initialized.current = true; // Mark as "handled" to avoid infinite retries
             }
         }
     }, [slotId]); // Only re-run if slotId changes

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
 export const metadata = {
     title: "Donate - FileVora",
@@ -40,7 +40,7 @@ export default function DonatePage() {
                             <ul className="text-slate-600 text-sm space-y-2">
                                 <li>• Share FileVora with friends and colleagues</li>
                                 <li>• Tell us what tools you’d like to see</li>
-                                <li>• Use our <Link href="/api" className="text-blue-600 hover:underline">API</Link> and give feedback</li>
+                                <li>• Use our <Link href="/api" prefetch={false} className="text-blue-600 hover:underline">API</Link> and give feedback</li>
                             </ul>
                         </div>
                     </div>
@@ -53,7 +53,7 @@ export default function DonatePage() {
                     </div>
 
                     <div className="mt-10 pt-6 border-t border-slate-200">
-                        <Link href="/" className="text-blue-600 font-semibold hover:underline">
+                        <Link href="/" prefetch={false} className="text-blue-600 font-semibold hover:underline">
                             ← Back to tools
                         </Link>
                     </div>

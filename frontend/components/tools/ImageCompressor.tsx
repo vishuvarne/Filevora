@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import Dropzone from "@/components/Dropzone";
+import Dropzone from "@/components/ui/Dropzone";
 import BeforeAfterSlider from "@/components/shared/BeforeAfterSlider";
 import FileSizeCard from "@/components/shared/FileSizeCard";
 import FormatInfo from "@/components/shared/FormatInfo";

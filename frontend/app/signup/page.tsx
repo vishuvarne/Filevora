@@ -31,7 +31,7 @@ export default function SignupPage() {
             <div className="w-full max-w-md">
                 {/* Logo and Header */}
                 <div className="text-center mb-8">
-                    <Link href="/" className="inline-flex items-center gap-2 mb-6">
+                    <Link href="/" prefetch={false} className="inline-flex items-center gap-2 mb-6">
                         <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white font-extrabold text-2xl shadow-lg">
                             F
                         </div>
@@ -145,9 +145,9 @@ export default function SignupPage() {
                             />
                             <label htmlFor="terms" className="ml-2 text-sm text-slate-600">
                                 I agree to FileVora&apos;s{" "}
-                                <Link href="/terms" className="text-blue-600 hover:text-blue-700 font-medium">Terms of Service</Link>
+                                <Link href="/terms" prefetch={false} className="text-blue-600 hover:text-blue-700 font-medium">Terms of Service</Link>
                                 {" "}and{" "}
-                                <Link href="/privacy" className="text-blue-600 hover:text-blue-700 font-medium">Privacy Policy</Link>
+                                <Link href="/privacy" prefetch={false} className="text-blue-600 hover:text-blue-700 font-medium">Privacy Policy</Link>
                             </label>
                         </div>
 
@@ -164,7 +164,7 @@ export default function SignupPage() {
                 {/* Login link */}
                 <p className="text-center mt-6 text-slate-600">
                     Already have an account?{" "}
-                    <Link href="/login" className="font-semibold text-blue-600 hover:text-blue-700">
+                    <Link href="/login" prefetch={false} className="font-semibold text-blue-600 hover:text-blue-700">
                         Sign in
                     </Link>
                 </p>

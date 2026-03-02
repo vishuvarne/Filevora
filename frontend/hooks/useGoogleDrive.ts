@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 
 // Use a type definition for the Google Picker API
 declare global {
@@ -18,20 +18,30 @@ export function useGoogleDrivePicker({ clientId, apiKey, appId }: GoogleDriveCon
     const [isLoaded, setIsLoaded] = useState(false);
     const pickerRef = useRef<any>(null);
 
-    useEffect(() => {
-        const loadGapi = () => {
-            if (!window.gapi) {
-                const script = document.createElement("script");
-                script.src = "https://apis.google.com/js/api.js";
-                script.onload = () => {
-                    window.gapi.load('picker', () => setIsLoaded(true));
-                };
-                document.body.appendChild(script);
-            } else {
-                window.gapi.load('picker', () => setIsLoaded(true));
+    const loadScriptPromise = useRef<Promise<void> | null>(null);
+
+    const loadGapi = useCallback((): Promise<void> => {
+        if (loadScriptPromise.current) return loadScriptPromise.current;
+
+        loadScriptPromise.current = new Promise((resolve) => {
+            if (window.gapi && window.google?.picker) {
+                setIsLoaded(true);
+                resolve(undefined);
+                return;
             }
-        };
-        loadGapi();
+
+            const script = document.createElement("script");
+            script.src = "https://apis.google.com/js/api.js";
+            script.onload = () => {
+                window.gapi.load('picker', () => {
+                    setIsLoaded(true);
+                    resolve(undefined);
+                });
+            };
+            document.body.appendChild(script);
+        });
+
+        return loadScriptPromise.current;
     }, []);
 
     const closeCustomButton = () => {
@@ -48,10 +58,13 @@ export function useGoogleDrivePicker({ clientId, apiKey, appId }: GoogleDriveCon
         closeCustomButton();
     }, []);
 
-    const openPicker = useCallback((): Promise<any> => {
+    const openPicker = useCallback(async (): Promise<any> => {
+        // Ensure GAPI is loaded first
+        await loadGapi();
+
         return new Promise((resolve, reject) => {
-            if (!isLoaded || !window.google || !window.google.picker) {
-                reject(new Error("Google Picker API is still loading. Please try again in a few seconds."));
+            if (!window.google?.picker) {
+                reject(new Error("Google Picker API failed to load. Please check your connection."));
                 return;
             }
 

@@ -70,7 +70,7 @@ export default function ProfilePage() {
             <header className="bg-white border-b border-slate-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                     <div className="flex items-center justify-between">
-                        <Link href="/" className="flex items-center gap-2">
+                        <Link href="/" prefetch={false} className="flex items-center gap-2">
                             <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-extrabold text-xl">
                                 F
                             </div>
@@ -78,7 +78,7 @@ export default function ProfilePage() {
                                 File<span className="text-blue-600">Vora</span>
                             </span>
                         </Link>
-                        <Link href="/" className="text-sm text-slate-600 hover:text-slate-900 transition-colors">
+                        <Link href="/" prefetch={false} className="text-sm text-slate-600 hover:text-slate-900 transition-colors">
                             ← Back to Home
                         </Link>
                     </div>
@@ -197,25 +197,25 @@ export default function ProfilePage() {
                                 <div>
                                     <h2 className="text-lg font-bold text-slate-900 mb-4">Quick Actions</h2>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                                        <Link href="/tools/merge-pdf" className="p-4 rounded-xl border-2 border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-all group">
+                                        <Link href="/tools/merge-pdf/" prefetch={false} className="p-4 rounded-xl border-2 border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-all group">
                                             <div className="text-3xl mb-2">📄</div>
                                             <h3 className="font-semibold text-slate-900 group-hover:text-blue-600">Merge PDF</h3>
                                             <p className="text-xs text-slate-500 mt-1">Combine PDFs</p>
                                         </Link>
 
-                                        <Link href="/tools/convert-image" className="p-4 rounded-xl border-2 border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-all group">
+                                        <Link href="/tools/convert-image/" prefetch={false} className="p-4 rounded-xl border-2 border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-all group">
                                             <div className="text-3xl mb-2">🖼️</div>
                                             <h3 className="font-semibold text-slate-900 group-hover:text-blue-600">Convert Image</h3>
                                             <p className="text-xs text-slate-500 mt-1">Change formats</p>
                                         </Link>
 
-                                        <Link href="/tools/compress-pdf" className="p-4 rounded-xl border-2 border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-all group">
+                                        <Link href="/tools/compress-pdf/" prefetch={false} className="p-4 rounded-xl border-2 border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-all group">
                                             <div className="text-3xl mb-2">📦</div>
                                             <h3 className="font-semibold text-slate-900 group-hover:text-blue-600">Compress PDF</h3>
                                             <p className="text-xs text-slate-500 mt-1">Reduce size</p>
                                         </Link>
 
-                                        <Link href="/tools/image-compressor" className="p-4 rounded-xl border-2 border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-all group">
+                                        <Link href="/tools/image-compressor/" prefetch={false} className="p-4 rounded-xl border-2 border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-all group">
                                             <div className="text-3xl mb-2">🗜️</div>
                                             <h3 className="font-semibold text-slate-900 group-hover:text-blue-600">Image Compressor</h3>
                                             <p className="text-xs text-slate-500 mt-1">Optimize images</p>
@@ -263,7 +263,7 @@ export default function ProfilePage() {
                                         </svg>
                                         <h3 className="text-lg font-semibold text-slate-900 mb-2">No conversion history yet</h3>
                                         <p className="text-slate-500 mb-6">Start using FileVora to see your conversion history here</p>
-                                        <Link href="/" className="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors">
+                                        <Link href="/" prefetch={false} className="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors">
                                             Browse Tools
                                         </Link>
                                     </div>

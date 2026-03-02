@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Dropzone from "@/components/Dropzone";
+import Dropzone from "@/components/ui/Dropzone";
+import DOMPurify from "dompurify";
+import { FEATURES } from "@/config/features";
 
 interface ChatMessage {
     role: "user" | "ai";
@@ -75,7 +77,19 @@ export default function PDFChat() {
 
     return (
         <div className="h-full flex flex-col">
-            {!file ? (
+            {!FEATURES.ENABLE_PDF_CHAT ? (
+                <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-card">
+                    <div className="w-20 h-20 bg-muted/30 rounded-3xl flex items-center justify-center text-muted-foreground mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125H18m0-4.5h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" />
+                        </svg>
+                    </div>
+                    <h3 className="text-2xl font-bold text-foreground mb-2">AI Chat is Currently Unavailable</h3>
+                    <p className="text-muted-foreground max-w-sm">
+                        This feature points to an external backend API which is temporarily disabled to optimize performance and prevent automated abuse. All other core file conversions remain fully operational and run 100% securely offline in your browser.
+                    </p>
+                </div>
+            ) : !file ? (
                 <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
                     <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center text-primary mb-6">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10">
@@ -111,7 +125,7 @@ export default function PDFChat() {
                                 <div className={`max-w-[85%] rounded-2xl p-4 text-sm leading-relaxed shadow-sm ${msg.role === "user" ? "bg-primary text-primary-foreground rounded-br-none" : "bg-card text-foreground border border-border rounded-bl-none"
                                     }`}>
                                     {/* eslint-disable-next-line react/no-danger */}
-                                    <div dangerouslySetInnerHTML={{ __html: msg.content.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br/>') }} />
+                                    <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(msg.content.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br/>')) }} />
                                 </div>
                             </div>
                         ))}

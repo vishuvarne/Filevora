@@ -312,6 +312,30 @@ export const TOOL_METADATA: Record<string, ToolMetadata> = {
         batchSupport: false,
         estimatedSpeed: '~40 pages/sec'
     },
+    'avif-converter': {
+        processingTime: 'medium',
+        processingTimeDescription: '3-8 seconds',
+        batchSupport: true,
+        estimatedSpeed: '~20 images/sec'
+    },
+    'jpg-to-avif': {
+        processingTime: 'medium',
+        processingTimeDescription: '3-8 seconds',
+        batchSupport: true,
+        estimatedSpeed: '~20 images/sec'
+    },
+    'epub-to-mobi': {
+        processingTime: 'fast',
+        processingTimeDescription: 'Under 5 seconds',
+        batchSupport: true,
+        estimatedSpeed: '~100 pages/sec'
+    },
+    'mobi-to-epub': {
+        processingTime: 'fast',
+        processingTimeDescription: 'Under 5 seconds',
+        batchSupport: true,
+        estimatedSpeed: '~100 pages/sec'
+    },
 };
 
 // Helper function to get metadata for a tool

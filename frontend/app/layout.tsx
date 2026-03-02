@@ -1,17 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import ChatWidget from "@/components/ChatWidget";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import FooterWrapper from "@/components/FooterWrapper";
 import GoogleAdsense from "@/components/GoogleAdsense";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import { AppNavigationProvider } from "@/context/AppNavigationProvider";
+import { Suspense } from "react";
+import { ThemeStyleProvider } from "@/context/ThemeStyleContext";
+import StickyFooterAd from "@/components/ads/StickyFooterAd";
 import "./globals.css";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap", // Prevent font blocking, faster FCP
-});
 
 export const viewport: Viewport = {
   themeColor: "#2563eb",
@@ -20,7 +17,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://filevora.com"),
+  metadataBase: new URL("https://filevora.web.app"),
   title: "FileVora – Free Online File Converter for PDF, Images, Video & Audio",
   description: "FileVora is a free online file converter for PDF, images, video, audio, and documents. Fast, secure, and no signup required.",
   keywords: [
@@ -79,7 +76,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://filevora.com",
+    url: "https://filevora.web.app",
     siteName: "FileVora",
     title: "FileVora – Free Online File Converter",
     description: "Convert, Edit, and Compress files online for free.",
@@ -111,6 +108,11 @@ export const metadata: Metadata = {
   },
 };
 
+import { inter, poppins, spaceGrotesk, jetbrainsMono } from "@/lib/fonts";
+import "./globals.css";
+import { SpeculationRules } from "@/components/SpeculationRules";
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -119,26 +121,121 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* MUST be first script - prevents dark mode flash on ALL builds including static */}
-        <script
+        {/* Critical CSS — inlined for instant LCP paint before external CSS loads */}
+        <style
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme'),d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d)){document.documentElement.classList.add('dark')}}catch(e){}})();`,
+            __html: `
+              body{margin:0;background:#f8fafc;color:#020617}
+              .dark body,.dark{background:#030712;color:#f8fafc}
+              h1{font-size:clamp(1.875rem,5vw,4.5rem);font-weight:900;letter-spacing:-0.025em;line-height:1.1;color:inherit}
+              h1 .text-primary{color:hsl(221.2,83.2%,53.3%)}
+              .dark h1 .text-primary{color:hsl(217,91%,60%)}
+            `.replace(/\s+/g, ' ').trim()
           }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "name": "FileVora",
+                "url": "https://filevora.web.app",
+                "logo": "https://filevora.web.app/logo.png",
+                "sameAs": []
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                "name": "FileVora",
+                "url": "https://filevora.web.app",
+                "potentialAction": {
+                  "@type": "SearchAction",
+                  "target": "https://filevora.web.app/?q={search_term_string}",
+                  "query-input": "required name=search_term_string"
+                }
+              }
+            ])
+          }}
+        />
+        {/* Anti-Blocker Safety Layer - Ensures analytics don't break JS execution if blocked */}
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){dataLayer.push(arguments);};gtag('js',new Date());`
+          }}
+        />
+        {/* Force-unregister broken next-pwa Service Workers that intercept Next.js RSC router requests */}
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `
+               if ('serviceWorker' in navigator) {
+                 navigator.serviceWorker.getRegistrations().then(function(regs) {
+                   for (var i = 0; i < regs.length; i++) {
+                     regs[i].unregister();
+                   }
+                 });
+               }
+             `
+          }}
+        />
+        {/* MUST be first script - prevents dark mode flash on ALL builds including static */}
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'){document.documentElement.classList.add('dark')}}catch(e){}})();`,
+          }}
+        />
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var s=localStorage.getItem('design-style');if(s==='neubrutalist'){document.documentElement.setAttribute('data-design','neubrutalist')}}catch(e){}})();`,
+          }}
+        />
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator && window.location.hostname !== 'localhost') {
+                window.addEventListener('load', () => {
+                  navigator.serviceWorker.register('/sw.js').then(reg => {
+                    console.log('[SW] Service Worker registered');
+                  }).catch(err => {
+                    console.error('[SW] Service Worker registration failed:', err);
+                  });
+                });
+              }
+            `
+          }}
+        />
+        <SpeculationRules />
       </head>
       <body
         suppressHydrationWarning
-        className={`${inter.variable} antialiased bg-slate-50 dark:bg-slate-950 flex flex-col min-h-screen font-sans overflow-x-hidden`}
+        className={`${inter.variable} ${poppins.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased bg-slate-50 dark:bg-slate-950 flex flex-col min-h-screen font-sans overflow-x-clip`}
       >
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ""} />
-        <Navbar />
-        {/* AdSense Script - Global */}
-        {/* <GoogleAdsense pId={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID || "ca-pub-0000000000000000"} /> */}
-        <div className="flex-1">
-          {children}
-        </div>
-        <Footer />
-        <ChatWidget />
+        <AppNavigationProvider>
+          <ThemeStyleProvider>
+            <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ""} />
+            <Navbar />
+            {/* AdSense Script - Global */}
+            <GoogleAdsense pId={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID || "ca-pub-0000000000000000"} />
+            <div className="flex-1 flex flex-col min-h-0">
+              <Suspense fallback={<div className="flex-1 flex items-center justify-center min-h-[50vh]"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>}>
+                {children}
+              </Suspense>
+            </div>
+            <FooterWrapper>
+              <Footer />
+            </FooterWrapper>
+
+            {/* Global Session-Persistent Sticky Ad */}
+            <StickyFooterAd adSlotId="YOUR_STICKY_AD_SLOT_ID" />
+
+          </ThemeStyleProvider>
+        </AppNavigationProvider>
       </body>
     </html>
   );

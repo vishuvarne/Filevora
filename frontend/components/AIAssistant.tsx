@@ -86,23 +86,7 @@ export default function AIAssistant({ tool, files, currentFormat, compressionLev
             return;
         }
 
-        // Priority 3: Format Optimization (WebP)
-        if ((tool.id === "convert-image" || tool.endpoint.includes("pdf-to-image")) &&
-            currentFormat && ["JPEG", "PNG"].includes(currentFormat.toUpperCase()) &&
-            !isDismissed('format')) {
-            setSuggestion({
-                title: "Optimization Tip",
-                message: `For web use, WebP offers ~30% better compression than ${currentFormat} with the same quality.`,
-                action: "Switch to WebP & Convert",
-                type: 'format',
-                value: 'WEBP',
-                autoRun: true,
-                explanation: "WebP is a modern image format developed by Google. It provides superior compression while maintaining visual quality, making it ideal for websites and apps.",
-                benefit: "30% smaller, same quality"
-            });
-            setIsVisible(true);
-            return;
-        }
+
 
         // Priority 4: PDF Compression for Large Files
         if (tool.id === "compress-pdf" && !isDismissed('compression')) {

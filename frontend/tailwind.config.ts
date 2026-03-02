@@ -6,17 +6,15 @@ const config: Config = {
         "./pages/**/*.{js,ts,jsx,tsx,mdx}",
         "./components/**/*.{js,ts,jsx,tsx,mdx}",
         "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    ],
-    safelist: [
-        {
-            pattern: /(from|to|bg|text|border|ring|shadow)-(red|blue|green|orange|purple|yellow|slate)-(50|100|200|300|400|500|600|700|800|900)/,
-            variants: ['hover', 'active', 'dark', 'group-hover'],
-        },
+        "./config/**/*.{js,ts,jsx,tsx,mdx}",
     ],
     theme: {
         extend: {
             fontFamily: {
-                sans: ["var(--font-inter)", "ui-sans-serif", "system-ui", "sans-serif"],
+                sans: ["var(--font-inter)", "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
+                poppins: ["var(--font-poppins)", "sans-serif"],
+                spaceGrotesk: ["var(--font-space-grotesk)", "sans-serif"],
+                jetbrains: ["var(--font-jetbrains)", "monospace"],
             },
             colors: {
                 background: "hsl(var(--background))",

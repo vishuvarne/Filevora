@@ -1,8 +1,6 @@
 import { ToolDef, TOOLS } from "@/config/tools"; // Import tools list
 import { getDownloadUrl, ProcessResponse, sendEmail } from "@/lib/api";
-import { useState } from "react";
-import confetti from "canvas-confetti";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { getSuggestedTools } from "@/config/toolSuggestions"; // Import suggestions
 import Link from "next/link";
 
@@ -18,12 +16,20 @@ export default function CompletionSuccess({ tool, result, onReset }: CompletionS
 
     // Trigger Confetti on Mount (Peak-End Rule: Positive End)
     useEffect(() => {
-        confetti({
-            particleCount: 100,
-            spread: 70,
-            origin: { y: 0.6 },
-            colors: ['#3b82f6', '#10b981', '#f59e0b', '#ec4899']
-        });
+        const triggerConfetti = async () => {
+            try {
+                const { default: confetti } = await import("canvas-confetti");
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#3b82f6', '#10b981', '#f59e0b', '#ec4899']
+                });
+            } catch (err) {
+                console.debug("Confetti failed to load:", err);
+            }
+        };
+        triggerConfetti();
     }, []);
 
     const isCompression = tool.id === "compress-pdf" || tool.id === "image-compressor";
@@ -169,7 +175,8 @@ export default function CompletionSuccess({ tool, result, onReset }: CompletionS
                         return (
                             <Link
                                 key={suggestedId}
-                                href={`/tools/${suggestedTool.id}`}
+                                href={`/tools/${suggestedTool.id}/`}
+                                prefetch={false}
                                 className="group block bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-md transition-all"
                             >
                                 <div className="flex items-center gap-3">

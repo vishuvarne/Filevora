@@ -2,6 +2,7 @@
 
 import { ToolDef, TOOLS } from "@/config/tools";
 import Link from "next/link";
+import { getToolSEOContent } from "@/config/seo-content";
 
 export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
 
@@ -10,24 +11,17 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
         .filter(t => t.category === tool.category && t.id !== tool.id)
         .slice(0, 8);
 
-    // Dynamic data based on tool type (In a real app, this might come from a CMS or config)
-    const useCases = [
-        {
-            title: "For Professionals",
-            desc: "Ensure your documents meet industry standards. Perfect for contracts, reports, and presentations.",
-            icon: "briefcase"
-        },
-        {
-            title: "For Students",
-            desc: "Submit assignments in the correct format. Easily handle PDFs, research papers, and images.",
-            icon: "academic"
-        },
-        {
-            title: "Save Storage",
-            desc: "Compress files without losing quality to free up space on your device or cloud storage.",
-            icon: "database"
-        }
-    ];
+    const seoContent = getToolSEOContent(tool.id);
+    const steps = seoContent.howToSteps;
+    const faqs = seoContent.faqs;
+    const useCases = seoContent.useCases;
+
+    // Formats relevant to category
+    let supportedFormats = ["PDF", "DOCX", "JPG", "PNG", "XLS", "PPT", "EPUB", "MP4", "GIF", "WEBP", "SVG", "TXT"];
+    if (tool.category === "Image") supportedFormats = ["JPG", "PNG", "WEBP", "HEIC", "BMP", "TIFF", "GIF", "AVIF", "SVG", "ICO", "EPS", "RAW"];
+    else if (tool.category === "Video & Audio") supportedFormats = ["MP4", "MP3", "WAV", "MOV", "AVI", "MKV", "WEBM", "FLV", "OGG", "FLAC", "AAC", "M4A"];
+    else if (tool.category === "PDF & Documents") supportedFormats = ["PDF", "DOCX", "DOC", "XLSX", "XLS", "PPTX", "PPT", "TXT", "RTF", "ODT", "CSV", "EPUB"];
+
 
     return (
         <div className="mt-16 space-y-20 max-w-5xl mx-auto px-4 font-sans text-foreground">
@@ -40,21 +34,21 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
                     {/* Text Instructions */}
                     <div className="order-2 lg:order-1">
                         <ol className="relative border-l-2 border-border ml-4 space-y-6 sm:space-y-8">
-                            <li className="mb-10 ml-6">
+                            <li className="mb-10 ml-6" id="step1">
                                 <span className="absolute flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full -left-4 ring-4 ring-card text-blue-600 dark:text-blue-400 font-bold">1</span>
-                                <h3 className="flex items-center mb-1 text-lg font-bold text-foreground">Click the "Choose Files" button</h3>
-                                <p className="mb-4 text-base font-normal text-muted-foreground">Select your files from your computer, Google Drive, Dropbox or URL.</p>
+                                <h3 className="flex items-center mb-1 text-lg font-bold text-foreground">{steps.step1.title}</h3>
+                                <p className="mb-4 text-base font-normal text-muted-foreground">{steps.step1.description}</p>
                             </li>
-                            <li className="mb-10 ml-6">
+                            <li className="mb-10 ml-6" id="step2">
                                 <span className="absolute flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full -left-4 ring-4 ring-card text-blue-600 dark:text-blue-400 font-bold">2</span>
-                                <h3 className="flex items-center mb-1 text-lg font-bold text-foreground">Choose Output Format</h3>
-                                <p className="mb-4 text-base font-normal text-muted-foreground">Select target format from the "Convert To" dropdown list.</p>
+                                <h3 className="flex items-center mb-1 text-lg font-bold text-foreground">{steps.step2.title}</h3>
+                                <p className="mb-4 text-base font-normal text-muted-foreground">{steps.step2.description}</p>
                             </li>
-                            <li className="ml-6">
+                            <li className="ml-6" id="step3">
                                 <span className="absolute flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full -left-4 ring-4 ring-card text-blue-600 dark:text-blue-400 font-bold">3</span>
-                                <h3 className="flex items-center mb-1 text-lg font-bold text-foreground">Download Your File</h3>
+                                <h3 className="flex items-center mb-1 text-lg font-bold text-foreground">{steps.step3.title}</h3>
                                 <p className="mb-4 text-base font-normal text-muted-foreground">
-                                    Click the blue "Convert" button to start processing, then download your file.
+                                    {steps.step3.description}
                                 </p>
                             </li>
                         </ol>
@@ -97,7 +91,7 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
             <section className="text-center">
                 <h2 className="text-2xl font-bold text-foreground mb-8">Supported Formats</h2>
                 <div className="inline-grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
-                    {["PDF", "DOCX", "JPG", "PNG", "XLS", "PPT", "EPUB", "MP4", "GIF", "WEBP", "SVG", "TXT"].map((fmt) => (
+                    {supportedFormats.map((fmt) => (
                         <div key={fmt} className="bg-card border border-border rounded-lg py-3 px-6 text-sm font-bold text-muted-foreground shadow-sm hover:border-primary hover:text-primary cursor-default transition-colors">
                             {fmt}
                         </div>
@@ -189,7 +183,7 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-8">
                         {relatedTools.map(t => (
-                            <Link key={t.id} href={`/tools/${t.id}`} className="text-primary hover:text-primary/80 hover:underline text-sm font-medium transition-colors">
+                            <Link key={t.id} href={`/tools/${t.id}/`} prefetch={false} className="text-primary hover:text-primary/80 hover:underline text-sm font-medium transition-colors">
                                 {t.name}
                             </Link>
                         ))}
@@ -201,15 +195,10 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
             <section className="max-w-4xl mx-auto border-t border-border pt-16">
                 <h2 className="text-3xl font-bold text-foreground mb-8 text-center">Frequently Asked Questions</h2>
                 <div className="space-y-4">
-                    {[
-                        { q: "Is it safe to use?", a: "Yes. Use HTTPS encryption and delete all files automatically after 1 hour." },
-                        { q: "Is there a file size limit?", a: "Currently we support files up to 500MB for free users." },
-                        { q: "Can I use it on mobile?", a: "Absolutely. Our website is fully responsive and works on all devices." },
-                        { q: "How long does it take?", a: "Most conversions finish in under 10 seconds thanks to our high-performance cloud servers." }
-                    ].map((faq, i) => (
+                    {faqs.map((faq, i) => (
                         <div key={i} className="border-b border-border pb-6 mb-2">
-                            <h3 className="text-lg font-bold text-foreground mb-2 cursor-pointer">{faq.q}</h3>
-                            <p className="text-muted-foreground">{faq.a}</p>
+                            <h3 className="text-lg font-bold text-foreground mb-2 cursor-pointer">{faq.question}</h3>
+                            <p className="text-muted-foreground">{faq.answer}</p>
                         </div>
                     ))}
                 </div>

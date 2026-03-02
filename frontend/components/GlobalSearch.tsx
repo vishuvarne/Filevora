@@ -64,7 +64,7 @@ export default function GlobalSearch({ className = "" }: GlobalSearchProps) {
             case "Enter":
                 e.preventDefault();
                 if (results[selectedIndex]) {
-                    window.location.href = `/tools/${results[selectedIndex].id}`;
+                    window.location.href = `/tools/${results[selectedIndex].id}/`;
                 }
                 break;
             case "Escape":
@@ -122,7 +122,8 @@ export default function GlobalSearch({ className = "" }: GlobalSearchProps) {
                     {results.map((tool, index) => (
                         <Link
                             key={tool.id}
-                            href={`/tools/${tool.id}`}
+                            href={`/tools/${tool.id}/`}
+                            prefetch={false}
                             onClick={() => {
                                 setIsOpen(false);
                                 setQuery("");

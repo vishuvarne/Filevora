@@ -93,7 +93,7 @@ export default function HelpPage() {
                 <div className="mt-20 bg-secondary/50 rounded-3xl p-12 text-center">
                     <h2 className="text-2xl font-bold mb-4">Still need help?</h2>
                     <p className="text-muted-foreground mb-8 text-lg">Our support team is always ready to assist you.</p>
-                    <Link href="/contact" className="inline-flex items-center justify-center px-8 py-4 bg-primary text-primary-foreground rounded-xl font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20">
+                    <Link href="/contact" prefetch={false} className="inline-flex items-center justify-center px-8 py-4 bg-primary text-primary-foreground rounded-xl font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20">
                         Contact Support
                     </Link>
                 </div>

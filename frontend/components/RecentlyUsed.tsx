@@ -1,14 +1,21 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import { TOOLS } from "@/config/tools";
 import { useRecentTools } from "@/hooks/useRecentTools";
-import ToolCard from "./ToolCard";
+import ToolCard from "@/components/ToolCard";
 
 export default function RecentlyUsed() {
     const { recentTools, clearHistory } = useRecentTools();
 
-    // Don't show if no recent tools
-    if (recentTools.length === 0) {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Don't show if no recent tools or not mounted to prevent hydration flash/jump
+    if (!mounted || recentTools.length === 0) {
         return null;
     }
 

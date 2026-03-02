@@ -1,30 +1,38 @@
-/* eslint-disable no-restricted-globals */
 // Audio Worker using ffmpeg.wasm
 // Lazy-loaded on first use
 
-let ffmpegLoaded = false;
 let ffmpeg = null;
 
-// Import ffmpeg from CDN
-importScripts('https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js');
-
-const { FFmpeg } = self.FFmpegWASM;
-
 async function loadFFmpeg() {
-    if (ffmpegLoaded && ffmpeg) return ffmpeg;
+    if (ffmpeg) return ffmpeg;
 
     try {
+        // Dynamic import - only when needed
+        const { FFmpeg } = await import('@ffmpeg/ffmpeg');
+        const { toBlobURL } = await import('@ffmpeg/util');
+
         ffmpeg = new FFmpeg();
 
-        // Load ffmpeg core
+        // Define core path - assuming we copy to public/workers/libs or use CDN
+        // User requested '/workers/libs/ffmpeg-core.js'
+        // For now, let's use CDN for simplicity unless we set up a copy script, 
+        // to avoid complex build config changes right now. 
+        // Or better, stick to the user's request but use the CDN URL they provided in the original file if local fails.
+        // Actually, the user's Plan 5.1 code snippet used `createFFmpeg` (v0.9/v0.10 API).
+        // But the previous file was using `importScripts` with v0.12.10 URL. 
+        // I will use v0.12 API (new FFmpeg()) as it is more modern.
+
+        const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
+
         await ffmpeg.load({
-            coreURL: 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js'
+            coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+            wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
         });
 
-        ffmpegLoaded = true;
         return ffmpeg;
     } catch (error) {
-        throw new Error('Failed to load ffmpeg: ' + error.message);
+        console.error("FFmpeg Load Error:", error);
+        throw new Error('Failed to load ffmpeg. Please check your internet connection. Details: ' + error.message);
     }
 }
 
@@ -58,23 +66,80 @@ self.onmessage = async (e) => {
                 throw new Error(`Unknown worker action: ${type}`);
         }
 
-        self.postMessage({ type: 'success', jobId, result });
+        if (result && result.buffer) {
+            if (result.buffer instanceof ArrayBuffer) {
+                transferables.push(result.buffer);
+            } else if (ArrayBuffer.isView(result.buffer)) {
+                transferables.push(result.buffer.buffer);
+            }
+        }
+
+        self.postMessage({ type: 'success', jobId, result }, transferables);
     } catch (error) {
         console.error("Audio Worker Error:", error);
         self.postMessage({ type: 'error', jobId, error: error.message || "Unknown error" });
     }
 };
 
+// Helper: Smart Input Writer
+// Returns the input filename to use in ffmpeg command (e.g. "input.mp4" or "concat:chunk_0|chunk_1")
+async function writeInputFile(ffmpegInstance, fileBuffer, originalFilename) {
+    const CHUNK_SIZE = 10 * 1024 * 1024; // 10MB
+    const inputExt = originalFilename.split('.').pop() || 'tmp';
+
+    // Chunk strategy for files > 20MB
+    if (fileBuffer.byteLength > 20 * 1024 * 1024) {
+        const chunks = Math.ceil(fileBuffer.byteLength / CHUNK_SIZE);
+        const chunkNames = [];
+
+        console.log(`[AudioWorker] Processing large file (${(fileBuffer.byteLength / 1024 / 1024).toFixed(2)}MB) in ${chunks} chunks...`);
+
+        // Create chunks
+        // fileBuffer is ArrayBuffer usually.
+        const uint8 = new Uint8Array(fileBuffer);
+
+        for (let i = 0; i < chunks; i++) {
+            const start = i * CHUNK_SIZE;
+            const end = Math.min(start + CHUNK_SIZE, uint8.length);
+            const chunkData = uint8.slice(start, end);
+            const chunkName = `chunk_${i}`;
+
+            await ffmpegInstance.writeFile(chunkName, chunkData);
+            chunkNames.push(chunkName);
+
+            // Optional: Report loading progress?
+        }
+
+        // Return concat string
+        return `concat:${chunkNames.join('|')}`;
+    } else {
+        // Standard write
+        const inputName = `input.${inputExt}`;
+        await ffmpegInstance.writeFile(inputName, new Uint8Array(fileBuffer));
+        return inputName;
+    }
+}
+
+async function cleanupInput(ffmpegInstance, inputStr) {
+    // inputStr can be "input.mp4" or "concat:chunk_0|..."
+    if (inputStr.startsWith('concat:')) {
+        const parts = inputStr.replace('concat:', '').split('|');
+        for (const p of parts) {
+            try { await ffmpegInstance.deleteFile(p); } catch (e) { }
+        }
+    } else {
+        try { await ffmpegInstance.deleteFile(inputStr); } catch (e) { }
+    }
+}
+
+
 async function convertToMP3(fileBuffer, originalFilename) {
     const ffmpegInstance = await loadFFmpeg();
 
-    // Determine input extension
-    const inputExt = originalFilename.split('.').pop() || 'mp4';
-    const inputName = `input.${inputExt}`;
     const outputName = 'output.mp3';
 
-    // Write input file to ffmpeg filesystem
-    await ffmpegInstance.writeFile(inputName, new Uint8Array(fileBuffer));
+    // Smart Write
+    const inputName = await writeInputFile(ffmpegInstance, fileBuffer, originalFilename);
 
     // Convert to MP3 (high quality: 320kbps)
     await ffmpegInstance.exec([
@@ -90,15 +155,15 @@ async function convertToMP3(fileBuffer, originalFilename) {
     const data = await ffmpegInstance.readFile(outputName);
 
     // Cleanup
-    await ffmpegInstance.deleteFile(inputName);
+    await cleanupInput(ffmpegInstance, inputName);
     await ffmpegInstance.deleteFile(outputName);
 
     return {
         buffer: data.buffer,
         filename: originalFilename.replace(/\.[^.]+$/, '.mp3'),
-        originalSize: fileBuffer.byteLength,
-        compressedSize: data.byteLength,
-        reductionPercent: 0
+        original_size: fileBuffer.byteLength,
+        compressed_size: data.byteLength,
+        reduction_percent: 0
     };
 }
 
@@ -106,10 +171,9 @@ async function trimAudio(fileBuffer, originalFilename, startTime = 0, endTime = 
     const ffmpegInstance = await loadFFmpeg();
 
     const inputExt = originalFilename.split('.').pop() || 'mp3';
-    const inputName = `input.${inputExt}`;
     const outputName = `output.${inputExt}`;
 
-    await ffmpegInstance.writeFile(inputName, new Uint8Array(fileBuffer));
+    const inputName = await writeInputFile(ffmpegInstance, fileBuffer, originalFilename);
 
     // Build ffmpeg command
     const cmd = ['-i', inputName];
@@ -130,26 +194,24 @@ async function trimAudio(fileBuffer, originalFilename, startTime = 0, endTime = 
     const data = await ffmpegInstance.readFile(outputName);
 
     // Cleanup
-    await ffmpegInstance.deleteFile(inputName);
+    await cleanupInput(ffmpegInstance, inputName);
     await ffmpegInstance.deleteFile(outputName);
 
     return {
         buffer: data.buffer,
         filename: originalFilename.replace(/\.[^.]+$/, `_trimmed.${inputExt}`),
-        originalSize: fileBuffer.byteLength,
-        compressedSize: data.byteLength,
-        reductionPercent: 0
+        original_size: fileBuffer.byteLength,
+        compressed_size: data.byteLength,
+        reduction_percent: 0
     };
 }
 
 async function compressAudio(fileBuffer, originalFilename, bitrate = '128k') {
     const ffmpegInstance = await loadFFmpeg();
 
-    const inputExt = originalFilename.split('.').pop() || 'mp3';
-    const inputName = `input.${inputExt}`;
     const outputName = 'output.mp3';
 
-    await ffmpegInstance.writeFile(inputName, new Uint8Array(fileBuffer));
+    const inputName = await writeInputFile(ffmpegInstance, fileBuffer, originalFilename);
 
     await ffmpegInstance.exec([
         '-i', inputName,
@@ -160,7 +222,7 @@ async function compressAudio(fileBuffer, originalFilename, bitrate = '128k') {
     const data = await ffmpegInstance.readFile(outputName);
 
     // Cleanup
-    await ffmpegInstance.deleteFile(inputName);
+    await cleanupInput(ffmpegInstance, inputName);
     await ffmpegInstance.deleteFile(outputName);
 
     const reduction = ((fileBuffer.byteLength - data.byteLength) / fileBuffer.byteLength) * 100;
@@ -168,20 +230,17 @@ async function compressAudio(fileBuffer, originalFilename, bitrate = '128k') {
     return {
         buffer: data.buffer,
         filename: originalFilename.replace(/\.[^.]+$/, '_compressed.mp3'),
-        originalSize: fileBuffer.byteLength,
-        compressedSize: data.byteLength,
-        reductionPercent: Math.max(0, Math.round(reduction))
+        original_size: fileBuffer.byteLength,
+        compressed_size: data.byteLength,
+        reduction_percent: Math.max(0, Math.round(reduction))
     };
 }
 
 async function convertToGIF(fileBuffer, originalFilename, fps = 10, width = 480) {
     const ffmpegInstance = await loadFFmpeg();
 
-    const inputExt = originalFilename.split('.').pop() || 'mp4';
-    const inputName = `input.${inputExt}`;
     const outputName = 'output.gif';
-
-    await ffmpegInstance.writeFile(inputName, new Uint8Array(fileBuffer));
+    const inputName = await writeInputFile(ffmpegInstance, fileBuffer, originalFilename);
 
     // Convert to GIF with quality optimization
     // fps: frames per second (lower = smaller file)
@@ -196,25 +255,23 @@ async function convertToGIF(fileBuffer, originalFilename, fps = 10, width = 480)
     const data = await ffmpegInstance.readFile(outputName);
 
     // Cleanup
-    await ffmpegInstance.deleteFile(inputName);
+    await cleanupInput(ffmpegInstance, inputName);
     await ffmpegInstance.deleteFile(outputName);
 
     return {
         buffer: data.buffer,
         filename: originalFilename.replace(/\.[^.]+$/, '.gif'),
-        originalSize: fileBuffer.byteLength,
-        compressedSize: data.byteLength,
-        reductionPercent: 0
+        original_size: fileBuffer.byteLength,
+        compressed_size: data.byteLength,
+        reduction_percent: 0
     };
 }
 
 async function convertGIFToMP4(fileBuffer, originalFilename) {
     const ffmpegInstance = await loadFFmpeg();
 
-    const inputName = 'input.gif';
     const outputName = 'output.mp4';
-
-    await ffmpegInstance.writeFile(inputName, new Uint8Array(fileBuffer));
+    const inputName = await writeInputFile(ffmpegInstance, fileBuffer, originalFilename); // Handles large GIFs too
 
     // Convert GIF to MP4 with good quality
     await ffmpegInstance.exec([
@@ -228,15 +285,15 @@ async function convertGIFToMP4(fileBuffer, originalFilename) {
     const data = await ffmpegInstance.readFile(outputName);
 
     // Cleanup
-    await ffmpegInstance.deleteFile(inputName);
+    await cleanupInput(ffmpegInstance, inputName);
     await ffmpegInstance.deleteFile(outputName);
 
     return {
         buffer: data.buffer,
         filename: originalFilename.replace(/\.gif$/, '.mp4'),
-        originalSize: fileBuffer.byteLength,
-        compressedSize: data.byteLength,
-        reductionPercent: 0
+        original_size: fileBuffer.byteLength,
+        compressed_size: data.byteLength,
+        reduction_percent: 0
     };
 }
 

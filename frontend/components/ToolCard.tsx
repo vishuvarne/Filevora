@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useState } from "react";
 import { preWarmTool } from "@/lib/client-processor";
+import { useRouter } from "next/navigation";
+import { useDesignStyle } from "@/context/ThemeStyleContext";
 
 // Category color mapp based on PRD specifications
 const CATEGORY_COLORS: Record<string, string> = {
@@ -15,6 +17,15 @@ const CATEGORY_COLORS: Record<string, string> = {
     "GIF": "#EC4899",                // Pink
     "Web Apps": "#F59E0B",           // Orange
     "Others": "#6B7280"              // Gray
+};
+
+const NB_CATEGORY_COLORS: Record<string, string> = {
+    "PDF & Documents": "var(--nb-blue)",
+    "Image": "var(--nb-mint)",
+    "Video & Audio": "var(--nb-lilac)",
+    "GIF": "var(--nb-pink)",
+    "Web Apps": "var(--nb-orange)",
+    "Others": "var(--nb-yellow)"
 };
 
 // Neuro-UX: Category Badge Icons (Preattentive Processing)
@@ -64,6 +75,8 @@ function ToolCard({ tool }: { tool: ToolDef }) {
     const fileLimit = getCategoryLimit(tool.category);
     const { isFavorite, toggleFavorite, MAX_FAVORITES } = useFavorites();
     const [showToast, setShowToast] = useState(false);
+    const router = useRouter();
+    const { isNeu } = useDesignStyle();
 
     const favorited = isFavorite(tool.id);
 
@@ -82,32 +95,55 @@ function ToolCard({ tool }: { tool: ToolDef }) {
 
     return (
         <Link
-            href={`/tools/${tool.id}`}
-            className="group relative bg-card p-6 rounded-2xl border border-border shadow-sm transition-all duration-300 overflow-hidden flex flex-col h-full cursor-pointer
-            hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:border-primary/60 hover:-translate-y-1 hover:bg-slate-50/50 dark:hover:bg-secondary/40 dark:hover:shadow-none active:scale-95"
+            href={`/tools/${tool.id}/`}
+            prefetch={false}
+            className={isNeu
+                ? "group relative p-6 flex flex-col h-full cursor-pointer nb-card overflow-hidden"
+                : `group relative bg-card p-6 rounded-2xl border border-border shadow-sm transition-all duration-300 overflow-hidden flex flex-col h-full cursor-pointer
+            hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:border-primary/60 hover:-translate-y-1 hover:bg-slate-50/50 dark:hover:bg-secondary/40 dark:hover:shadow-none active:scale-95`
+            }
             onMouseEnter={() => {
-                // Safe pre-warming - don't block navigation
-                if (typeof window !== 'undefined') {
-                    try {
+                // Pre-warming is entirely optional — never let it block navigation
+                try {
+                    if (typeof window !== 'undefined') {
+                        // @ts-ignore - document.prerendering is a new API
+                        if (document.prerendering) return;
+
+                        // 1. Tell Next.js to background-fetch the specific UI chunk 
+                        // so click navigation is fully instant (effectively prefetch={true} but ONLY on hover).
+                        router.prefetch(`/tools/${tool.id}/`);
+
+                        // 2. Pre-warm any required WASM workers
                         preWarmTool(tool.id);
-                    } catch (e) {
-                        // Silently fail - pre-warming is optional
-                        console.debug('Pre-warm failed:', e);
                     }
+                } catch (e) {
+                    // Silently swallow — pre-warming failure must never affect UX
                 }
             }}
         >
-            {/* Category Color Accent - always visible, brightens on hover */}
-            <div
-                className="absolute left-0 top-0 bottom-0 w-[4px] opacity-60 group-hover:opacity-100 transition-opacity duration-300"
-                style={{
-                    background: `linear-gradient(to bottom, ${borderColor}, ${borderColor})`
-                }}
-            />
+            {/* Category Color Accent */}
+            {isNeu ? (
+                <div
+                    className="absolute left-0 top-0 right-0 h-[6px]"
+                    style={{ background: NB_CATEGORY_COLORS[tool.category] || "var(--nb-yellow)" }}
+                />
+            ) : (
+                <div
+                    className="absolute left-0 top-0 bottom-0 w-[4px] opacity-60 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{
+                        background: `linear-gradient(to bottom, ${borderColor}, ${borderColor})`
+                    }}
+                />
+            )}
 
             <div className="relative z-10 flex-1 flex flex-col pl-2">
                 <div className="flex justify-between items-start mb-5">
-                    <div className={`w-14 h-14 ${tool.theme.bgLight} rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
+                    <div className={isNeu
+                        ? `w-14 h-14 rounded-[var(--nb-r-lg)] flex items-center justify-center border-2 border-[var(--nb-border)] shadow-[2px_2px_0px_0px_var(--nb-border)] group-hover:translate-x-[-1px] group-hover:translate-y-[-1px] group-hover:shadow-[3px_3px_0px_0px_var(--nb-border)] transition-all`
+                        : `w-14 h-14 ${tool.theme.bgLight} rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`
+                    }
+                        style={isNeu ? { background: NB_CATEGORY_COLORS[tool.category] || "var(--nb-yellow)" } : undefined}
+                    >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-7 h-7 ${tool.theme.text}`}>
                             <path strokeLinecap="round" strokeLinejoin="round" d={tool.iconPath} />
                         </svg>
@@ -128,7 +164,7 @@ function ToolCard({ tool }: { tool: ToolDef }) {
                 </p>
             </div>
 
-            {/* Favorite Star Icon - Semantic Button Div */}
+            {/* Favorite Star Icon - Always visible on mobile (hover:none), hidden on desktop until hover */}
             <div
                 role="button"
                 tabIndex={0}
@@ -138,7 +174,8 @@ function ToolCard({ tool }: { tool: ToolDef }) {
                         handleFavoriteClick(e);
                     }
                 }}
-                className="absolute top-4 right-4 z-20 p-2 rounded-lg hover:bg-background/80 transition-all group/star opacity-0 group-hover:opacity-100 focus:opacity-100 cursor-pointer"
+                className={`absolute top-4 right-4 z-20 p-2 rounded-lg hover:bg-background/80 transition-all group/star cursor-pointer
+                    ${favorited ? "opacity-100" : "opacity-0 group-hover:opacity-100 focus:opacity-100 [@media(hover:none)]:opacity-100"}`}
                 aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
             >
                 <svg
@@ -164,7 +201,12 @@ function ToolCard({ tool }: { tool: ToolDef }) {
                 </div>
             )}
 
-            <div className="relative z-10 mt-5 flex items-center text-sm font-semibold text-primary opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+            <div className={`relative z-10 mt-5 flex items-center text-sm font-semibold transition-all duration-300 ${isNeu
+                    ? "opacity-100 translate-x-0 font-bold uppercase tracking-wide"
+                    : "text-primary opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 [@media(hover:none)]:opacity-100 [@media(hover:none)]:translate-x-0"
+                }`}
+                style={isNeu ? { color: "var(--nb-text)" } : undefined}
+            >
                 Try Now
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 ml-1">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />

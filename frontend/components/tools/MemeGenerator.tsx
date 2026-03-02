@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Dropzone from "@/components/Dropzone";
+import Dropzone from "@/components/ui/Dropzone";
 
 export default function MemeGenerator() {
     const [imageSrc, setImageSrc] = useState<string | null>(null);

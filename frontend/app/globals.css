@@ -49,11 +49,11 @@
     --popover: 229 25% 15%;
     --popover-foreground: 210 40% 98%;
 
-    /* Vibrant Cyber Lime Primary */
-    --primary: 84 81% 55%;
-    /* #a3e635 (Lime 400) - "Cyber Lime" */
-    --primary-foreground: 230 35% 7%;
-    /* Dark text on lime */
+    /* Electric Blue Primary */
+    --primary: 217 91% 60%;
+    /* #3b82f6 (Blue 500 equivalent) - Vibrant Blue */
+    --primary-foreground: 210 40% 98%;
+    /* White text on blue */
 
     /* Secondary - Muted Indigo */
     --secondary: 228 15% 25%;
@@ -72,8 +72,8 @@
 
     --border: 229 20% 20%;
     --input: 229 20% 20%;
-    --ring: 84 81% 55%;
-    /* Lime Ring */
+    --ring: 217 91% 60%;
+    /* Blue Ring */
   }
 }
 
@@ -84,6 +84,157 @@
 
   .glass-panel-dark {
     @apply bg-black/20 backdrop-blur-lg border border-white/5 shadow-2xl;
+  }
+
+  /* Feature Animations */
+  /* Merge Animations */
+  @keyframes merge-left {
+    0% {
+      transform: translateX(-100%) opacity(0);
+    }
+
+    50% {
+      transform: translateX(0) opacity(1);
+    }
+
+    100% {
+      transform: translateX(10px) opacity(0);
+    }
+  }
+
+  @keyframes merge-right {
+    0% {
+      transform: translateX(100%) opacity(0);
+    }
+
+    50% {
+      transform: translateX(0) opacity(1);
+    }
+
+    100% {
+      transform: translateX(-10px) opacity(0);
+    }
+  }
+
+  .animate-merge-left {
+    animation: merge-left 2s ease-in-out infinite;
+  }
+
+  .animate-merge-right {
+    animation: merge-right 2s ease-in-out infinite;
+  }
+
+  /* Split Animations */
+  @keyframes split-left {
+    0% {
+      transform: translateX(0) translateY(0) scale(0.5);
+      opacity: 0;
+    }
+
+    50% {
+      transform: translateX(-20px) translateY(10px) scale(1);
+      opacity: 1;
+    }
+
+    100% {
+      transform: translateX(-30px) translateY(20px) scale(0);
+      opacity: 0;
+    }
+  }
+
+  @keyframes split-center {
+    0% {
+      transform: translateY(0) scale(0.5);
+      opacity: 0;
+    }
+
+    50% {
+      transform: translateY(20px) scale(1);
+      opacity: 1;
+    }
+
+    100% {
+      transform: translateY(30px) scale(0);
+      opacity: 0;
+    }
+  }
+
+  @keyframes split-right {
+    0% {
+      transform: translateX(0) translateY(0) scale(0.5);
+      opacity: 0;
+    }
+
+    50% {
+      transform: translateX(20px) translateY(10px) scale(1);
+      opacity: 1;
+    }
+
+    100% {
+      transform: translateX(30px) translateY(20px) scale(0);
+      opacity: 0;
+    }
+  }
+
+  .animate-split-left {
+    animation: split-left 2s ease-out infinite;
+  }
+
+  .animate-split-center {
+    animation: split-center 2s ease-out infinite 0.1s;
+  }
+
+  .animate-split-right {
+    animation: split-right 2s ease-out infinite 0.2s;
+  }
+
+  /* Compress/Squeeze Animations */
+  @keyframes squeeze {
+
+    0%,
+    100% {
+      transform: scaleX(1) scaleY(1);
+    }
+
+    50% {
+      transform: scaleX(0.85) scaleY(0.95);
+    }
+  }
+
+  @keyframes point-in-left {
+
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+
+    50% {
+      transform: translateX(5px);
+    }
+  }
+
+  @keyframes point-in-right {
+
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+
+    50% {
+      transform: translateX(-5px);
+    }
+  }
+
+  .animate-squeeze {
+    animation: squeeze 1.5s ease-in-out infinite;
+  }
+
+  .animate-point-in-left {
+    animation: point-in-left 1.5s ease-in-out infinite;
+  }
+
+  .animate-point-in-right {
+    animation: point-in-right 1.5s ease-in-out infinite;
   }
 }
 
@@ -137,4 +288,1016 @@ html {
   /* IE and Edge */
   scrollbar-width: none;
   /* Firefox */
+}
+
+/* ================================================
+   NEUBRUTALIST DESIGN SYSTEM
+   Activated via: data-design="neubrutalist" on <html>
+   ================================================ */
+
+[data-design="neubrutalist"] {
+  /* --- Color Tokens --- */
+  --nb-bg: #F4F4F0;
+  --nb-text: #1A1A1A;
+  --nb-text2: #555555;
+  --nb-card: #FFFFFF;
+  --nb-border: #1A1A1A;
+  --nb-pink: #FFB5E8;
+  --nb-mint: #AFF8D8;
+  --nb-yellow: #FFE88A;
+  --nb-blue: #B5E8FF;
+  --nb-lilac: #E7C6FF;
+  --nb-orange: #FFC9A9;
+  --nb-green: #00C853;
+  --nb-red: #FF1744;
+
+  /* --- Border & Shadow Tokens (refined — thinner, softer) --- */
+  --nb-border-thick: 2px solid var(--nb-border);
+  --nb-border-thin: 1.5px solid var(--nb-border);
+  --nb-shadow: 3px 3px 0px 0px var(--nb-border);
+  --nb-shadow-hover: 4px 4px 0px 0px var(--nb-border);
+  --nb-shadow-active: 1px 1px 0px 0px var(--nb-border);
+  --nb-shadow-sm: 2px 2px 0px 0px var(--nb-border);
+
+  /* --- Radius Tokens --- */
+  --nb-r-sm: 8px;
+  --nb-r-md: 12px;
+  --nb-r-lg: 16px;
+  --nb-r-xl: 20px;
+  --nb-r-full: 9999px;
+
+  /* --- Animation (smooth & buttery) --- */
+  --nb-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --nb-dur: 200ms;
+}
+
+/* --- Global Touch & Mobile Optimizations --- */
+[data-design="neubrutalist"] button,
+[data-design="neubrutalist"] a,
+[data-design="neubrutalist"] [role="button"],
+[data-design="neubrutalist"] .nb-card {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Accessibility: Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  [data-design="neubrutalist"] * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* ================================================
+   NEUBRUTALIST DARK MODE  — Soothing & Vibrant
+   ================================================ */
+[data-design="neubrutalist"].dark,
+.dark[data-design="neubrutalist"] {
+  --nb-bg: #111111;
+  --nb-text: #ECECEC;
+  --nb-text2: #999;
+  --nb-card: #1E1E1E;
+  --nb-border: #555;
+
+  /* Thinner borders for dark mode */
+  --nb-border-thick: 1.5px solid var(--nb-border);
+  --nb-border-thin: 1px solid var(--nb-border);
+
+  /* Vibrant but softened pastels for dark bg */
+  --nb-pink: #FF85C8;
+  --nb-mint: #5AEAAD;
+  --nb-yellow: #FFD43B;
+  --nb-blue: #6CC3FF;
+  --nb-lilac: #C49BFF;
+  --nb-orange: #FFB07A;
+
+  /* Hard offset shadows — same style as light mode but with lighter color */
+  --nb-shadow: 3px 3px 0px 0px #555;
+  --nb-shadow-hover: 4px 4px 0px 0px #666;
+  --nb-shadow-active: 1px 1px 0px 0px #444;
+  --nb-shadow-sm: 2px 2px 0px 0px #555;
+}
+
+/* ================================================
+   NEUBRUTALIST TOOL PAGE OVERRIDES (CSS-only)
+   ================================================ */
+
+/* --- Navbar bottom border --- */
+[data-design="neubrutalist"] header.border-b {
+  border-bottom: 1.5px solid #1A1A1A !important;
+}
+
+.dark[data-design="neubrutalist"] header.border-b,
+[data-design="neubrutalist"].dark header.border-b {
+  border-bottom-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* --- Dropzone: dashed → solid, premium hover glow --- */
+[data-design="neubrutalist"] .group.border-dashed,
+[data-design="neubrutalist"] .border-dashed {
+  border-style: solid !important;
+  border-width: 2px !important;
+  border-color: var(--nb-border) !important;
+  border-radius: var(--nb-r-xl) !important;
+  box-shadow: var(--nb-shadow) !important;
+  background: var(--nb-card) !important;
+  transition: transform 200ms var(--nb-ease),
+    box-shadow 200ms var(--nb-ease),
+    border-color 200ms ease,
+    background-color 200ms ease !important;
+  position: relative !important;
+}
+
+[data-design="neubrutalist"] .group.border-dashed:hover,
+[data-design="neubrutalist"] .border-dashed:hover {
+  transform: translateY(-3px) scale(1.005) !important;
+  border-color: var(--nb-pink) !important;
+  box-shadow:
+    var(--nb-shadow-hover),
+    0 0 0 3px color-mix(in srgb, var(--nb-pink) 50%, transparent),
+    0 0 30px -5px color-mix(in srgb, var(--nb-pink) 25%, transparent) !important;
+  background: color-mix(in srgb, var(--nb-card) 95%, var(--nb-pink)) !important;
+}
+
+[data-design="neubrutalist"] .group.border-dashed:active,
+[data-design="neubrutalist"] .border-dashed:active {
+  transform: translateY(1px) scale(0.98) !important;
+  box-shadow: var(--nb-shadow-active) !important;
+  transition: transform 100ms ease-out, box-shadow 100ms ease-out !important;
+}
+
+/* --- Dropzone text: bold + brighten on hover --- */
+[data-design="neubrutalist"] .group .text-xl {
+  font-weight: 800 !important;
+  transition: all 200ms var(--nb-ease) !important;
+}
+
+[data-design="neubrutalist"] .group:hover .text-foreground,
+[data-design="neubrutalist"] .group:hover .text-muted-foreground,
+[data-design="neubrutalist"] .group:hover p {
+  color: var(--nb-text) !important;
+  opacity: 1 !important;
+}
+
+/* --- Tool main container card --- */
+[data-design="neubrutalist"] .rounded-\[2rem\] {
+  border: var(--nb-border-thick) !important;
+  border-radius: var(--nb-r-xl) !important;
+  box-shadow: var(--nb-shadow) !important;
+  background: var(--nb-card) !important;
+}
+
+/* --- Process Button: yellow, smooth press --- */
+[data-design="neubrutalist"] .fixed.bottom-0 button {
+  background: var(--nb-yellow) !important;
+  color: #1A1A1A !important;
+  border: 1.5px solid #1A1A1A !important;
+  border-radius: var(--nb-r-xl) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.02em !important;
+  transition: transform 200ms var(--nb-ease),
+    box-shadow 200ms var(--nb-ease) !important;
+}
+
+.dark[data-design="neubrutalist"] .fixed.bottom-0 button,
+[data-design="neubrutalist"].dark .fixed.bottom-0 button {
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+[data-design="neubrutalist"] .fixed.bottom-0 button:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: var(--nb-shadow-hover) !important;
+}
+
+[data-design="neubrutalist"] .fixed.bottom-0 button:active {
+  transform: translateY(2px) scale(0.97) !important;
+  box-shadow: var(--nb-shadow-active) !important;
+  transition: transform 100ms ease-out, box-shadow 100ms ease-out !important;
+}
+
+/* --- Sticky process bar bg --- */
+[data-design="neubrutalist"] .fixed.bottom-0 {
+  background: var(--nb-bg) !important;
+  border-top: 1px solid var(--nb-border) !important;
+  backdrop-filter: none !important;
+}
+
+/* --- File cards in tool --- */
+[data-design="neubrutalist"] .aspect-square {
+  border: var(--nb-border-thick) !important;
+  border-radius: var(--nb-r-lg) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  background: var(--nb-card) !important;
+  transition: transform 200ms var(--nb-ease),
+    box-shadow 200ms var(--nb-ease) !important;
+}
+
+[data-design="neubrutalist"] .aspect-square:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: var(--nb-shadow-hover) !important;
+}
+
+[data-design="neubrutalist"] .aspect-square:active {
+  transform: translateY(1px) scale(0.97) !important;
+  box-shadow: var(--nb-shadow-active) !important;
+  transition: transform 100ms ease-out, box-shadow 100ms ease-out !important;
+}
+
+/* --- Settings sidebar --- */
+[data-design="neubrutalist"] .border-l {
+  border-left: 2px solid var(--nb-border) !important;
+  background: var(--nb-bg) !important;
+}
+
+/* --- Ghost/On-Device Badge --- */
+[data-design="neubrutalist"] .bg-green-50,
+[data-design="neubrutalist"] .bg-emerald-50 {
+  background: var(--nb-mint) !important;
+  border: 1.5px solid var(--nb-border) !important;
+  border-radius: var(--nb-r-full) !important;
+  color: #1A1A1A !important;
+}
+
+/* --- TURBO Badge --- */
+[data-design="neubrutalist"] .bg-amber-50 {
+  background: var(--nb-yellow) !important;
+  border: 1.5px solid var(--nb-border) !important;
+  border-radius: var(--nb-r-full) !important;
+  color: #1A1A1A !important;
+}
+
+/* --- Select/input in tool settings --- */
+[data-design="neubrutalist"] select,
+[data-design="neubrutalist"] .border-border input[type="number"],
+[data-design="neubrutalist"] .border-border input[type="text"] {
+  border: var(--nb-border-thin) !important;
+  border-radius: var(--nb-r-md) !important;
+  background: var(--nb-card) !important;
+  color: var(--nb-text) !important;
+  font-weight: 600 !important;
+  transition: box-shadow var(--nb-dur) var(--nb-ease),
+    border-color var(--nb-dur) var(--nb-ease) !important;
+}
+
+[data-design="neubrutalist"] select:focus,
+[data-design="neubrutalist"] .border-border input[type="number"]:focus,
+[data-design="neubrutalist"] .border-border input[type="text"]:focus {
+  box-shadow: 0 0 0 3px var(--nb-blue) !important;
+  border-color: var(--nb-blue) !important;
+}
+
+/* --- Split mode / Orientation tabs --- */
+[data-design="neubrutalist"] .bg-slate-100,
+[data-design="neubrutalist"] .dark .bg-slate-800 {
+  border: var(--nb-border-thin) !important;
+  border-radius: var(--nb-r-lg) !important;
+  background: var(--nb-bg) !important;
+}
+
+/* --- "Add More" / "Replace" button --- */
+[data-design="neubrutalist"] button[title*="Add more"],
+[data-design="neubrutalist"] button[title*="Replace"] {
+  border: var(--nb-border-thin) !important;
+  border-radius: var(--nb-r-full) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  background: var(--nb-card) !important;
+  color: var(--nb-text) !important;
+  font-weight: 700 !important;
+  transition: all var(--nb-dur) var(--nb-ease) !important;
+}
+
+[data-design="neubrutalist"] button[title*="Add more"]:hover,
+[data-design="neubrutalist"] button[title*="Replace"]:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: var(--nb-shadow) !important;
+  background: var(--nb-mint) !important;
+  color: #1A1A1A !important;
+}
+
+[data-design="neubrutalist"] button[title*="Add more"]:active,
+[data-design="neubrutalist"] button[title*="Replace"]:active {
+  transform: translateY(1px) scale(0.95) !important;
+  box-shadow: var(--nb-shadow-active) !important;
+  transition: transform 100ms ease-out, box-shadow 100ms ease-out !important;
+}
+
+/* --- "Delete All" button --- */
+[data-design="neubrutalist"] button[title*="Delete all"],
+[data-design="neubrutalist"] button[title*="delete all"],
+[data-design="neubrutalist"] button[title*="Delete All"] {
+  border: var(--nb-border-thin) !important;
+  border-radius: var(--nb-r-full) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  background: var(--nb-card) !important;
+  color: #DC2626 !important;
+  font-weight: 700 !important;
+  transition: all var(--nb-dur) var(--nb-ease) !important;
+}
+
+[data-design="neubrutalist"] button[title*="Delete all"]:hover,
+[data-design="neubrutalist"] button[title*="delete all"]:hover,
+[data-design="neubrutalist"] button[title*="Delete All"]:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: var(--nb-shadow) !important;
+  background: #FEE2E2 !important;
+  color: #DC2626 !important;
+}
+
+.dark [data-design="neubrutalist"] button[title*="Delete all"]:hover,
+.dark [data-design="neubrutalist"] button[title*="delete all"]:hover,
+.dark [data-design="neubrutalist"] button[title*="Delete All"]:hover,
+[data-design="neubrutalist"].dark button[title*="Delete all"]:hover,
+[data-design="neubrutalist"].dark button[title*="delete all"]:hover,
+[data-design="neubrutalist"].dark button[title*="Delete All"]:hover {
+  background: rgba(220, 38, 38, 0.15) !important;
+}
+
+[data-design="neubrutalist"] button[title*="Delete all"]:active,
+[data-design="neubrutalist"] button[title*="delete all"]:active,
+[data-design="neubrutalist"] button[title*="Delete All"]:active {
+  transform: translateY(1px) scale(0.95) !important;
+  box-shadow: var(--nb-shadow-active) !important;
+  transition: transform 100ms ease-out, box-shadow 100ms ease-out !important;
+}
+
+/* --- "Add Range" / general secondary action buttons --- */
+[data-design="neubrutalist"] .border-primary.text-primary {
+  border: var(--nb-border-thick) !important;
+  border-radius: var(--nb-r-xl) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  background: var(--nb-card) !important;
+  color: var(--nb-text) !important;
+  font-weight: 700 !important;
+  transition: all var(--nb-dur) var(--nb-ease) !important;
+}
+
+[data-design="neubrutalist"] .border-primary.text-primary:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: var(--nb-shadow) !important;
+  background: var(--nb-blue) !important;
+  color: #1A1A1A !important;
+}
+
+[data-design="neubrutalist"] .border-primary.text-primary:active {
+  transform: translateY(1px) scale(0.96) !important;
+  box-shadow: var(--nb-shadow-active) !important;
+  transition: transform 100ms ease-out, box-shadow 100ms ease-out !important;
+}
+
+/* --- Split mode tabs (Range/Extract/Size) --- */
+[data-design="neubrutalist"] .gap-2.p-1.rounded-xl {
+  border: var(--nb-border-thin) !important;
+  border-radius: var(--nb-r-lg) !important;
+  background: var(--nb-bg) !important;
+  padding: 4px !important;
+}
+
+/* --- Checkbox styling --- */
+[data-design="neubrutalist"] .border-slate-300 {
+  border-color: var(--nb-border) !important;
+}
+
+/* --- Range input containers --- */
+[data-design="neubrutalist"] .overflow-hidden[class*="focus-within"] {
+  border: var(--nb-border-thin) !important;
+  border-radius: var(--nb-r-md) !important;
+  background: var(--nb-card) !important;
+}
+
+/* ================================================
+   NEUBRUTALIST — Favorites / History Tabs
+   ================================================ */
+/* Tab container */
+[data-design="neubrutalist"] .flex[class*="bg-secondary"] {
+  border-bottom: none !important;
+  background: var(--nb-bg) !important;
+  padding: 6px !important;
+  gap: 4px !important;
+  border-radius: var(--nb-r-lg) var(--nb-r-lg) 0 0 !important;
+}
+
+/* Active tab */
+[data-design="neubrutalist"] .flex[class*="bg-secondary"] .border-primary.bg-background {
+  background: var(--nb-card) !important;
+  border: var(--nb-border-thin) !important;
+  border-radius: var(--nb-r-full) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  color: var(--nb-text) !important;
+  font-weight: 800 !important;
+}
+
+/* Inactive tab */
+[data-design="neubrutalist"] .flex[class*="bg-secondary"] .border-transparent {
+  border: 2px solid transparent !important;
+  border-radius: var(--nb-r-full) !important;
+  color: var(--nb-text2) !important;
+  transition: all var(--nb-dur) var(--nb-ease) !important;
+}
+
+[data-design="neubrutalist"] .flex[class*="bg-secondary"] .border-transparent:hover {
+  background: var(--nb-card) !important;
+  border-color: var(--nb-border) !important;
+  color: var(--nb-text) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Library dropdown container */
+[data-design="neubrutalist"] .w-80.bg-background.rounded-xl {
+  border: var(--nb-border-thick) !important;
+  border-radius: var(--nb-r-xl) !important;
+  box-shadow: var(--nb-shadow) !important;
+  overflow: hidden !important;
+}
+
+/* ================================================
+   NEUBRUTALIST — Compression Mode Cards
+   ================================================ */
+/* All compression cards base */
+[data-design="neubrutalist"] .space-y-4 button.rounded-xl,
+[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl {
+  border: var(--nb-border-thin) !important;
+  border-radius: var(--nb-r-lg) !important;
+  background: var(--nb-card) !important;
+  box-shadow: none !important;
+  --tw-ring-shadow: none !important;
+  transition: transform 200ms var(--nb-ease),
+    box-shadow 200ms var(--nb-ease),
+    border-color 200ms ease,
+    background-color 200ms ease !important;
+  cursor: pointer !important;
+}
+
+/* Unselected card hover */
+[data-design="neubrutalist"] .space-y-4 button.rounded-xl:hover,
+[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl:hover {
+  transform: translateY(-1px) scale(1.01) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  border-color: var(--nb-pink) !important;
+}
+
+/* Unselected card active/click */
+[data-design="neubrutalist"] .space-y-4 button.rounded-xl:active,
+[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl:active {
+  transform: translateY(1px) scale(0.97) !important;
+  box-shadow: none !important;
+  transition: transform 100ms ease-out, box-shadow 100ms ease-out !important;
+}
+
+/* Selected card — yellow highlight (has ring-1 and border-primary) */
+[data-design="neubrutalist"] .space-y-4 button.rounded-xl.ring-1,
+[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl.ring-1 {
+  background: var(--nb-yellow) !important;
+  border: var(--nb-border-thick) !important;
+  border-radius: var(--nb-r-lg) !important;
+  box-shadow: var(--nb-shadow) !important;
+  color: #1A1A1A !important;
+  outline: none !important;
+  --tw-ring-shadow: none !important;
+}
+
+[data-design="neubrutalist"] .space-y-4 button.rounded-xl.ring-1 .text-primary,
+[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl.ring-1 .text-primary {
+  color: #1A1A1A !important;
+}
+
+/* Selected card hover — slight lift */
+[data-design="neubrutalist"] .space-y-4 button.rounded-xl.ring-1:hover,
+[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl.ring-1:hover {
+  transform: translateY(-1px) scale(1.01) !important;
+  box-shadow: var(--nb-shadow-hover) !important;
+}
+
+/* Selected card active/click */
+[data-design="neubrutalist"] .space-y-4 button.rounded-xl.ring-1:active,
+[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl.ring-1:active {
+  transform: translateY(1px) scale(0.97) !important;
+  box-shadow: var(--nb-shadow-active) !important;
+  transition: transform 100ms ease-out, box-shadow 100ms ease-out !important;
+}
+
+/* "Manual" / toggle pill button  */
+[data-design="neubrutalist"] button.rounded-full[class*="bg-primary"] {
+  background: var(--nb-mint) !important;
+  color: #1A1A1A !important;
+  border: var(--nb-border-thin) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  font-weight: 800 !important;
+  transition: transform 200ms var(--nb-ease),
+    box-shadow 200ms var(--nb-ease),
+    background-color 200ms ease !important;
+}
+
+[data-design="neubrutalist"] button.rounded-full[class*="bg-primary"]:hover {
+  transform: translateY(-1px) scale(1.03) !important;
+  box-shadow: var(--nb-shadow) !important;
+  background: var(--nb-blue) !important;
+}
+
+[data-design="neubrutalist"] button.rounded-full[class*="bg-primary"]:active {
+  transform: translateY(1px) scale(0.95) !important;
+  box-shadow: 1px 1px 0px 0px var(--nb-border) !important;
+  transition: transform 100ms ease-out, box-shadow 100ms ease-out !important;
+}
+
+/* ================================================
+   NEUBRUTALIST — Configure Tool Settings Button
+   ================================================ */
+[data-design="neubrutalist"] button[class*="lg:hidden"][class*="group/settings"] {
+  background: var(--nb-card) !important;
+  border: var(--nb-border-thin) !important;
+  border-radius: var(--nb-r-xl) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  transition: transform 200ms var(--nb-ease),
+    box-shadow 200ms var(--nb-ease) !important;
+}
+
+[data-design="neubrutalist"] button[class*="lg:hidden"][class*="group/settings"]:hover {
+  transform: translateY(-2px) scale(1.01) !important;
+  box-shadow: var(--nb-shadow) !important;
+  border-color: var(--nb-border) !important;
+}
+
+[data-design="neubrutalist"] button[class*="lg:hidden"][class*="group/settings"]:active {
+  transform: translateY(2px) scale(0.96) !important;
+  box-shadow: var(--nb-shadow-active) !important;
+  transition: transform 100ms ease-out, box-shadow 100ms ease-out !important;
+}
+
+/* ================================================
+   NEUBRUTALIST — File Thumbnail Cards
+   ================================================ */
+[data-design="neubrutalist"] [data-file-card] {
+  background: var(--nb-card) !important;
+  border: var(--nb-border-thin) !important;
+  border-radius: var(--nb-r-lg) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  transition: transform 200ms var(--nb-ease),
+    box-shadow 200ms var(--nb-ease) !important;
+}
+
+[data-design="neubrutalist"] [data-file-card]:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: var(--nb-shadow) !important;
+}
+
+[data-design="neubrutalist"] [data-file-card]:active {
+  transform: translateY(1px) scale(0.96) !important;
+  box-shadow: var(--nb-shadow-active) !important;
+  transition: transform 100ms ease-out, box-shadow 100ms ease-out !important;
+}
+
+/* Bottom filename label bar */
+[data-design="neubrutalist"] [data-file-card-label] {
+  background: #1A1A1A !important;
+  color: #FFFFFF !important;
+  border-top: none !important;
+  font-weight: 800 !important;
+  border-radius: 0 0 calc(var(--nb-r-lg) - 2px) calc(var(--nb-r-lg) - 2px) !important;
+}
+
+/* File card action buttons (rotate & close) */
+[data-design="neubrutalist"] [data-file-card] .rounded-full {
+  background: var(--nb-card) !important;
+  color: var(--nb-text) !important;
+  border: 1.5px solid var(--nb-border) !important;
+  box-shadow: var(--nb-shadow-active) !important;
+  backdrop-filter: none !important;
+  transition: all 150ms var(--nb-ease) !important;
+}
+
+[data-design="neubrutalist"] [data-file-card] .rounded-full:hover {
+  transform: scale(1.15) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  border-color: var(--nb-pink) !important;
+  background: var(--nb-pink) !important;
+  color: #1A1A1A !important;
+}
+
+[data-design="neubrutalist"] [data-file-card] .rounded-full:active {
+  transform: scale(0.9) !important;
+  box-shadow: none !important;
+}
+
+[data-design="neubrutalist"] .w-20.h-20.rounded-2xl {
+  border: var(--nb-border-thick) !important;
+  border-radius: var(--nb-r-lg) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  background: var(--nb-mint) !important;
+  color: #1A1A1A !important;
+  transition: all 350ms cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+[data-design="neubrutalist"] .group:hover .w-20.h-20.rounded-2xl {
+  transform: scale(1.12) rotate(3deg) translateY(-2px) !important;
+  background: var(--nb-pink) !important;
+  border-color: var(--nb-pink) !important;
+  box-shadow:
+    var(--nb-shadow),
+    0 0 20px -3px color-mix(in srgb, var(--nb-pink) 40%, transparent) !important;
+}
+
+/* --- Cloud import buttons --- */
+[data-design="neubrutalist"] button[title="Google Drive"],
+[data-design="neubrutalist"] button[title="Dropbox"],
+[data-design="neubrutalist"] button[title="OneDrive"] {
+  border: var(--nb-border-thin) !important;
+  border-radius: var(--nb-r-md) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  background: var(--nb-card) !important;
+  transition: all var(--nb-dur) var(--nb-ease) !important;
+}
+
+[data-design="neubrutalist"] button[title="Google Drive"]:hover,
+[data-design="neubrutalist"] button[title="Dropbox"]:hover,
+[data-design="neubrutalist"] button[title="OneDrive"]:hover {
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow: var(--nb-shadow) !important;
+}
+
+[data-design="neubrutalist"] button[title="Google Drive"]:active,
+[data-design="neubrutalist"] button[title="Dropbox"]:active,
+[data-design="neubrutalist"] button[title="OneDrive"]:active {
+  transform: translateY(1px) scale(0.95) !important;
+  box-shadow: var(--nb-shadow-active) !important;
+}
+
+/* --- Security badge at bottom of dropzone --- */
+[data-design="neubrutalist"] .bg-secondary\/50.rounded-full {
+  border: var(--nb-border-thin) !important;
+  background: var(--nb-card) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+}
+
+/* --- Compression mode cards --- */
+[data-design="neubrutalist"] .border-primary.bg-primary\/5 {
+  border: var(--nb-border-thick) !important;
+  box-shadow: var(--nb-shadow) !important;
+  background: var(--nb-yellow) !important;
+  color: #1A1A1A !important;
+}
+
+/* --- Download/Success card --- */
+[data-design="neubrutalist"] .min-h-\[500px\] {
+  border: 1.5px solid #1A1A1A !important;
+  border-radius: var(--nb-r-xl) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  background: var(--nb-card) !important;
+}
+
+.dark[data-design="neubrutalist"] .min-h-\[500px\],
+[data-design="neubrutalist"].dark .min-h-\[500px\] {
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* --- Breadcrumbs --- */
+[data-design="neubrutalist"] a[href="/"] {
+  font-weight: 700 !important;
+}
+
+/* ================================================
+   NEUBRUTALIST — Search Bar Polish
+   ================================================ */
+[data-design="neubrutalist"] input[type="text"][placeholder*="Search"],
+[data-design="neubrutalist"] input[placeholder*="Search"] {
+  border: var(--nb-border-thick) !important;
+  border-radius: var(--nb-r-xl) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  background: var(--nb-card) !important;
+  color: var(--nb-text) !important;
+  font-weight: 600 !important;
+  padding: 14px 20px 14px 56px !important;
+  transition: all var(--nb-dur) var(--nb-ease) !important;
+}
+
+[data-design="neubrutalist"] input[type="text"][placeholder*="Search"]:focus,
+[data-design="neubrutalist"] input[placeholder*="Search"]:focus {
+  box-shadow: var(--nb-shadow), 0 0 0 3px color-mix(in srgb, var(--nb-blue) 40%, transparent) !important;
+  border-color: var(--nb-blue) !important;
+  outline: none !important;
+}
+
+/* ================================================
+   NEUBRUTALIST — Success Page Buttons
+   ================================================ */
+/* "Process Another" button */
+[data-design="neubrutalist"] button.bg-slate-100 {
+  background: #FFFFFF !important;
+  border: 1.5px solid #1A1A1A !important;
+  border-radius: var(--nb-r-xl) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  color: #1A1A1A !important;
+  font-weight: 800 !important;
+  transition: all var(--nb-dur) var(--nb-ease) !important;
+}
+
+.dark[data-design="neubrutalist"] button.bg-slate-100,
+[data-design="neubrutalist"].dark button.bg-slate-100 {
+  background: var(--nb-card) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  color: var(--nb-text) !important;
+}
+
+[data-design="neubrutalist"] button.bg-slate-100:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: var(--nb-shadow) !important;
+}
+
+[data-design="neubrutalist"] button.bg-slate-100:active {
+  transform: translateY(1px) !important;
+  box-shadow: var(--nb-shadow-active) !important;
+}
+
+/* "Download Now" button */
+[data-design="neubrutalist"] a.bg-primary {
+  background: var(--nb-yellow) !important;
+  color: #1A1A1A !important;
+  border: 1.5px solid #1A1A1A !important;
+  border-radius: var(--nb-r-xl) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  font-weight: 800 !important;
+  transition: all var(--nb-dur) var(--nb-ease) !important;
+}
+
+.dark[data-design="neubrutalist"] a.bg-primary,
+[data-design="neubrutalist"].dark a.bg-primary {
+  border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+[data-design="neubrutalist"] a.bg-primary:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: var(--nb-shadow) !important;
+}
+
+[data-design="neubrutalist"] a.bg-primary:active {
+  transform: translateY(1px) !important;
+  box-shadow: var(--nb-shadow-active) !important;
+}
+
+/* ================================================
+   NEUBRUTALIST — Next Action Panel
+   ================================================ */
+[data-design="neubrutalist"] .bg-slate-50 {
+  background: var(--nb-bg) !important;
+}
+
+/* Next Action card container */
+[data-design="neubrutalist"] [class*="rounded-[2rem]"].border-2 {
+  border: var(--nb-border-thick) !important;
+  border-radius: var(--nb-r-xl) !important;
+  box-shadow: var(--nb-shadow) !important;
+  background: var(--nb-card) !important;
+}
+
+/* Next Action label pill */
+[data-design="neubrutalist"] .bg-slate-900 {
+  background: var(--nb-text) !important;
+  border: var(--nb-border-thin) !important;
+  border-radius: var(--nb-r-full) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+}
+
+/* Next Action tool items */
+[data-design="neubrutalist"] button.bg-white[class*="bg-slate-950"] {
+  background: var(--nb-card) !important;
+  border: var(--nb-border-thin) !important;
+  border-radius: var(--nb-r-md) !important;
+  box-shadow: none !important;
+  transition: all var(--nb-dur) var(--nb-ease) !important;
+}
+
+[data-design="neubrutalist"] button.bg-white[class*="bg-slate-950"]:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  border-color: var(--nb-pink) !important;
+}
+
+/* Next Action tool icon circles */
+[data-design="neubrutalist"] .w-9.h-9.rounded-md {
+  border: var(--nb-border-thin) !important;
+  border-radius: var(--nb-r-sm) !important;
+}
+
+/* ================================================
+   NEUBRUTALIST — Result / Status Badges
+   ================================================ */
+[data-design="neubrutalist"] .rounded-full.bg-slate-100 {
+  border: var(--nb-border-thin) !important;
+  background: var(--nb-card) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+}
+
+[data-design="neubrutalist"] .rounded-full[class*="bg-primary"] {
+  border: var(--nb-border-thin) !important;
+  background: var(--nb-mint) !important;
+  color: #1A1A1A !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+}
+
+/* ================================================
+   NEUBRUTALIST — Tool Card Icons (homepage)
+   ================================================ */
+[data-design="neubrutalist"] .nb-card .rounded-xl {
+  border: var(--nb-border-thin) !important;
+  border-radius: var(--nb-r-sm) !important;
+}
+
+/* --- Global Overrides when Neubrutalist is active --- */
+[data-design="neubrutalist"] body {
+  background-color: var(--nb-bg) !important;
+  color: var(--nb-text);
+  font-family: var(--font-space-grotesk), var(--font-inter), system-ui, sans-serif;
+}
+
+/* --- CARD: clean bg, border, shadow, smooth hover --- */
+[data-design="neubrutalist"] .nb-card {
+  background: var(--nb-card);
+  border: var(--nb-border-thick);
+  border-radius: var(--nb-r-xl);
+  box-shadow: var(--nb-shadow);
+  transition: transform 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    background-color 200ms ease;
+}
+
+[data-design="neubrutalist"] .nb-card:hover {
+  transform: translateY(-4px) scale(1.015);
+  box-shadow: 5px 5px 0px 0px var(--nb-border), 0 12px 30px -8px rgba(0, 0, 0, 0.1);
+}
+
+[data-design="neubrutalist"] .nb-card:active {
+  transform: translateY(2px) scale(0.97);
+  box-shadow: 1px 1px 0px 0px var(--nb-border);
+  transition: transform 100ms ease-out, box-shadow 100ms ease-out;
+}
+
+/* --- BUTTON PRIMARY: yellow, smooth lift/press --- */
+[data-design="neubrutalist"] .nb-btn {
+  background: var(--nb-yellow);
+  color: #1A1A1A;
+  border: var(--nb-border-thick);
+  border-radius: var(--nb-r-xl);
+  padding: 14px 28px;
+  font-weight: 800;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  box-shadow: var(--nb-shadow);
+  cursor: pointer;
+  transition: transform var(--nb-dur) var(--nb-ease),
+    box-shadow var(--nb-dur) var(--nb-ease);
+  text-decoration: none;
+  display: inline-block;
+}
+
+[data-design="neubrutalist"] .nb-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--nb-shadow-hover), 0 6px 20px -4px rgba(0, 0, 0, 0.12);
+}
+
+[data-design="neubrutalist"] .nb-btn:active {
+  transform: translateY(1px);
+  box-shadow: var(--nb-shadow-active);
+}
+
+/* --- BUTTON GHOST: clean, smooth lift/press --- */
+[data-design="neubrutalist"] .nb-btn-ghost {
+  background: var(--nb-card);
+  color: var(--nb-text);
+  border: var(--nb-border-thick);
+  border-radius: var(--nb-r-xl);
+  padding: 12px 24px;
+  font-weight: 700;
+  font-size: 0.875rem;
+  box-shadow: var(--nb-shadow);
+  cursor: pointer;
+  transition: transform var(--nb-dur) var(--nb-ease),
+    box-shadow var(--nb-dur) var(--nb-ease);
+  text-decoration: none;
+  display: inline-block;
+}
+
+[data-design="neubrutalist"] .nb-btn-ghost:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--nb-shadow-hover), 0 6px 20px -4px rgba(0, 0, 0, 0.08);
+}
+
+[data-design="neubrutalist"] .nb-btn-ghost:active {
+  transform: translateY(1px);
+  box-shadow: var(--nb-shadow-active);
+}
+
+/* --- INPUT: clean border, focus glow --- */
+[data-design="neubrutalist"] .nb-input {
+  background: var(--nb-card);
+  color: var(--nb-text);
+  border: var(--nb-border-thick);
+  border-radius: var(--nb-r-lg);
+  padding: 14px 18px;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: var(--nb-shadow);
+  outline: none;
+  transition: box-shadow var(--nb-dur) var(--nb-ease),
+    border-color var(--nb-dur) var(--nb-ease);
+}
+
+[data-design="neubrutalist"] .nb-input:focus {
+  box-shadow: var(--nb-shadow), 0 0 0 3px var(--nb-blue);
+  border-color: var(--nb-blue);
+}
+
+[data-design="neubrutalist"] .nb-input::placeholder {
+  color: var(--nb-text2);
+  font-weight: 600;
+}
+
+/* --- PILL / BADGE: thin border, small shadow, fully rounded --- */
+[data-design="neubrutalist"] .nb-pill {
+  background: var(--nb-card);
+  color: var(--nb-text);
+  border: var(--nb-border-thin);
+  border-radius: var(--nb-r-full);
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  box-shadow: var(--nb-shadow-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* --- SECTION LABEL: uppercase eyebrow --- */
+[data-design="neubrutalist"] .nb-label {
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--nb-text);
+}
+
+/* Neubrutalist stagger fade-up animation for cards */
+@keyframes nb-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+[data-design="neubrutalist"] .nb-stagger>* {
+  animation: nb-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+[data-design="neubrutalist"] .nb-stagger>*:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+[data-design="neubrutalist"] .nb-stagger>*:nth-child(2) {
+  animation-delay: 60ms;
+}
+
+[data-design="neubrutalist"] .nb-stagger>*:nth-child(3) {
+  animation-delay: 120ms;
+}
+
+[data-design="neubrutalist"] .nb-stagger>*:nth-child(4) {
+  animation-delay: 180ms;
+}
+
+[data-design="neubrutalist"] .nb-stagger>*:nth-child(5) {
+  animation-delay: 240ms;
+}
+
+[data-design="neubrutalist"] .nb-stagger>*:nth-child(6) {
+  animation-delay: 300ms;
+}
+
+[data-design="neubrutalist"] .nb-stagger>*:nth-child(7) {
+  animation-delay: 360ms;
+}
+
+[data-design="neubrutalist"] .nb-stagger>*:nth-child(8) {
+  animation-delay: 420ms;
+}
+
+[data-design="neubrutalist"] .nb-stagger>*:nth-child(9) {
+  animation-delay: 480ms;
+}
+
+[data-design="neubrutalist"] .nb-stagger>*:nth-child(10) {
+  animation-delay: 540ms;
+}
+
+[data-design="neubrutalist"] .nb-stagger>*:nth-child(11) {
+  animation-delay: 600ms;
+}
+
+[data-design="neubrutalist"] .nb-stagger>*:nth-child(12) {
+  animation-delay: 660ms;
 }

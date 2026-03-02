@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 
 declare global {
     interface Window {
@@ -13,40 +13,49 @@ interface DropboxConfig {
 export function useDropboxChooser({ appKey }: DropboxConfig) {
     const [isLoaded, setIsLoaded] = useState(false);
 
-    const loadScript = useCallback(() => {
-        if (document.getElementById('dropboxjs')) {
-            setIsLoaded(true);
-            return;
-        }
-        const script = document.createElement("script");
-        script.id = "dropboxjs";
-        script.src = "https://www.dropbox.com/static/api/2/dropins.js";
-        script.dataset.appKey = appKey;
-        script.onload = () => setIsLoaded(true);
-        document.body.appendChild(script);
+    const loadPromise = useRef<Promise<void> | null>(null);
+
+    const loadScript = useCallback((): Promise<void> => {
+        if (loadPromise.current) return loadPromise.current;
+
+        loadPromise.current = new Promise((resolve) => {
+            if (window.Dropbox) {
+                setIsLoaded(true);
+                resolve(undefined);
+                return;
+            }
+            const script = document.createElement("script");
+            script.id = "dropboxjs";
+            script.src = "https://www.dropbox.com/static/api/2/dropins.js";
+            script.dataset.appKey = appKey;
+            script.onload = () => {
+                setIsLoaded(true);
+                resolve(undefined);
+            };
+            document.body.appendChild(script);
+        });
+
+        return loadPromise.current;
     }, [appKey]);
 
-    const openChooser = useCallback((): Promise<any> => {
+    const openChooser = useCallback(async (): Promise<any> => {
+        await loadScript();
+
         return new Promise((resolve, reject) => {
             if (!window.Dropbox) {
-                loadScript();
-                // In a real app we'd wait for load, simple retry for now
-                setTimeout(() => {
-                    if (!window.Dropbox) reject("Dropbox SDK not loaded");
-                }, 1000);
+                reject(new Error("Dropbox SDK failed to initialize."));
+                return;
             }
 
-            if (window.Dropbox) {
-                window.Dropbox.choose({
-                    success: (files: any[]) => {
-                        resolve(files[0]); // We typically just want one for now
-                    },
-                    cancel: () => reject("Cancelled"),
-                    linkType: "direct", // Direct download link
-                    multiselect: false,
-                    extensions: ['.pdf', '.doc', '.docx', '.jpg', '.png'],
-                });
-            }
+            window.Dropbox.choose({
+                success: (files: any[]) => {
+                    resolve(files[0]); // We typically just want one for now
+                },
+                cancel: () => reject("Cancelled"),
+                linkType: "direct", // Direct download link
+                multiselect: false,
+                extensions: ['.pdf', '.doc', '.docx', '.jpg', '.png', '.jpeg', '.webp'],
+            });
         });
     }, [loadScript]);
 

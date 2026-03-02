@@ -1,7 +1,19 @@
 /* eslint-disable no-restricted-globals */
 // Import libraries from CDN
-importScripts('/workers/libs/pdf-lib.min.js');
-importScripts('/workers/libs/jszip.min.js');
+// Import libraries with robust fallback
+try {
+    importScripts('/workers/libs/pdf-lib.min.js');
+} catch (e) {
+    console.warn('Failed to load local pdf-lib, trying CDN...');
+    importScripts('https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js');
+}
+
+try {
+    importScripts('/workers/libs/jszip.min.js');
+} catch (e) {
+    console.warn('Failed to load local jszip, trying CDN...');
+    importScripts('https://unpkg.com/jszip@3.10.1/dist/jszip.min.js');
+}
 
 const { PDFDocument, degrees } = self.PDFLib;
 const JSZip = self.JSZip;
@@ -20,7 +32,7 @@ self.onmessage = async (e) => {
                 result = await rotatePDF(payload.file, payload.angle);
                 break;
             case 'split-pdf':
-                result = await splitPDF(payload.file);
+                result = await splitPDF(payload.file, payload.mode, payload.customRanges, payload.fixedRange, payload.mergeAll);
                 break;
             case 'compress-pdf':
                 result = await compressPDF(payload.file);
@@ -84,27 +96,225 @@ async function rotatePDF(fileData, angle) {
     };
 }
 
-async function splitPDF(fileData) {
+async function splitPDF(fileData, mode = 'range', customRanges = [], fixedRange = 1, mergeAll = false, extractMode = 'all', selectedPages = [], extractPagesInput = '', sizeLimit = 1, sizeUnit = 'MB', allowCompression = true) {
     const srcPdf = await PDFDocument.load(fileData, { ignoreEncryption: true });
     const pageCount = srcPdf.getPageCount();
-    const zip = new JSZip();
-    let totalSize = 0;
 
-    for (let i = 0; i < pageCount; i++) {
+    // Helper to parse string ranges safely
+    const parseRange = (r) => {
+        let from = parseInt(r.from);
+        let to = parseInt(r.to);
+        if (isNaN(from) || from < 1) from = 1;
+        if (isNaN(to) || to > pageCount) to = pageCount;
+        if (from > to) {
+            const temp = from;
+            from = to;
+            to = temp;
+        }
+        return { from, to };
+    };
+
+    // Parse page selection from text input like "1-3,6,8-10"
+    const parsePageSelection = (input) => {
+        const pages = new Set();
+        if (!input) return pages;
+        input.split(',').forEach(part => {
+            const t = part.trim();
+            if (t.includes('-')) {
+                const [a, b] = t.split('-').map(Number);
+                if (!isNaN(a) && !isNaN(b)) {
+                    for (let i = Math.max(1, a); i <= Math.min(pageCount, b); i++) pages.add(i);
+                }
+            } else {
+                const n = parseInt(t);
+                if (!isNaN(n) && n >= 1 && n <= pageCount) pages.add(n);
+            }
+        });
+        return pages;
+    };
+
+    // Helper to create a single PDF from page indices (0-based)
+    const createPdfFromIndices = async (indices) => {
         const newPdf = await PDFDocument.create();
-        const [copiedPage] = await newPdf.copyPages(srcPdf, [i]);
-        newPdf.addPage(copiedPage);
-        const pdfBytes = await newPdf.save();
-        const pageNum = (i + 1).toString().padStart(3, '0');
-        zip.file(`page_${pageNum}.pdf`, pdfBytes);
-        totalSize += pdfBytes.byteLength;
+        if (indices.length > 0) {
+            const copiedPages = await newPdf.copyPages(srcPdf, indices);
+            copiedPages.forEach(p => newPdf.addPage(p));
+        }
+        return newPdf;
+    };
+
+    // ============ MODE: RANGE ============
+    if (mode === 'range') {
+        let rangesToExtract = [];
+        if (!customRanges || customRanges.length === 0) {
+            rangesToExtract = [{ from: 1, to: pageCount }];
+        } else {
+            rangesToExtract = customRanges.map(parseRange);
+        }
+
+        if (mergeAll) {
+            const newPdf = await PDFDocument.create();
+            for (const range of rangesToExtract) {
+                const indices = [];
+                for (let i = range.from - 1; i <= range.to - 1; i++) indices.push(i);
+                if (indices.length > 0) {
+                    const copiedPages = await newPdf.copyPages(srcPdf, indices);
+                    copiedPages.forEach(p => newPdf.addPage(p));
+                }
+            }
+            const pdfBytes = await newPdf.save();
+            return {
+                buffer: pdfBytes,
+                filename: `split_merged_${Date.now()}.pdf`,
+                originalSize: fileData.byteLength,
+                compressedSize: pdfBytes.byteLength,
+                reductionPercent: 0
+            };
+        } else {
+            const zip = new JSZip();
+            let totalSize = 0;
+            for (let idx = 0; idx < rangesToExtract.length; idx++) {
+                const range = rangesToExtract[idx];
+                const indices = [];
+                for (let i = range.from - 1; i <= range.to - 1; i++) indices.push(i);
+                if (indices.length > 0) {
+                    const newPdf = await createPdfFromIndices(indices);
+                    const pdfBytes = await newPdf.save();
+                    const fileName = range.from === range.to
+                        ? `page_${range.from}.pdf`
+                        : `pages_${range.from}-${range.to}.pdf`;
+                    zip.file(fileName, pdfBytes);
+                    totalSize += pdfBytes.byteLength;
+                }
+            }
+            const content = await zip.generateAsync({ type: "blob" });
+            const arrayBuffer = await content.arrayBuffer();
+            return {
+                buffer: arrayBuffer,
+                filename: `split_${Date.now()}.zip`,
+                originalSize: fileData.byteLength,
+                compressedSize: arrayBuffer.byteLength,
+                reductionPercent: 0
+            };
+        }
     }
 
-    const content = await zip.generateAsync({ type: "blob" }); // Blob is valid in Worker? Yes.
-    // However, we can't send Blob back easily? Transferable?
-    // Conversion to ArrayBuffer for transfer is safer.
-    const arrayBuffer = await content.arrayBuffer();
+    // ============ MODE: PAGES (Extract) ============
+    if (mode === 'pages') {
+        let pagesToExtract = [];
 
+        if (extractMode === 'all') {
+            // Extract every page as individual PDF
+            for (let i = 1; i <= pageCount; i++) pagesToExtract.push(i);
+        } else {
+            // Use selectedPages array or parse from input
+            if (selectedPages && selectedPages.length > 0) {
+                pagesToExtract = selectedPages.filter(p => p >= 1 && p <= pageCount).sort((a, b) => a - b);
+            } else if (extractPagesInput) {
+                const parsed = parsePageSelection(extractPagesInput);
+                pagesToExtract = Array.from(parsed).sort((a, b) => a - b);
+            }
+            if (pagesToExtract.length === 0) {
+                pagesToExtract = [1]; // fallback
+            }
+        }
+
+        if (mergeAll && extractMode === 'select') {
+            // Merge all selected pages into one PDF
+            const indices = pagesToExtract.map(p => p - 1);
+            const newPdf = await createPdfFromIndices(indices);
+            const pdfBytes = await newPdf.save();
+            return {
+                buffer: pdfBytes,
+                filename: `extracted_merged_${Date.now()}.pdf`,
+                originalSize: fileData.byteLength,
+                compressedSize: pdfBytes.byteLength,
+                reductionPercent: 0
+            };
+        } else {
+            // Each page as individual PDF, zipped
+            const zip = new JSZip();
+            let totalSize = 0;
+            for (const pageNum of pagesToExtract) {
+                const newPdf = await createPdfFromIndices([pageNum - 1]);
+                const pdfBytes = await newPdf.save();
+                zip.file(`page_${pageNum}.pdf`, pdfBytes);
+                totalSize += pdfBytes.byteLength;
+            }
+            const content = await zip.generateAsync({ type: "blob" });
+            const arrayBuffer = await content.arrayBuffer();
+            return {
+                buffer: arrayBuffer,
+                filename: `extracted_${Date.now()}.zip`,
+                originalSize: fileData.byteLength,
+                compressedSize: arrayBuffer.byteLength,
+                reductionPercent: 0
+            };
+        }
+    }
+
+    // ============ MODE: SIZE ============
+    if (mode === 'size') {
+        const maxBytes = sizeUnit === 'MB' ? sizeLimit * 1024 * 1024 : sizeLimit * 1024;
+        const zip = new JSZip();
+        let currentPdf = await PDFDocument.create();
+        let currentIndices = [];
+        let partNumber = 1;
+        let totalSize = 0;
+
+        const flushCurrentPdf = async () => {
+            if (currentIndices.length > 0) {
+                const newPdf = await createPdfFromIndices(currentIndices);
+                const pdfBytes = await newPdf.save();
+                const start = currentIndices[0] + 1;
+                const end = currentIndices[currentIndices.length - 1] + 1;
+                const fileName = start === end
+                    ? `part_${partNumber}_page_${start}.pdf`
+                    : `part_${partNumber}_pages_${start}-${end}.pdf`;
+                zip.file(fileName, pdfBytes);
+                totalSize += pdfBytes.byteLength;
+                partNumber++;
+                currentIndices = [];
+            }
+        };
+
+        for (let i = 0; i < pageCount; i++) {
+            // Try adding this page
+            const testIndices = [...currentIndices, i];
+            const testPdf = await createPdfFromIndices(testIndices);
+            const testBytes = await testPdf.save();
+
+            if (testBytes.byteLength > maxBytes && currentIndices.length > 0) {
+                // Current batch exceeds limit, flush without this page
+                await flushCurrentPdf();
+                currentIndices = [i]; // Start new batch with this page
+            } else {
+                currentIndices.push(i);
+            }
+        }
+        // Flush remaining pages
+        await flushCurrentPdf();
+
+        const content = await zip.generateAsync({ type: "blob" });
+        const arrayBuffer = await content.arrayBuffer();
+        return {
+            buffer: arrayBuffer,
+            filename: `split_by_size_${Date.now()}.zip`,
+            originalSize: fileData.byteLength,
+            compressedSize: arrayBuffer.byteLength,
+            reductionPercent: 0
+        };
+    }
+
+    // Fallback: split into individual pages (shouldn't reach here)
+    const zip = new JSZip();
+    for (let i = 0; i < pageCount; i++) {
+        const newPdf = await createPdfFromIndices([i]);
+        const pdfBytes = await newPdf.save();
+        zip.file(`page_${i + 1}.pdf`, pdfBytes);
+    }
+    const content = await zip.generateAsync({ type: "blob" });
+    const arrayBuffer = await content.arrayBuffer();
     return {
         buffer: arrayBuffer,
         filename: `split_${Date.now()}.zip`,

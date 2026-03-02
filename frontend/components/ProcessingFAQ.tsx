@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 
 interface FAQItem {
     question: string;
@@ -129,15 +130,16 @@ export default function ProcessingFAQ() {
                     <p className="text-muted-foreground mb-4">
                         Still have questions?
                     </p>
-                    <a
+                    <Link
                         href="/contact"
+                        prefetch={false}
                         className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-semibold hover:brightness-110 transition-all hover:scale-105"
                     >
                         Contact Support
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                         </svg>
-                    </a>
+                    </Link>
                 </div>
             </div>
         </section>
