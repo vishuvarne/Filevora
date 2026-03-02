@@ -111,6 +111,7 @@ export const metadata: Metadata = {
 import { inter, poppins, spaceGrotesk, jetbrainsMono } from "@/lib/fonts";
 import "./globals.css";
 import { SpeculationRules } from "@/components/SpeculationRules";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 
 export default function RootLayout({
@@ -236,6 +237,7 @@ export default function RootLayout({
 
           </ThemeStyleProvider>
         </AppNavigationProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
