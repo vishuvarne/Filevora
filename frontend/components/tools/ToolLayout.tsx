@@ -3,6 +3,7 @@ import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import GhostModeBadge from "@/components/GhostModeBadge";
 import { getProcessingVisual, getProcessingTitle } from "@/components/ProcessingVisuals";
 import Dropzone from "@/components/SmartDropzone";
+import AdSlot from "@/components/ads/AdSlot";
 import dynamic from "next/dynamic";
 
 const ConversionSuccessModal = dynamic(() => import("@/components/ConversionSuccessModal"), { ssr: false });
@@ -151,16 +152,32 @@ export default function ToolLayout({
                                                 <p className="font-bold text-slate-500 dark:text-slate-400">Loading file...</p>
                                             </div>
                                         ) : (
-                                            <Dropzone
-                                                onFilesSelected={onFilesSelected}
-                                                acceptedTypes={tool.acceptedTypes}
-                                                multiple={tool.multiple}
-                                                compact={files.length > 0}
-                                                label={files.length > 0 ? "Add more files" : `Drag & Drop ${tool.name.split(' ')[0]} files here`}
-                                            />
+                                            <>
+                                                {/* Mobile Ad (Above Dropzone) */}
+                                                {!files.length && (
+                                                    <div className="block md:hidden w-full max-w-[320px] mx-auto mb-2 mt-4">
+                                                        <AdSlot adSlotId="mobile-top-layout" format="mobile-banner" isTest={true} />
+                                                    </div>
+                                                )}
+
+                                                <Dropzone
+                                                    onFilesSelected={onFilesSelected}
+                                                    acceptedTypes={tool.acceptedTypes}
+                                                    multiple={tool.multiple}
+                                                    compact={files.length > 0}
+                                                    label={files.length > 0 ? "Add more files" : `Drag & Drop ${tool.name.split(' ')[0]} files here`}
+                                                />
+
+                                                {/* Mobile Ad (Below Dropzone) */}
+                                                {!files.length && (
+                                                    <div className="block md:hidden w-full max-w-[320px] mx-auto mt-2 mb-4">
+                                                        <AdSlot adSlotId="mobile-bottom-layout" format="mobile-banner" isTest={true} />
+                                                    </div>
+                                                )}
+                                            </>
                                         )}
                                     </div>
-                                    <div className="flex items-center justify-center gap-2.5 text-[11px] font-bold text-muted-foreground bg-secondary/60 backdrop-blur-sm rounded-full px-5 py-2.5 w-fit mx-auto border border-border/40 shadow-sm">
+                                    <div className="flex items-center justify-center gap-2 text-[10px] sm:text-[11px] font-bold text-muted-foreground bg-secondary/60 backdrop-blur-sm rounded-full px-4 py-2 w-fit mx-auto border border-border/40 shadow-sm">
                                         <span>{isGhostMode ? "Processed entirely on your device • No upload" : "SSL Encrypted • Max 500MB"}</span>
                                     </div>
                                 </>

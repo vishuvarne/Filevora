@@ -46,16 +46,14 @@ export default function StickyFooterAd({ adSlotId }: StickyFooterAdProps) {
         <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center w-full animate-fade-in-up">
             <div className="relative bg-white dark:bg-slate-900 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] border-t-2 border-slate-900 dark:border-slate-700 w-full flex justify-center py-2">
 
-                {/* The Close Button Requirement */}
+                {/* Close Button — minimal circle */}
                 <button
                     onClick={handleDismiss}
-                    className="absolute -top-10 right-4 md:right-10 bg-white dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white p-2 rounded-t-lg border-x-2 border-t-2 border-slate-900 dark:border-slate-700 shadow-sm transition-colors"
+                    className="absolute -top-3 right-3 md:right-6 w-6 h-6 flex items-center justify-center rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-300 dark:hover:bg-slate-600 shadow-sm transition-all"
                     aria-label="Close Ad"
+                    title="Close Ad"
                 >
-                    <div className="flex items-center gap-1">
-                        <span className="text-xs font-bold uppercase tracking-wider">Close Ad</span>
-                        <XMarkIcon className="w-5 h-5" />
-                    </div>
+                    <XMarkIcon className="w-3.5 h-3.5" />
                 </button>
 
                 {/* The Ad Slot - Auto shrinks depending on if mobile or desktop */}

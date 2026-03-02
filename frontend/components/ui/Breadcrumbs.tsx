@@ -15,8 +15,8 @@ export default function Breadcrumbs({ items, dark }: BreadcrumbsProps) {
     const separatorColor = dark ? "text-slate-600" : "text-slate-400";
 
     return (
-        <nav className={`flex mb-2 text-sm ${baseColor}`} aria-label="Breadcrumb">
-            <ol className="inline-flex flex-wrap items-center gap-1 md:gap-3">
+        <nav className={`w-full flex mb-2 text-sm ${baseColor} overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]`} aria-label="Breadcrumb">
+            <ol className="inline-flex items-center gap-1 md:gap-3 whitespace-nowrap min-w-max pr-4">
                 {items.map((item, index) => (
                     <li key={index} className="inline-flex items-center">
                         {index > 0 && (

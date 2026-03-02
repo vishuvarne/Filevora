@@ -49,28 +49,9 @@ export default function ToolsGrid() {
     }, [searchQuery, activeCategory]);
 
     return (
-        <section id="tools" className="scroll-mt-24 pt-0 pb-8">
+        <section id="tools" className="scroll-mt-24 pb-8">
             {/* Search & Filter Header */}
             <div className="mb-4 flex flex-col lg:flex-row items-center justify-center gap-3 w-full">
-                {/* Search Bar */}
-                <div className="relative w-full lg:w-80 group flex-shrink-0">
-                    <div className="relative">
-                        <input
-                            type="text"
-                            placeholder="Search tools..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className={isNeu
-                                ? "w-full pl-10 pr-4 py-2.5 text-sm nb-input"
-                                : "w-full pl-10 pr-4 py-2.5 rounded-full border border-border bg-background shadow-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm placeholder:text-muted-foreground/60 text-foreground"
-                            }
-                        />
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-muted-foreground absolute left-4 top-1/2 -translate-y-1/2 group-focus-within:text-primary transition-colors">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                        </svg>
-                    </div>
-                </div>
-
                 {/* Category Pills */}
                 <div className="flex flex-wrap justify-center lg:justify-start gap-2">
                     {CATEGORIES.map((cat) => (

@@ -27,7 +27,7 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
         <div className="mt-16 space-y-20 max-w-5xl mx-auto px-4 font-sans text-foreground">
 
             {/* 1. Instructions & Highlights Block */}
-            <section className="bg-card rounded-3xl p-5 sm:p-8 md:p-12 shadow-sm border border-border">
+            <section className="bg-card rounded-[2rem] p-5 sm:p-8 md:p-12 border-[3px] border-slate-900 dark:border-slate-900 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] dark:shadow-[6px_6px_0px_0px_rgba(30,41,59,1)]">
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-8 text-center text-foreground">How to convert {tool.name.toLowerCase()} files?</h2>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-12 items-center mb-8 md:mb-16">
@@ -56,7 +56,7 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
 
                     {/* Feature Icons (Right side or top on mobile) */}
                     <div className="order-1 lg:order-2 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4 md:gap-6 text-center">
-                        <div className="p-6 rounded-2xl bg-secondary border border-border">
+                        <div className="p-6 rounded-[1.5rem] bg-secondary border-[3px] border-slate-900 dark:border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] dark:shadow-[4px_4px_0px_0px_rgba(30,41,59,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] transition-all duration-200">
                             <div className="w-16 h-16 mx-auto bg-card rounded-full flex items-center justify-center shadow-sm mb-4 text-purple-600 dark:text-purple-400">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
@@ -65,7 +65,7 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
                             <h3 className="text-lg font-bold mb-2 text-foreground">Convert Any File</h3>
                             <p className="text-muted-foreground text-sm">Supports 200+ formats for all your needs.</p>
                         </div>
-                        <div className="p-6 rounded-2xl bg-secondary border border-border">
+                        <div className="p-6 rounded-[1.5rem] bg-secondary border-[3px] border-slate-900 dark:border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] dark:shadow-[4px_4px_0px_0px_rgba(30,41,59,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] transition-all duration-200">
                             <div className="w-16 h-16 mx-auto bg-card rounded-full flex items-center justify-center shadow-sm mb-4 text-blue-600 dark:text-blue-400">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -74,7 +74,7 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
                             <h3 className="text-lg font-bold mb-2 text-foreground">Best Quality</h3>
                             <p className="text-muted-foreground text-sm">High fidelity conversion with advanced algorithms.</p>
                         </div>
-                        <div className="p-6 rounded-2xl bg-secondary border border-border">
+                        <div className="p-6 rounded-[1.5rem] bg-secondary border-[3px] border-slate-900 dark:border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] dark:shadow-[4px_4px_0px_0px_rgba(30,41,59,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] transition-all duration-200">
                             <div className="w-16 h-16 mx-auto bg-card rounded-full flex items-center justify-center shadow-sm mb-4 text-green-600 dark:text-green-400">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-12.25v10m-3.75 3.25H6a2.25 2.25 0 00-2.25 2.25V21h13.5V6.75a2.25 2.25 0 00-2.25-2.25H15M10.5 4.5h3m-3-2.25h3" />
@@ -92,7 +92,7 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
                 <h2 className="text-2xl font-bold text-foreground mb-8">Supported Formats</h2>
                 <div className="inline-grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
                     {supportedFormats.map((fmt) => (
-                        <div key={fmt} className="bg-card border border-border rounded-lg py-3 px-6 text-sm font-bold text-muted-foreground shadow-sm hover:border-primary hover:text-primary cursor-default transition-colors">
+                        <div key={fmt} className="bg-card border-[3px] border-slate-900 dark:border-slate-900 rounded-xl py-3 px-6 text-sm font-black uppercase tracking-wider text-slate-800 dark:text-slate-200 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] dark:shadow-[4px_4px_0px_0px_rgba(30,41,59,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] cursor-default transition-all duration-200">
                             {fmt}
                         </div>
                     ))}
@@ -104,7 +104,7 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
             <section>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {useCases.map((useCase, i) => (
-                        <div key={i} className="bg-card p-8 rounded-3xl border border-border shadow-sm hover:shadow-md transition-shadow">
+                        <div key={i} className="bg-card p-8 rounded-[2rem] border-[3px] border-slate-900 dark:border-slate-900 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] dark:shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] transition-all duration-200">
                             <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center mb-6">
                                 {useCase.icon === "briefcase" && (
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.066v1.75m-4.5 0v1.75m0-1.75a48.11 48.11 0 01-3.413.387m-4.5-8.006c0-1.116.775-2.034 1.846-2.193 1.503-.21 3.037-.342 4.591-.342 1.554 0 3.088.132 4.591.342 1.071.159 1.846 1.077 1.846 2.193v.448m-16.5 0a2.18 2.18 0 00-1.624 3.791m1.624-3.343a48.12 48.12 0 013.413-.387m-4.5 3.86a48.115 48.115 0 013.413-.387m4.5 0c1.064-.144 1.836-1.08 1.836-2.157V8.706c0-1.065-.758-2.012-1.815-2.17A48.122 48.122 0 0012 6.372c-1.35 0-2.68.04-3.993.118-1.057.158-1.815 1.105-1.815 2.17v.448c0 1.076.772 2.013 1.836 2.157m0 0a48.112 48.112 0 013.413.387m-4.5 0A2.18 2.18 0 003.75 12.81m16.5 0a2.18 2.18 0 01-2.18 2.18H5.93A2.18 2.18 0 013.75 12.81" /></svg>
@@ -124,13 +124,13 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
             </section>
 
             {/* 4. Security Section (Your Data, Our Priority) */}
-            <section className="bg-card rounded-3xl p-6 sm:p-10 border border-border shadow-sm flex flex-col lg:flex-row items-center gap-10 md:gap-12">
+            <section className="bg-card rounded-[2rem] p-6 sm:p-10 border-[3px] border-slate-900 dark:border-slate-900 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] dark:shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] flex flex-col lg:flex-row items-center gap-10 md:gap-12">
                 <div className="flex-1 text-center lg:text-left">
                     <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-4">Your Data, Our Priority</h2>
                     <p className="text-muted-foreground leading-relaxed mb-6 text-sm sm:text-base">
                         At FileVora, we go beyond just converting files—we protect them. Our robust security framework ensures that your data is always safe, whether you're converting an image, video, or document. With advanced encryption, secure data centers, and vigilant monitoring, we've covered every aspect of your data's safety.
                     </p>
-                    <button className="text-primary font-bold border border-primary/20 hover:bg-primary/5 px-6 py-3 rounded-xl transition-colors text-sm">
+                    <button className="text-slate-900 dark:text-slate-100 font-black uppercase tracking-wider border-[3px] border-slate-900 bg-white dark:bg-slate-800 hover:bg-slate-100 px-6 py-3 rounded-xl transition-all shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-1 active:translate-y-0 active:shadow-none text-sm">
                         Learn more about our security
                     </button>
                 </div>
@@ -162,12 +162,13 @@ export default function ToolInfoSection({ tool }: { tool: ToolDef }) {
             </section>
 
             {/* 5. Upgrade Banner */}
-            <section className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-8 sm:p-12 text-center text-white shadow-lg shadow-blue-200/50">
-                <h2 className="text-2xl sm:text-3xl font-bold mb-4">Want to convert large files without a queue or Ads?</h2>
-                <p className="text-blue-100 mb-8 max-w-2xl mx-auto text-base sm:text-lg">
+            <section className="bg-blue-600 rounded-[32px] p-8 sm:p-12 text-center text-white border-[4px] border-slate-900 shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500 rounded-full blur-3xl opacity-50 -mr-20 -mt-20"></div>
+                <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight mb-4 relative z-10 text-white">Want to convert large files without a queue or Ads?</h2>
+                <p className="text-white font-bold mb-8 max-w-2xl mx-auto text-base sm:text-lg relative z-10">
                     Upgrade to Pro for unlimited file size, concurrent conversions, and priority support.
                 </p>
-                <button className="bg-yellow-400 hover:bg-yellow-300 text-blue-900 font-bold px-8 py-3.5 rounded-xl text-base sm:text-lg transition-transform hover:scale-105 shadow-xl active:scale-95">
+                <button className="relative z-10 bg-yellow-400 text-slate-900 font-black uppercase tracking-wider px-8 py-3.5 rounded-xl text-base sm:text-lg transition-transform border-[3px] border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none">
                     Sign Up Now
                 </button>
             </section>

@@ -1023,14 +1023,25 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                 {/* Full Dropzone — only when no files selected */}
                                 {files.length === 0 && (
                                     <>
+                                        {/* Mobile Ad (Above Dropzone) */}
+                                        <div className="block md:hidden w-full max-w-[320px] mx-auto mb-2">
+                                            <AdSlot adSlotId="mobile-top-dropzone" format="mobile-banner" isTest={true} />
+                                        </div>
+
                                         <Dropzone
                                             onFilesSelected={handleFilesSelected}
                                             acceptedTypes={tool.acceptedTypes}
                                             multiple={tool.multiple}
                                             label="Drag & Drop files here, or click to select"
                                         />
-                                        <div className="flex items-center justify-center gap-2.5 text-xs font-black text-slate-800 dark:text-slate-200 bg-[#f4f4f5] dark:bg-slate-800 rounded-full px-6 py-3 w-fit mx-auto border-[3px] border-slate-900 dark:border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] dark:shadow-[4px_4px_0px_0px_rgba(30,41,59,1)]">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-green-600 dark:text-green-500 shrink-0">
+
+                                        {/* Mobile Ad (Below Dropzone) */}
+                                        <div className="block md:hidden w-full max-w-[320px] mx-auto mt-2">
+                                            <AdSlot adSlotId="mobile-bottom-dropzone" format="mobile-banner" isTest={true} />
+                                        </div>
+
+                                        <div className="flex items-center justify-center gap-2 text-[10px] sm:text-[11px] font-bold text-slate-800 dark:text-slate-200 bg-[#f4f4f5] dark:bg-slate-800 rounded-full px-4 py-2 w-fit mx-auto border-2 border-slate-900 dark:border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] dark:shadow-[2px_2px_0px_0px_rgba(30,41,59,1)]">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-green-600 dark:text-green-500 shrink-0">
                                                 <path fillRule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clipRule="evenodd" />
                                             </svg>
                                             <span className="uppercase tracking-wide">{isGhostMode ? "Processed entirely on your device • No upload • No storage" : "SSL Encrypted • Auto-delete in 1h • Max 500MB"}</span>

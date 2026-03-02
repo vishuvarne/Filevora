@@ -361,17 +361,20 @@ export default function Navbar() {
                         <DesignStyleToggle />
                         <button
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                            className="p-2.5 -mr-2 rounded-xl text-muted-foreground hover:text-primary hover:bg-secondary/50 active:bg-secondary transition-all duration-200 hover:scale-110 active:scale-95"
+                            className={isNeu
+                                ? `p-2.5 -mr-2 rounded-[var(--nb-r-md)] transition-all duration-200 ${mobileMenuOpen ? 'bg-secondary' : 'bg-background hover:-translate-y-0.5'} border-[3px] border-slate-900 shadow-[var(--nb-shadow-sm)] hover:shadow-[var(--nb-shadow-md)] active:shadow-none active:translate-y-0 text-slate-800 dark:text-slate-200`
+                                : "p-2.5 -mr-2 rounded-xl text-muted-foreground hover:text-primary hover:bg-secondary/50 active:bg-secondary transition-all duration-200 hover:scale-110 active:scale-95"
+                            }
                             aria-expanded={mobileMenuOpen}
                             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
                         >
                             <span className="sr-only">{mobileMenuOpen ? "Close" : "Menu"}</span>
                             {mobileMenuOpen ? (
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-7 h-7">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={isNeu ? 3 : 2} stroke="currentColor" className="w-6 h-6">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             ) : (
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-7 h-7">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={isNeu ? 3 : 2} stroke="currentColor" className="w-6 h-6">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                                 </svg>
                             )}
@@ -427,16 +430,27 @@ export default function Navbar() {
                 <button
                     type="button"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="md:hidden fixed inset-0 top-20 bg-black/40 z-[100] animate-in fade-in duration-300"
+                    className="md:hidden fixed inset-0 bg-black/40 z-[100] animate-in fade-in duration-300"
                     aria-label="Close menu"
                 />
             )}
 
             {/* Mobile: Drawer */}
             <div
-                className={`lg:hidden fixed top-20 right-0 h-[calc(100vh-5rem)] w-[90vw] max-w-sm bg-background border-l border-border shadow-2xl z-[101] flex flex-col transition-transform duration-300 ease-out ${mobileMenuOpen ? "translate-x-0" : "translate-x-full pointer-events-none invisible"}`}
+                className={`lg:hidden fixed top-0 right-0 h-[100dvh] w-[90vw] max-w-sm bg-background border-l border-border shadow-2xl z-[101] flex flex-col transition-transform duration-300 ease-out ${mobileMenuOpen ? "translate-x-0" : "translate-x-full pointer-events-none invisible"}`}
                 {...({ inert: !mobileMenuOpen ? true : undefined } as any)}
             >
+                <div className="flex items-center justify-between p-4 border-b border-border shrink-0">
+                    <span className="font-bold text-lg">Menu</span>
+                    <button
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary active:bg-secondary/80 transition-all"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
                 <div className="flex-1 overflow-y-auto overscroll-contain">
                     <div className="p-4 pb-6 space-y-6">
                         {/* Search Bar */}

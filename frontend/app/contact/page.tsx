@@ -4,7 +4,7 @@ import Link from "next/link";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { useState } from "react";
 import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore/lite";
 
 export default function ContactPage() {
     const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");

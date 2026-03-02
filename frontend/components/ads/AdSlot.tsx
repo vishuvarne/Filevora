@@ -17,19 +17,44 @@ export default function AdSlot({ adSlotId, format = 'auto', className = '', isTe
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        if (isTest) return; // Don't try to load AdSense script in test mode
+        if (isTest || isLoaded) return;
 
-        try {
-            // Push the ad to the global adsbygoogle array once the component mounts
-            const adsbygoogle = (window as any).adsbygoogle || [];
-            if (adRef.current && !adRef.current.hasChildNodes()) {
-                adsbygoogle.push({});
-                setIsLoaded(true);
+        let observer: IntersectionObserver;
+
+        const loadAd = () => {
+            try {
+                const adsbygoogle = (window as any).adsbygoogle || [];
+                if (adRef.current && !adRef.current.hasChildNodes()) {
+                    adsbygoogle.push({});
+                    setIsLoaded(true);
+                }
+            } catch (e) {
+                console.error('AdSense error:', e);
             }
-        } catch (e) {
-            console.error('AdSense error:', e);
+        };
+
+        if (adRef.current) {
+            observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            loadAd();
+                            observer.disconnect();
+                        }
+                    });
+                },
+                { rootMargin: '200px' } // Load slightly before it enters the viewport
+            );
+
+            observer.observe(adRef.current);
         }
-    }, [isTest]);
+
+        return () => {
+            if (observer) {
+                observer.disconnect();
+            }
+        };
+    }, [isTest, isLoaded]);
 
     // Map formats to fixed minimum dimensions to absolutely prevent CLS 
     const formatClasses: Record<AdFormat, string> = {

@@ -24,7 +24,7 @@ export const FirestoreService = {
     async saveUserProfile(user: UserProfile) {
         try {
             const { db } = await import("./firebase");
-            const { doc, setDoc, serverTimestamp } = await import("firebase/firestore");
+            const { doc, setDoc, serverTimestamp } = await import("firebase/firestore/lite");
             const userRef = doc(db, "users", user.uid);
             await setDoc(userRef, {
                 ...user,
@@ -38,7 +38,7 @@ export const FirestoreService = {
     async logConversion(log: ConversionLog) {
         try {
             const { db } = await import("./firebase");
-            const { collection, addDoc, serverTimestamp } = await import("firebase/firestore");
+            const { collection, addDoc, serverTimestamp } = await import("firebase/firestore/lite");
             await addDoc(collection(db, "conversions"), {
                 ...log,
                 timestamp: serverTimestamp()
@@ -51,7 +51,7 @@ export const FirestoreService = {
     async getUserHistory(userId: string) {
         try {
             const { db } = await import("./firebase");
-            const { collection, query, where, orderBy, limit, getDocs } = await import("firebase/firestore");
+            const { collection, query, where, orderBy, limit, getDocs } = await import("firebase/firestore/lite");
             const q = query(
                 collection(db, "conversions"),
                 where("userId", "==", userId),
@@ -72,7 +72,7 @@ export const FirestoreService = {
     async subscribeToNewsletter(email: string) {
         try {
             const { db } = await import("./firebase");
-            const { collection, addDoc, serverTimestamp } = await import("firebase/firestore");
+            const { collection, addDoc, serverTimestamp } = await import("firebase/firestore/lite");
             await addDoc(collection(db, "subscribers"), {
                 email,
                 subscribedAt: serverTimestamp(),
