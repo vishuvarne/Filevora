@@ -1,6 +1,6 @@
 import { openDB, DBSchema, IDBPDatabase } from 'idb';
 
-interface FileVoraDB extends DBSchema {
+interface ConvertLocallyDB extends DBSchema {
     files: {
         key: string;
         value: {
@@ -17,20 +17,20 @@ interface FileVoraDB extends DBSchema {
     };
 }
 
-const DB_NAME = 'filevora-db';
+const DB_NAME = 'convertlocally-db';
 const DB_VERSION = 1;
 
 // Lazy initialization to avoid SSR issues
-let dbPromise: Promise<IDBPDatabase<FileVoraDB>> | null = null;
+let dbPromise: Promise<IDBPDatabase<ConvertLocallyDB>> | null = null;
 
-function getDB(): Promise<IDBPDatabase<FileVoraDB>> {
+function getDB(): Promise<IDBPDatabase<ConvertLocallyDB>> {
     // Only initialize on client-side
     if (typeof window === 'undefined') {
         throw new Error('IndexedDB is only available in the browser');
     }
 
     if (!dbPromise) {
-        dbPromise = openDB<FileVoraDB>(DB_NAME, DB_VERSION, {
+        dbPromise = openDB<ConvertLocallyDB>(DB_NAME, DB_VERSION, {
             upgrade(db) {
                 const store = db.createObjectStore('files', { keyPath: 'id' });
                 store.createIndex('by-timestamp', 'timestamp');
@@ -42,7 +42,7 @@ function getDB(): Promise<IDBPDatabase<FileVoraDB>> {
 }
 
 export const fileDB = {
-    async saveFile(metadata: Omit<FileVoraDB['files']['value'], 'timestamp'> & { blob: Blob }) {
+    async saveFile(metadata: Omit<ConvertLocallyDB['files']['value'], 'timestamp'> & { blob: Blob }) {
         const db = await getDB();
         const item = {
             ...metadata,

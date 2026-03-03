@@ -27,7 +27,7 @@ export default function PDFChat() {
             formData.append("file", files[0]);
 
             try {
-                const res = await fetch("https://filevora.onrender.com/process/chat-pdf-init", {
+                const res = await fetch("https://convertlocally.onrender.com/process/chat-pdf-init", {
                     method: "POST",
                     body: formData
                 });
@@ -61,7 +61,7 @@ export default function PDFChat() {
             formData.append("file", file); // Sending file again for stateless demo simplicity
             formData.append("query", userMsg);
 
-            const res = await fetch("https://filevora.onrender.com/process/chat-pdf-query", {
+            const res = await fetch("https://convertlocally.onrender.com/process/chat-pdf-query", {
                 method: "POST",
                 body: formData
             });

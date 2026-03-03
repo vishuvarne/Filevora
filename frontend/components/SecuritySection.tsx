@@ -2,10 +2,12 @@
 
 import { useFileHistory } from '@/hooks/useFileHistory';
 import { useState } from 'react';
+import { useDesignStyle } from '@/context/ThemeStyleContext';
 
 export default function SecuritySection() {
     const { clearHistory } = useFileHistory();
     const [isWiping, setIsWiping] = useState(false);
+    const { isNeu } = useDesignStyle();
 
     const handleWipeData = async () => {
         if (!confirm("Are you sure? This will delete all local history, cached files, and settings from this browser.")) return;
@@ -48,16 +50,19 @@ export default function SecuritySection() {
                 </div>
                 <h2 className="text-3xl font-bold text-foreground mb-4 leading-tight">Your Data, <span className="text-primary">Our Priority</span></h2>
                 <p className="text-muted-foreground leading-relaxed mb-8 text-lg">
-                    At FileVora, we go beyond just converting files—we protect them. Our robust security framework ensures that your data is always safe, whether you're converting an image, video, or document. Files are automatically deleted after 1 hour.
+                    At ConvertLocally, we go beyond just converting files—we protect them. Our robust security framework ensures that your data is always safe, whether you're converting an image, video, or document. Files are automatically deleted after 1 hour.
                 </p>
                 <div className="flex flex-wrap gap-4">
-                    <button className="bg-primary text-primary-foreground font-bold px-6 py-3 rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/25 active:scale-95">
+                    <button className={isNeu ? "nb-btn !bg-blue-600 !text-white px-6 py-3" : "bg-primary text-primary-foreground font-bold px-6 py-3 rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/25 active:scale-95"}>
                         Read Security Policy
                     </button>
                     <button
                         onClick={handleWipeData}
                         disabled={isWiping}
-                        className="text-red-600 dark:text-red-400 font-bold border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/30 px-6 py-3 rounded-xl transition-colors flex items-center gap-2"
+                        className={isNeu
+                            ? "nb-btn !bg-red-50 !text-red-600 px-6 py-3 flex items-center gap-2"
+                            : "text-red-600 dark:text-red-400 font-bold border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/30 px-6 py-3 rounded-xl transition-colors flex items-center gap-2"
+                        }
                     >
                         {isWiping ? 'Wiping...' : 'Wipe All Local Data'}
                     </button>

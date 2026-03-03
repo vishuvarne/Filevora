@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const STORAGE_KEY = "filevora_favorites";
+const STORAGE_KEY = "convertlocally_favorites";
 const MAX_FAVORITES = 10;
 
 export function useFavorites() {

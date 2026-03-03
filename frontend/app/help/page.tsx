@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-    title: 'Help Center | FileVora',
-    description: 'Get help with FileVora tools, troubleshoot issues, and find answers to common questions.',
+    title: 'Help Center | ConvertLocally',
+    description: 'Get help with ConvertLocally tools, troubleshoot issues, and find answers to common questions.',
 };
 
 export default function HelpPage() {
@@ -35,7 +35,7 @@ export default function HelpPage() {
                             </svg>
                         </div>
                         <h3 className="text-xl font-bold mb-2">Getting Started</h3>
-                        <p className="text-muted-foreground">How to use FileVora tools effectively and efficiently.</p>
+                        <p className="text-muted-foreground">How to use ConvertLocally tools effectively and efficiently.</p>
                     </div>
                     <div className="bg-card p-8 rounded-2xl shadow-lg border border-border hover:-translate-y-1 transition-transform cursor-pointer">
                         <div className="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center mb-6">
@@ -80,7 +80,7 @@ export default function HelpPage() {
                         </div>
                         <div className="bg-card p-6 rounded-xl border border-border hover:border-primary/50 transition-colors flex items-center justify-between group cursor-pointer">
                             <div>
-                                <h3 className="font-bold text-lg group-hover:text-primary transition-colors">Can I use FileVora for business?</h3>
+                                <h3 className="font-bold text-lg group-hover:text-primary transition-colors">Can I use ConvertLocally for business?</h3>
                                 <p className="text-muted-foreground mt-1">Information about commercial usage and API access.</p>
                             </div>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-muted-foreground group-hover:translate-x-1 transition-transform">

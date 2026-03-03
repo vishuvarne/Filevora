@@ -3,8 +3,8 @@ import os
 
 def make_zip():
     # Define paths
-    backend_dir = r"c:\Users\dear_\OneDrive\Desktop\filevora\backend"
-    output_filename = r"c:\Users\dear_\OneDrive\Desktop\filevora\backend" # shutil.make_archive adds .zip automatically
+    backend_dir = r"c:\Users\dear_\OneDrive\Desktop\convertlocally\backend"
+    output_filename = r"c:\Users\dear_\OneDrive\Desktop\convertlocally\backend" # shutil.make_archive adds .zip automatically
 
     print(f"Zipping {backend_dir} to {output_filename}.zip...")
     

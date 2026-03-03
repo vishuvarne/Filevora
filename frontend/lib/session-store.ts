@@ -51,7 +51,7 @@ interface SessionDB extends DBSchema {
     };
 }
 
-const DB_NAME = 'filevora-sessions';
+const DB_NAME = 'convertlocally-sessions';
 const DB_VERSION = 1;
 const SESSION_TTL_MS = 2 * 60 * 60 * 1000; // 2 hours
 

@@ -177,7 +177,7 @@ export class ImageGpuAccelerator {
             console.warn(`[WebGPU] Slow performance detected: ${durationMs.toFixed(1)}ms for ${pixelCount} pixels.`);
             this.isSlow = true;
             try {
-                sessionStorage.setItem('filevora_gpu_slow', 'true');
+                sessionStorage.setItem('convertlocally_gpu_slow', 'true');
             } catch { }
         }
     }

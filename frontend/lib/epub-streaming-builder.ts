@@ -172,7 +172,7 @@ export class EpubStreamingBuilder implements OutputBuilder {
 
     async finalize(): Promise<Blob> {
         const title = this.metadata.title || "Converted Document";
-        const author = this.metadata.author || "Filevora User";
+        const author = this.metadata.author || "ConvertLocally User";
 
         // Generate content.opf
         const opf = `<?xml version="1.0" encoding="utf-8"?>

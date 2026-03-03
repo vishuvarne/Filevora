@@ -12,7 +12,7 @@ export default function ApiSection({ category, tools }: ApiSectionProps) {
     const [activeTab, setActiveTab] = useState<"curl" | "python">("curl");
 
     const getCurlSnippet = (tool: ToolDef) => {
-        return `curl -X POST "https://api.filevora.com/v1${tool.endpoint}" \\
+        return `curl -X POST "https://api.convertlocally.com/v1${tool.endpoint}" \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: multipart/form-data" \\
   -F "file=@/path/to/your/file${tool.acceptedTypes.split(',')[0]}" ${tool.id === 'convert-image' ? '\\\n  -F "target_format=PNG"' : ''}`;
@@ -21,7 +21,7 @@ export default function ApiSection({ category, tools }: ApiSectionProps) {
     const getPythonSnippet = (tool: ToolDef) => {
         return `import requests
 
-url = "https://api.filevora.com/v1${tool.endpoint}"
+url = "https://api.convertlocally.com/v1${tool.endpoint}"
 headers = {"Authorization": "Bearer YOUR_API_KEY"}
 files = {"file": open("file${tool.acceptedTypes.split(',')[0]}", "rb")}
 ${tool.id === 'convert-image' ? 'data = {"target_format": "PNG"}\n' : ''}

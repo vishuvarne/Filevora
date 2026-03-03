@@ -102,7 +102,9 @@ export default function ImageCropper() {
         const link = document.createElement('a');
         link.download = 'cropped-image.png';
         link.href = canvas.toDataURL('image/png');
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
     };
 
     const setAspectRatio = (ratio: string) => {

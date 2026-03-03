@@ -5,8 +5,8 @@ import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import ApiSection from "@/components/api/ApiSection";
 
 export const metadata: Metadata = {
-    title: "Developer API Marketplace - FileVora",
-    description: "Rent professional file processing APIs. Integrate PDF merging, image conversion, and video compression into your apps with FileVora API.",
+    title: "Developer API Marketplace - ConvertLocally",
+    description: "Rent professional file processing APIs. Integrate PDF merging, image conversion, and video compression into your apps with ConvertLocally API.",
 };
 
 export default function ApiPage() {
@@ -34,7 +34,7 @@ export default function ApiPage() {
                         </div>
                         <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
                             Build with the <br />
-                            <span className="text-blue-500">FileVora Engine</span>
+                            <span className="text-blue-500">ConvertLocally Engine</span>
                         </h1>
                         <p className="text-xl text-slate-400 mb-10 leading-relaxed font-medium">
                             Don't waste months building complex file processing logic.

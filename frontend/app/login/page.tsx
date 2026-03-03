@@ -33,10 +33,10 @@ export default function LoginPage() {
                 <div className="text-center mb-8">
                     <Link href="/" prefetch={false} className="inline-flex items-center gap-2 mb-6">
                         <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white font-extrabold text-2xl shadow-lg">
-                            F
+                            C
                         </div>
                         <span className="text-2xl font-bold text-slate-900">
-                            File<span className="text-blue-600">Vora</span>
+                            Convert<span className="text-blue-600">Locally</span>
                         </span>
                     </Link>
                     <h1 className="text-3xl font-bold text-slate-900 mb-2">Welcome back</h1>
@@ -149,7 +149,7 @@ export default function LoginPage() {
 
                 {/* Terms */}
                 <p className="text-center mt-8 text-xs text-slate-400">
-                    By continuing, you agree to FileVora&apos;s{" "}
+                    By continuing, you agree to ConvertLocally&apos;s{" "}
                     <Link href="/terms" prefetch={false} className="underline hover:text-slate-600">Terms of Service</Link>
                     {" "}and{" "}
                     <Link href="/privacy" prefetch={false} className="underline hover:text-slate-600">Privacy Policy</Link>

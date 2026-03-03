@@ -17,17 +17,17 @@ export async function generateMetadata(
 
     if (!tool) {
         return {
-            title: "Tool Not Found | FileVora",
+            title: "Tool Not Found | ConvertLocally",
         };
     }
 
     const seoContent = getToolSEOContent(id);
-    const baseKeywords = [tool.name, "online", "free", "file converter", "FileVora", "no signup", "no watermark"];
+    const baseKeywords = [tool.name, "online", "free", "file converter", "ConvertLocally", "no signup", "no watermark"];
     const focusKeywords = seoContent.keywords;
 
     // Enhanced Title & Description
-    const title = tool.seoTitle || `${tool.name} Online - Free, Fast & Secure | FileVora`;
-    const description = tool.seoDescription || `The best free online ${tool.name.toLowerCase()} tool. Fast, secure, and no installation required. Convert, compress, or edit your files in seconds with FileVora.`;
+    const title = tool.seoTitle || `${tool.name} Online - Free, Fast & Secure | ConvertLocally`;
+    const description = tool.seoDescription || `The best free online ${tool.name.toLowerCase()} tool. Fast, secure, and no installation required. Convert, compress, or edit your files in seconds with ConvertLocally.`;
 
     return {
         title,
@@ -36,9 +36,9 @@ export async function generateMetadata(
         openGraph: {
             title,
             description,
-            url: `https://filevora.web.app/tools/${tool.id}`,
+            url: `https://convertlocally.web.app/tools/${tool.id}`,
             images: [`/og/tools/${tool.id}.png`],
-            siteName: "FileVora",
+            siteName: "ConvertLocally",
             locale: "en_US",
             type: "website",
         },
@@ -49,7 +49,7 @@ export async function generateMetadata(
             images: [`/og/tools/${tool.id}.png`],
         },
         alternates: {
-            canonical: `https://filevora.web.app/tools/${tool.id}`,
+            canonical: `https://convertlocally.web.app/tools/${tool.id}`,
         }
     };
 }

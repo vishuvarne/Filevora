@@ -64,7 +64,9 @@ export default function MemeGenerator() {
         const link = document.createElement("a");
         link.download = "meme.png";
         link.href = canvasRef.current.toDataURL("image/png");
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
     };
 
     return (

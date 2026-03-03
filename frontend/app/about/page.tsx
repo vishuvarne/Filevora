@@ -2,28 +2,28 @@ import Link from "next/link";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
 export const metadata = {
-    title: "About FileVora - Professional File Tools",
-    description: "Learn about FileVora: our mission, values, and commitment to free, secure file conversion and processing tools.",
+    title: "About ConvertLocally - Professional File Tools",
+    description: "Learn about ConvertLocally: our mission, values, and commitment to free, secure file conversion and processing tools.",
 };
 
 export default function AboutPage() {
     return (
         <main className="min-h-screen bg-slate-50 text-slate-900 font-sans pb-20 pt-8">
             <div className="max-w-3xl mx-auto px-4">
-                <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "About FileVora" }]} />
+                <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "About ConvertLocally" }]} />
 
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 md:p-10">
-                    <h1 className="text-3xl font-bold text-slate-900 mb-6">About FileVora</h1>
+                    <h1 className="text-3xl font-bold text-slate-900 mb-6">About ConvertLocally</h1>
 
                     <p className="text-slate-600 leading-relaxed mb-6">
-                        FileVora is a free, fast, and secure suite of file tools. We help you merge, split, compress, and convert
+                        ConvertLocally is a free, fast, and secure suite of file tools. We help you merge, split, compress, and convert
                         PDFs, images, videos, and more—without complicated software or hidden fees.
                     </p>
 
                     <h2 className="text-xl font-bold text-slate-800 mt-8 mb-3">Our Mission</h2>
                     <p className="text-slate-600 leading-relaxed mb-6">
                         We believe everyone deserves access to reliable file tools. Whether you need to convert a document for work,
-                        resize an image for the web, or create a QR code—FileVora is here to help, 100% free.
+                        resize an image for the web, or create a QR code—ConvertLocally is here to help, 100% free.
                     </p>
 
                     <h2 className="text-xl font-bold text-slate-800 mt-8 mb-3">What We Offer</h2>

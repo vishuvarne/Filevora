@@ -100,7 +100,9 @@ export default function CollageMaker() {
         const link = document.createElement('a');
         link.download = 'collage.jpg';
         link.href = canvasRef.current!.toDataURL('image/jpeg', 0.9);
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
     };
 
     return (

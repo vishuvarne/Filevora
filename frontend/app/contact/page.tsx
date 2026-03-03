@@ -143,7 +143,7 @@ export default function ContactPage() {
                     <div className="mt-10 pt-8 border-t border-slate-100 grid md:grid-cols-2 gap-6">
                         <div>
                             <h3 className="font-bold text-slate-800 mb-1">Email us directly</h3>
-                            <a href="mailto:support@filevora.com" className="text-slate-500 hover:text-blue-600 transition">support@filevora.com</a>
+                            <a href="mailto:support@convertlocally.com" className="text-slate-500 hover:text-blue-600 transition">support@convertlocally.com</a>
                         </div>
                         <div>
                             <h3 className="font-bold text-slate-800 mb-1">Live Chat</h3>

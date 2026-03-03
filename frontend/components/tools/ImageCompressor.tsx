@@ -162,7 +162,9 @@ export default function ImageCompressor() {
         const link = document.createElement("a");
         link.download = `${base}-compressed.${ext}`;
         link.href = compressedDataUrl;
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
     };
 
     const reset = () => {

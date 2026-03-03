@@ -1,5 +1,5 @@
 
-const DB_NAME = 'FilevoraTransferDB';
+const DB_NAME = 'ConvertLocallyTransferDB';
 const STORE_NAME = 'transfers';
 
 /**

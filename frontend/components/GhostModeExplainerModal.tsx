@@ -42,7 +42,7 @@ export default function GhostModeExplainerModal({ onClose }: GhostModeExplainerM
                 <div className="p-5 sm:p-8 space-y-6 sm:space-y-8 overflow-y-auto flex-1">
                     <div className="space-y-4">
                         <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-                            FileVora uses <strong className="text-slate-900 dark:text-white">WebAssembly</strong> technology to process your files directly inside your browser. This means your data never leaves your device.
+                            ConvertLocally uses <strong className="text-slate-900 dark:text-white">WebAssembly</strong> technology to process your files directly inside your browser. This means your data never leaves your device.
                         </p>
                     </div>
 

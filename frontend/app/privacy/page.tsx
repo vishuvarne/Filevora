@@ -2,8 +2,8 @@ import Link from "next/link";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
 export const metadata = {
-    title: "Privacy Policy - FileVora",
-    description: "FileVora Privacy Policy. How we collect, use, and protect your data when you use our file tools.",
+    title: "Privacy Policy - ConvertLocally",
+    description: "ConvertLocally Privacy Policy. How we collect, use, and protect your data when you use our file tools.",
 };
 
 export default function PrivacyPage() {
@@ -19,7 +19,7 @@ export default function PrivacyPage() {
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-slate-800 mb-3">1. Introduction</h2>
                         <p className="text-slate-600 leading-relaxed">
-                            FileVora (“we”, “our”, or “us”) is committed to protecting your privacy. This policy describes how we
+                            ConvertLocally (“we”, “our”, or “us”) is committed to protecting your privacy. This policy describes how we
                             collect, use, and safeguard information when you use our website and tools.
                         </p>
                     </section>
@@ -27,7 +27,7 @@ export default function PrivacyPage() {
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-slate-800 mb-3">2. Information We Collect</h2>
                         <p className="text-slate-600 leading-relaxed mb-4">
-                            When you use FileVora, we may collect:
+                            When you use ConvertLocally, we may collect:
                         </p>
                         <ul className="list-disc list-inside text-slate-600 space-y-2">
                             <li><strong>Files you upload</strong> — Processed only to provide the requested service. Many of our tools run in your browser; in those cases, your files never leave your device.</li>
@@ -39,7 +39,7 @@ export default function PrivacyPage() {
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-slate-800 mb-3">3. How We Use Your Information</h2>
                         <p className="text-slate-600 leading-relaxed">
-                            We use the information to operate and improve FileVora, to process your requests, to enforce our Terms
+                            We use the information to operate and improve ConvertLocally, to process your requests, to enforce our Terms
                             of Service, and to protect against abuse. We do not sell your personal data or uploaded files to third parties.
                         </p>
                     </section>
@@ -72,7 +72,7 @@ export default function PrivacyPage() {
                         <h2 className="text-xl font-bold text-slate-800 mb-3">7. Your Rights</h2>
                         <p className="text-slate-600 leading-relaxed">
                             Depending on where you live, you may have rights to access, correct, or delete your personal data, or
-                            to object to or restrict certain processing. Contact us at support@filevora.com to exercise these rights.
+                            to object to or restrict certain processing. Contact us at support@convertlocally.com to exercise these rights.
                         </p>
                     </section>
 
@@ -87,7 +87,7 @@ export default function PrivacyPage() {
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-slate-800 mb-3">9. Contact</h2>
                         <p className="text-slate-600 leading-relaxed">
-                            For privacy-related questions: <a href="mailto:privacy@filevora.com" className="text-blue-600 hover:underline">privacy@filevora.com</a>
+                            For privacy-related questions: <a href="mailto:privacy@convertlocally.com" className="text-blue-600 hover:underline">privacy@convertlocally.com</a>
                         </p>
                     </section>
 

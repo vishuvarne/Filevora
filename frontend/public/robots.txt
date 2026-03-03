@@ -4,4 +4,4 @@ Disallow: /profile
 Disallow: /api/
 Disallow: /temp/
 
-Sitemap: https://filevora.com/sitemap.xml
+Sitemap: https://convertlocally.com/sitemap.xml

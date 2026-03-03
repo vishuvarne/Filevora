@@ -4,7 +4,7 @@ import { TOOLS } from "@/config/tools";
 export const dynamic = 'force-static';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = "https://filevora.web.app";
+    const baseUrl = "https://convertlocally.web.app";
 
     // High-priority tools
     const highPriorityTools = new Set([

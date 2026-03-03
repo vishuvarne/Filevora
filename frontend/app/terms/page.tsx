@@ -2,8 +2,8 @@ import Link from "next/link";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
 export const metadata = {
-    title: "Terms of Service - FileVora",
-    description: "FileVora Terms of Service. Rules and conditions for using our file conversion and processing tools.",
+    title: "Terms of Service - ConvertLocally",
+    description: "ConvertLocally Terms of Service. Rules and conditions for using our file conversion and processing tools.",
 };
 
 export default function TermsPage() {
@@ -19,7 +19,7 @@ export default function TermsPage() {
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-slate-800 mb-3">1. Acceptance</h2>
                         <p className="text-slate-600 leading-relaxed">
-                            By using FileVora’s website and services, you agree to these Terms of Service (“Terms”). If you do not
+                            By using ConvertLocally’s website and services, you agree to these Terms of Service (“Terms”). If you do not
                             agree, do not use our services.
                         </p>
                     </section>
@@ -27,7 +27,7 @@ export default function TermsPage() {
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-slate-800 mb-3">2. Use of the Service</h2>
                         <p className="text-slate-600 leading-relaxed mb-4">
-                            FileVora provides file conversion, compression, and related tools. You agree to:
+                            ConvertLocally provides file conversion, compression, and related tools. You agree to:
                         </p>
                         <ul className="list-disc list-inside text-slate-600 space-y-2">
                             <li>Use the service only for lawful purposes and in compliance with applicable laws.</li>
@@ -39,7 +39,7 @@ export default function TermsPage() {
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-slate-800 mb-3">3. Intellectual Property</h2>
                         <p className="text-slate-600 leading-relaxed">
-                            FileVora’s brand, design, and code are owned by us or our licensors. You retain ownership of the files
+                            ConvertLocally’s brand, design, and code are owned by us or our licensors. You retain ownership of the files
                             you upload. By uploading, you grant us a limited license to process them solely to provide the requested service.
                         </p>
                     </section>
@@ -55,7 +55,7 @@ export default function TermsPage() {
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-slate-800 mb-3">5. Limitation of Liability</h2>
                         <p className="text-slate-600 leading-relaxed">
-                            To the fullest extent permitted by law, FileVora and its affiliates shall not be liable for any
+                            To the fullest extent permitted by law, ConvertLocally and its affiliates shall not be liable for any
                             indirect, incidental, special, or consequential damages, or for loss of data or profits, arising from your
                             use of the service.
                         </p>
@@ -80,7 +80,7 @@ export default function TermsPage() {
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-slate-800 mb-3">8. Contact</h2>
                         <p className="text-slate-600 leading-relaxed">
-                            Questions about these Terms: <a href="mailto:legal@filevora.com" className="text-blue-600 hover:underline">legal@filevora.com</a>
+                            Questions about these Terms: <a href="mailto:legal@convertlocally.com" className="text-blue-600 hover:underline">legal@convertlocally.com</a>
                         </p>
                     </section>
 

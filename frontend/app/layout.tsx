@@ -16,9 +16,9 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://filevora.web.app"),
-  title: "FileVora – Free Online File Converter for PDF, Images, Video & Audio",
-  description: "FileVora is a free online file converter for PDF, images, video, audio, and documents. Fast, secure, and no signup required.",
+  metadataBase: new URL("https://convertlocally.web.app"),
+  title: "ConvertLocally – Free Online File Converter for PDF, Images, Video & Audio",
+  description: "ConvertLocally is a free online file converter for PDF, images, video, audio, and documents. Fast, secure, and no signup required.",
   keywords: [
     // Core converter keywords
     "online file converter",
@@ -71,26 +71,26 @@ export const metadata: Metadata = {
     "free online tools for pdf",
     "all in one file converter"
   ],
-  authors: [{ name: "FileVora Team" }],
+  authors: [{ name: "ConvertLocally Team" }],
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://filevora.web.app",
-    siteName: "FileVora",
-    title: "FileVora – Free Online File Converter",
+    url: "https://convertlocally.web.app",
+    siteName: "ConvertLocally",
+    title: "ConvertLocally – Free Online File Converter",
     description: "Convert, Edit, and Compress files online for free.",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "FileVora - Free Online File Converter Tools",
+        alt: "ConvertLocally - Free Online File Converter Tools",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "FileVora - Free Online File Converter",
+    title: "ConvertLocally - Free Online File Converter",
     description: "60+ free tools to convert, merge, compress files. PDF, Image, Video converter with no signup required.",
     images: ["/og-image.png"],
   },
@@ -141,19 +141,19 @@ export default function RootLayout({
               {
                 "@context": "https://schema.org",
                 "@type": "Organization",
-                "name": "FileVora",
-                "url": "https://filevora.web.app",
-                "logo": "https://filevora.web.app/logo.png",
+                "name": "ConvertLocally",
+                "url": "https://convertlocally.web.app",
+                "logo": "https://convertlocally.web.app/logo.png",
                 "sameAs": []
               },
               {
                 "@context": "https://schema.org",
                 "@type": "WebSite",
-                "name": "FileVora",
-                "url": "https://filevora.web.app",
+                "name": "ConvertLocally",
+                "url": "https://convertlocally.web.app",
                 "potentialAction": {
                   "@type": "SearchAction",
-                  "target": "https://filevora.web.app/?q={search_term_string}",
+                  "target": "https://convertlocally.web.app/?q={search_term_string}",
                   "query-input": "required name=search_term_string"
                 }
               }

@@ -1,6 +1,6 @@
 {
     "hosting": {
-        "site": "filevora",
+        "site": "convertlocally",
         "public": "out",
         "ignore": [
             "firebase.json",

@@ -17,13 +17,13 @@ export const EXPLANATION_REGISTRY: Record<string, ExplanationEntry> = {
     "unknown_tool": {
         title: "Unsupported Component",
         description: "The requested tool or operation is not recognized by the security policy engine.",
-        suggestion: "Ensure you are using an official Filevora tool.",
+        suggestion: "Ensure you are using an official ConvertLocally tool.",
         alternatives: ["Check for app updates", "Contact support if this persists"]
     },
     "missing_capability_network": {
         title: "Network Access Denied",
         description: "This operation attempted to access the internet, but network capabilities were not granted.",
-        suggestion: "Filevora tools run locally by default to protect your privacy.",
+        suggestion: "ConvertLocally tools run locally by default to protect your privacy.",
         alternatives: ["Continue with local-only processing", "Use a cloud-enabled alternative if available"]
     },
     "missing_capability_file_write": {

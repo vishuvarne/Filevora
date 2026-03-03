@@ -79,7 +79,9 @@ export default function PhotoEditor() {
         const link = document.createElement("a");
         link.download = "edited-photo.png";
         link.href = canvasRef.current.toDataURL("image/png");
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
     };
 
     return (

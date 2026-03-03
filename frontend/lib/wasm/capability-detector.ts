@@ -11,7 +11,7 @@ import type { BrowserCapabilities, RuntimeTier, CachedCapabilities } from './run
 const RUNTIME_VERSION = '1.0.0';
 
 /** Cache key in localStorage */
-const CACHE_KEY = 'filevora_wasm_capabilities';
+const CACHE_KEY = 'convertlocally_wasm_capabilities';
 
 /** Cache TTL: 7 days */
 const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
@@ -61,7 +61,7 @@ async function detectWebGPU(): Promise<boolean> {
 
         // Check for "slow GPU" flag in session storage
         try {
-            if (sessionStorage.getItem('filevora_gpu_slow') === 'true') {
+            if (sessionStorage.getItem('convertlocally_gpu_slow') === 'true') {
                 return false;
             }
         } catch { }

@@ -55,7 +55,7 @@ export class ConversionScheduler {
                 // @ts-ignore - Check for method existence at runtime
                 this.builder.setMetadata({
                     title: metadata.info?.Title || "Converted Document",
-                    author: metadata.info?.Author || "Filevora User"
+                    author: metadata.info?.Author || "ConvertLocally User"
                 });
             }
 

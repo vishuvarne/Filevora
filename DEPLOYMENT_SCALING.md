@@ -1,7 +1,7 @@
-# FileVora Scaling & Deployment Guide
+# ConvertLocally Scaling & Deployment Guide
 
 ## Overview
-This guide describes how to scale FileVora to handle **1 Million+ Visitors per Month**. 
+This guide describes how to scale ConvertLocally to handle **1 Million+ Visitors per Month**. 
 The architecture supports horizontal scaling by offloading state to external services (S3, Redis, Postgres).
 
 ---

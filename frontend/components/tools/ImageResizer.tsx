@@ -66,7 +66,9 @@ export default function ImageResizer() {
         const link = document.createElement("a");
         link.download = "resized-image.png";
         link.href = canvasRef.current.toDataURL("image/png");
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
     };
 
     const reset = () => {

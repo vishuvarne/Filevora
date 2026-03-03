@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
  * IndexNow Submission Script
- * Submits all FileVora tool URLs to IndexNow API for instant indexing.
+ * Submits all ConvertLocally tool URLs to IndexNow API for instant indexing.
  * Supported by: Bing, Yandex, Naver, Seznam, Yep
  * 
  * Usage: node scripts/submit-indexnow.js
  */
 
 const INDEXNOW_KEY = 'befebe4b2fecd5a199901880ead7d692';
-const HOST = 'filevora.web.app';
+const HOST = 'convertlocally.web.app';
 const KEY_LOCATION = `https://${HOST}/${INDEXNOW_KEY}.txt`;
 
 // All tool IDs from the TOOLS array

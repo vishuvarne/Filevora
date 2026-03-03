@@ -1,6 +1,6 @@
 {
-    "name": "FileVora",
-    "short_name": "FileVora",
+    "name": "ConvertLocally",
+    "short_name": "ConvertLocally",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",

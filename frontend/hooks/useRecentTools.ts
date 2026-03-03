@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const STORAGE_KEY = "filevora_recent_tools";
+const STORAGE_KEY = "convertlocally_recent_tools";
 const MAX_RECENT = 5;
 
 interface RecentTool {

@@ -2,8 +2,8 @@ import Link from "next/link";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
 export const metadata = {
-    title: "Donate - FileVora",
-    description: "Support FileVora. Help us keep our file tools free for everyone.",
+    title: "Donate - ConvertLocally",
+    description: "Support ConvertLocally. Help us keep our file tools free for everyone.",
 };
 
 export default function DonatePage() {
@@ -13,10 +13,10 @@ export default function DonatePage() {
                 <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Donate" }]} />
 
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 md:p-10">
-                    <h1 className="text-3xl font-bold text-slate-900 mb-6">Support FileVora</h1>
+                    <h1 className="text-3xl font-bold text-slate-900 mb-6">Support ConvertLocally</h1>
 
                     <p className="text-slate-600 leading-relaxed mb-8">
-                        FileVora is free to use. Donations help us pay for servers, development, and keep adding new tools
+                        ConvertLocally is free to use. Donations help us pay for servers, development, and keep adding new tools
                         without ads or paywalls. Every contribution counts.
                     </p>
 
@@ -38,7 +38,7 @@ export default function DonatePage() {
                         <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200">
                             <h2 className="font-bold text-slate-800 mb-2">Other ways to help</h2>
                             <ul className="text-slate-600 text-sm space-y-2">
-                                <li>• Share FileVora with friends and colleagues</li>
+                                <li>• Share ConvertLocally with friends and colleagues</li>
                                 <li>• Tell us what tools you’d like to see</li>
                                 <li>• Use our <Link href="/api" prefetch={false} className="text-blue-600 hover:underline">API</Link> and give feedback</li>
                             </ul>

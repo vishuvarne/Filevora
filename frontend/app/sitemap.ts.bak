@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { TOOLS } from "@/config/tools";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = "https://filevora.com";
+    const baseUrl = "https://convertlocally.com";
 
     // Tool pages
     const toolUrls = TOOLS.map((tool) => ({

@@ -110,7 +110,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/image-to-pdf",
         acceptedTypes: "image/*",
         multiple: true,
-        seoTitle: "Image to PDF Converter Online Free – Convert JPG, PNG to PDF | FileVora",
+        seoTitle: "Image to PDF Converter Online Free – Convert JPG, PNG to PDF | ConvertLocally",
         seoDescription: "Convert images to PDF online for free. Support for JPG, PNG, WebP, HEIC, BMP, TIFF and more. Combine multiple images into one PDF. No signup, no watermark, 100% free."
     },
     {
@@ -123,7 +123,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/image-to-pdf",
         acceptedTypes: "image/jpeg,image/jpg",
         multiple: true,
-        seoTitle: "JPG to PDF Converter – Convert JPEG to PDF Online Free | FileVora",
+        seoTitle: "JPG to PDF Converter – Convert JPEG to PDF Online Free | ConvertLocally",
         seoDescription: "Convert JPG to PDF online for free. Combine multiple JPEG images into one PDF. Fast, secure, no signup required. Best free JPG to PDF converter."
     },
     // --- PDF & Documents ---
@@ -139,7 +139,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: ".pdf,application/pdf",
         multiple: false,
         type: "interactive",
-        seoTitle: "Edit PDF Online – Free Client-Side PDF Editor | FileVora",
+        seoTitle: "Edit PDF Online – Free Client-Side PDF Editor | ConvertLocally",
         seoDescription: "Edit PDF files directly in your browser. Add text, fill forms, and annotate PDFs without uploading. Fast, free, and secure."
     },
     */
@@ -153,8 +153,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/merge-pdf",
         acceptedTypes: ".pdf,application/pdf",
         multiple: true,
-        seoTitle: "Merge PDF Files Online – Free & Secure | FileVora",
-        seoDescription: "Combine multiple PDF files into one document online for free. Fast, secure, and easy PDF merging with FileVora."
+        seoTitle: "Merge PDF Files Online – Free & Secure | ConvertLocally",
+        seoDescription: "Combine multiple PDF files into one document online for free. Fast, secure, and easy PDF merging with ConvertLocally."
     },
     {
         id: "split-pdf",
@@ -166,8 +166,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/split-pdf",
         acceptedTypes: ".pdf,application/pdf",
         multiple: false,
-        seoTitle: "Split PDF Online – Extract Pages from PDF Free | FileVora",
-        seoDescription: "Split your PDF files online for free. Extract specific pages or split every page into separate files with FileVora. Fast and secure."
+        seoTitle: "Split PDF Online – Extract Pages from PDF Free | ConvertLocally",
+        seoDescription: "Split your PDF files online for free. Extract specific pages or split every page into separate files with ConvertLocally. Fast and secure."
     },
     {
         id: "compress-pdf",
@@ -179,8 +179,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/compress-pdf",
         acceptedTypes: ".pdf,application/pdf",
         multiple: false,
-        seoTitle: "Compress PDF Online – Reduce PDF Size Free | FileVora",
-        seoDescription: "Reduce PDF file size online without losing quality. Free, fast, and secure PDF compression with FileVora."
+        seoTitle: "Compress PDF Online – Reduce PDF Size Free | ConvertLocally",
+        seoDescription: "Reduce PDF file size online without losing quality. Free, fast, and secure PDF compression with ConvertLocally."
     },
     {
         id: "rotate-pdf",
@@ -192,35 +192,10 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/rotate-pdf",
         acceptedTypes: ".pdf,application/pdf",
         multiple: false,
-        seoTitle: "Rotate PDF Online – Fix PDF Orientation Free | FileVora",
-        seoDescription: "Rotate PDF pages online for free. Fix portrait or landscape orientation easily with FileVora. No installation required."
+        seoTitle: "Rotate PDF Online – Fix PDF Orientation Free | ConvertLocally",
+        seoDescription: "Rotate PDF pages online for free. Fix portrait or landscape orientation easily with ConvertLocally. No installation required."
     },
-    {
-        id: "pdf-password-protect",
-        name: "PDF Password Protect",
-        description: "Protect your PDF with a password. Zero-knowledge encryption - password never leaves your device.",
-        category: "PDF & Documents",
-        iconPath: "M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z",
-        theme: THEMES.red,
-        endpoint: "/process/pdf-password-protect",
-        acceptedTypes: ".pdf,application/pdf",
-        multiple: false,
-        seoTitle: "Password Protect PDF - Secure PDF Encryption Online | FileVora",
-        seoDescription: "Protect your PDF files with password encryption. Your password never leaves your device. Free, secure, and private PDF password protection."
-    },
-    {
-        id: "pdf-remove-password",
-        name: "PDF Remove Password",
-        description: "Remove password protection from PDF files. Decryption happens locally on your device.",
-        category: "PDF & Documents",
-        iconPath: "M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z",
-        theme: THEMES.green,
-        endpoint: "/process/pdf-remove-password",
-        acceptedTypes: ".pdf,application/pdf",
-        multiple: false,
-        seoTitle: "Remove PDF Password - Unlock PDF Online | FileVora",
-        seoDescription: "Remove password protection from PDF files securely. Unlock encrypted PDFs locally in your browser. No upload required."
-    },
+
     {
         id: "pdf-converter",
         name: "PDF Converter",
@@ -231,7 +206,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/pdf-to-image",
         acceptedTypes: ".pdf,application/pdf",
         multiple: false,
-        seoTitle: "PDF Converter Online Free – Convert PDF to Any Format | FileVora",
+        seoTitle: "PDF Converter Online Free – Convert PDF to Any Format | ConvertLocally",
         seoDescription: "Convert PDF to Word, Excel, PowerPoint, JPG and more. Free online PDF converter with no signup required."
     },
     /* Temporarily disabled: Heavy PDF to Office tools
@@ -245,8 +220,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/pdf-to-word",
         acceptedTypes: ".pdf,application/pdf",
         multiple: false,
-        seoTitle: "PDF to Word Converter – Free & Fast | FileVora",
-        seoDescription: "Convert PDF to Word online for free. Maintain formatting, fast processing, and secure file conversion with FileVora. No signup required."
+        seoTitle: "PDF to Word Converter – Free & Fast | ConvertLocally",
+        seoDescription: "Convert PDF to Word online for free. Maintain formatting, fast processing, and secure file conversion with ConvertLocally. No signup required."
     },
     {
         id: "pdf-to-ppt",
@@ -258,8 +233,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/pdf-to-ppt",
         acceptedTypes: ".pdf,application/pdf",
         multiple: false,
-        seoTitle: "PDF to PowerPoint Converter Online – Free | FileVora",
-        seoDescription: "Convert PDF files to editable PowerPoint presentations online. Free, secure, and preserves layout with FileVora."
+        seoTitle: "PDF to PowerPoint Converter Online – Free | ConvertLocally",
+        seoDescription: "Convert PDF files to editable PowerPoint presentations online. Free, secure, and preserves layout with ConvertLocally."
     },
     */
     /* Temporarily disabled: Office tools
@@ -273,8 +248,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/docx-to-pdf",
         acceptedTypes: ".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         multiple: false,
-        seoTitle: "Word to PDF Converter Online – Free | FileVora",
-        seoDescription: "Convert Word documents to PDF instantly. Free, secure, and high-quality Word to PDF conversion powered by FileVora."
+        seoTitle: "Word to PDF Converter Online – Free | ConvertLocally",
+        seoDescription: "Convert Word documents to PDF instantly. Free, secure, and high-quality Word to PDF conversion powered by ConvertLocally."
     },
     {
         id: "excel-to-pdf",
@@ -286,8 +261,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/xlsx-to-pdf",
         acceptedTypes: ".xlsx,.xls",
         multiple: false,
-        seoTitle: "Excel to PDF Converter Online – Free | FileVora",
-        seoDescription: "Convert Excel files to PDF online instantly. Free, accurate, and secure document conversion with FileVora."
+        seoTitle: "Excel to PDF Converter Online – Free | ConvertLocally",
+        seoDescription: "Convert Excel files to PDF online instantly. Free, accurate, and secure document conversion with ConvertLocally."
     },
     {
         id: "ppt-to-pdf",
@@ -299,8 +274,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/pptx-to-pdf",
         acceptedTypes: ".pptx,.ppt",
         multiple: false,
-        seoTitle: "PPT to PDF Converter – Free & Fast | FileVora",
-        seoDescription: "Convert PowerPoint presentations to PDF online for free. Fast, secure, and high-quality conversion with FileVora."
+        seoTitle: "PPT to PDF Converter – Free & Fast | ConvertLocally",
+        seoDescription: "Convert PowerPoint presentations to PDF online for free. Fast, secure, and high-quality conversion with ConvertLocally."
     },
     */
     {
@@ -314,8 +289,8 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: ".pdf,application/pdf",
         multiple: false, // Backend expects single file
         presetOptions: { format: "jpeg" },
-        seoTitle: "PDF to JPG Converter – Extract Images from PDF Free | FileVora",
-        seoDescription: "Convert PDF pages to high-quality JPG images online for free. Extract images from your PDF files instantly with FileVora."
+        seoTitle: "PDF to JPG Converter – Extract Images from PDF Free | ConvertLocally",
+        seoDescription: "Convert PDF pages to high-quality JPG images online for free. Extract images from your PDF files instantly with ConvertLocally."
     },
     /* Temporarily disabled: epub tools
     {
@@ -328,7 +303,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/pdf-to-epub",
         acceptedTypes: ".pdf,application/pdf",
         multiple: false,
-        seoTitle: "PDF to EPUB Converter Online Free | FileVora",
+        seoTitle: "PDF to EPUB Converter Online Free | ConvertLocally",
         seoDescription: "Convert PDF to EPUB ebook format online for free. Read your PDFs on any e-reader device."
     },
     {
@@ -341,7 +316,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/epub-to-pdf",
         acceptedTypes: ".epub",
         multiple: false,
-        seoTitle: "EPUB to PDF Converter Online Free | FileVora",
+        seoTitle: "EPUB to PDF Converter Online Free | ConvertLocally",
         seoDescription: "Convert EPUB ebooks to PDF online for free. Create printable versions of your ebooks instantly."
     },
     {
@@ -354,7 +329,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/ebook-convert",
         acceptedTypes: "*",
         multiple: false,
-        seoTitle: "Ebook Converter Online Free – EPUB, MOBI, PDF | FileVora",
+        seoTitle: "Ebook Converter Online Free – EPUB, MOBI, PDF | ConvertLocally",
         seoDescription: "Convert between ebook formats online for free. Support for EPUB, MOBI, PDF, and more. No signup needed."
     },
     {
@@ -367,7 +342,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/epub-to-mobi",
         acceptedTypes: ".epub",
         multiple: false,
-        seoTitle: "EPUB to MOBI Converter Online Free | FileVora",
+        seoTitle: "EPUB to MOBI Converter Online Free | ConvertLocally",
         seoDescription: "Convert EPUB to MOBI for Kindle devices online for free. Fast, secure ebook conversion."
     },
     {
@@ -380,7 +355,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/mobi-to-epub",
         acceptedTypes: ".mobi",
         multiple: false,
-        seoTitle: "MOBI to EPUB Converter Online Free | FileVora",
+        seoTitle: "MOBI to EPUB Converter Online Free | ConvertLocally",
         seoDescription: "Convert MOBI to EPUB format online for free. Read your Kindle books on any e-reader."
     },
     {
@@ -393,7 +368,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/document-convert",
         acceptedTypes: "*",
         multiple: false,
-        seoTitle: "Document Converter Online Free – Convert DOCX, XLSX, PPTX | FileVora",
+        seoTitle: "Document Converter Online Free – Convert DOCX, XLSX, PPTX | ConvertLocally",
         seoDescription: "Convert between document formats online for free. Support for Word, Excel, PowerPoint, and PDF."
     },
     */
@@ -409,7 +384,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/convert-image",
         acceptedTypes: "image/*,.png,.jpeg,.jpg,.webp,.gif,.svg,.jxl,.avif,.heic,.heif,.ico,.bmp,.cur,.ani,.icns,.nef,.cr2,.hdr,.jpe,.mat,.pbm,.pfm,.pgm,.pnm,.ppm,.tiff,.jfif,.eps,.psd,.arw,.tif,.dng,.xcf,.rw2,.raf,.orf,.pef,.mos,.raw,.dcr,.crw,.cr3,.3fr,.erf,.mrw,.mef,.nrw,.srw,.sr2,.srf,.a,.aai,.ai,.art,.avs,.b,.bgr,.bgra,.bgro,.bmp2,.bmp3,.brf,.cal,.cals,.cin,.cip,.cmyk,.cmyka,.dcx,.dds,.dpx,.dxt1,.dxt5,.epdf,.epi,.eps2,.eps3,.epsf,.epsi,.ept,.ept2,.ept3,.exr,.farbfeld,.fax,.ff,.fit,.fits,.fl32,.fts,.ftxt,.g,.g3,.g4,.gif87,.gray,.graya,.group4,.hrz,.icb,.icon,.info,.ipl,.isobrl,.isobrl6,.j2c,.j2k,.jng,.jp2,.jpc,.jpm,.jps,.map,.miff,.mng,.mono,.mtv,.o,.otb,.pal,.palm,.pam,.pcd,.pcds,.pcl,.pct,.pcx,.pdb,.pgx,.phm,.picon,.pict,.pjpeg,.png00,.png24,.png32,.png48,.png64,.png8,.ps,.ps1,.ps2,.ps3,.psb,.ptif,.qoi,.r,.ras,.rgb,.rgba,.rgbo,.rgf,.sgi,.six,.sixel,.sparse-color,.strimg,.sun,.svgz,.tga,.tiff64,.ubrl,.ubrl6,.uil,.uyvy,.vda,.vicar,.viff,.vips,.vst,.wbmp,.wpg,.xbm,.xpm,.xv,.ycbcr,.ycbcra,.yuv",
         multiple: true,
-        seoTitle: "Image Converter Online Free – JPG, PNG, WebP, AVIF | FileVora",
+        seoTitle: "Image Converter Online Free – JPG, PNG, WebP, AVIF | ConvertLocally",
         seoDescription: "Convert images between formats online for free. Support for JPG, PNG, WebP, AVIF, GIF, BMP, TIFF. Batch conversion supported."
     },
     {
@@ -423,8 +398,8 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/jpeg,image/jpg",
         multiple: true,
         presetOptions: { target_format: "PNG" },
-        seoTitle: "JPG to PNG Converter Online – Free | FileVora",
-        seoDescription: "Convert JPG images to PNG format instantly. Free online image converter with fast and secure processing by FileVora."
+        seoTitle: "JPG to PNG Converter Online – Free | ConvertLocally",
+        seoDescription: "Convert JPG images to PNG format instantly. Free online image converter with fast and secure processing by ConvertLocally."
     },
     {
         id: "png-to-jpg",
@@ -437,8 +412,8 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/png",
         multiple: true,
         presetOptions: { target_format: "JPEG" },
-        seoTitle: "PNG to JPG Converter – Free Image Tool | FileVora",
-        seoDescription: "Convert PNG to JPG online for free. High-quality image conversion with fast processing using FileVora."
+        seoTitle: "PNG to JPG Converter – Free Image Tool | ConvertLocally",
+        seoDescription: "Convert PNG to JPG online for free. High-quality image conversion with fast processing using ConvertLocally."
     },
     {
         id: "image-compressor",
@@ -451,8 +426,8 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/*",
         multiple: true,
         type: "interactive",
-        seoTitle: "Compress Images Online – Free Image Compressor | FileVora",
-        seoDescription: "Compress images online to reduce file size without quality loss. Free and fast image compression with FileVora."
+        seoTitle: "Compress Images Online – Free Image Compressor | ConvertLocally",
+        seoDescription: "Compress images online to reduce file size without quality loss. Free and fast image compression with ConvertLocally."
     },
     {
         id: "rotate-image",
@@ -464,7 +439,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/rotate-image",
         acceptedTypes: "image/*",
         multiple: false,
-        seoTitle: "Rotate Image Online Free – 90°, 180°, 270° | FileVora",
+        seoTitle: "Rotate Image Online Free – 90°, 180°, 270° | ConvertLocally",
         seoDescription: "Rotate images online for free. Turn photos 90°, 180°, or 270°. Fix orientation instantly."
     },
     {
@@ -478,7 +453,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/webp",
         multiple: true,
         presetOptions: { target_format: "PNG" },
-        seoTitle: "WebP to PNG Converter Online Free | FileVora",
+        seoTitle: "WebP to PNG Converter Online Free | ConvertLocally",
         seoDescription: "Convert WebP to PNG online for free. Get lossless PNG images from WebP files instantly."
     },
     {
@@ -492,7 +467,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/jpeg,image/pjpeg", // JFIF is technically JPEG
         multiple: true,
         presetOptions: { target_format: "PNG" },
-        seoTitle: "JFIF to PNG Converter Online Free | FileVora",
+        seoTitle: "JFIF to PNG Converter Online Free | ConvertLocally",
         seoDescription: "Convert JFIF to PNG online for free. Transform JFIF to universally compatible PNG format."
     },
     {
@@ -505,7 +480,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/coming-soon",
         acceptedTypes: "image/png",
         multiple: false,
-        seoTitle: "PNG to SVG Converter Online Free – Vectorize Images | FileVora",
+        seoTitle: "PNG to SVG Converter Online Free – Vectorize Images | ConvertLocally",
         seoDescription: "Convert PNG to SVG vector format online for free. Trace raster images to scalable vector graphics."
     },
     {
@@ -519,7 +494,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: ".heic,image/heic",
         multiple: true,
         presetOptions: { target_format: "JPEG" },
-        seoTitle: "HEIC to JPG Converter Online Free – iPhone Photos | FileVora",
+        seoTitle: "HEIC to JPG Converter Online Free – iPhone Photos | ConvertLocally",
         seoDescription: "Convert HEIC to JPG online for free. Convert iPhone and iPad photos to compatible JPG format."
     },
     {
@@ -533,7 +508,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: ".heic,image/heic",
         multiple: true,
         presetOptions: { target_format: "PNG" },
-        seoTitle: "HEIC to PNG Converter Online Free | FileVora",
+        seoTitle: "HEIC to PNG Converter Online Free | ConvertLocally",
         seoDescription: "Convert HEIC to PNG online for free. Get lossless PNG from Apple HEIC photos."
     },
     {
@@ -547,7 +522,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/webp",
         multiple: true,
         presetOptions: { target_format: "JPEG" },
-        seoTitle: "WebP to JPG Converter Online Free | FileVora",
+        seoTitle: "WebP to JPG Converter Online Free | ConvertLocally",
         seoDescription: "Convert WebP to JPG online for free. Transform WebP to universally compatible JPEG format."
     },
     {
@@ -560,7 +535,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/convert-image",
         acceptedTypes: "image/*,image/svg+xml",
         multiple: true,
-        seoTitle: "SVG Converter Online Free – SVG to PNG, JPG | FileVora",
+        seoTitle: "SVG Converter Online Free – SVG to PNG, JPG | ConvertLocally",
         seoDescription: "Convert SVG to PNG, JPG, and other formats online for free. Transform vector graphics to raster images."
     },
     {
@@ -573,7 +548,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/convert-image",
         acceptedTypes: "image/*,image/avif",
         multiple: true,
-        seoTitle: "AVIF Converter Online Free – AVIF to JPG, PNG | FileVora",
+        seoTitle: "AVIF Converter Online Free – AVIF to JPG, PNG | ConvertLocally",
         seoDescription: "Convert AVIF images to JPG, PNG, and other formats online for free. Open AVIF files in any browser."
     },
     {
@@ -587,7 +562,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/jpeg,image/jpg",
         multiple: true,
         presetOptions: { target_format: "AVIF" },
-        seoTitle: "JPG to AVIF Converter Online Free | FileVora",
+        seoTitle: "JPG to AVIF Converter Online Free | ConvertLocally",
         seoDescription: "Convert JPG to AVIF online for free. Get next-gen AVIF with 50% smaller file sizes."
     },
 
@@ -603,7 +578,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/mp4-to-mp3",
         acceptedTypes: "video/*,.mp4,.mov,.avi,.mkv,.webm",
         multiple: false,
-        seoTitle: "MP4 to MP3 Converter – Free Audio Extractor | FileVora",
+        seoTitle: "MP4 to MP3 Converter – Free Audio Extractor | ConvertLocally",
         seoDescription: "Extract audio from MP4 videos to MP3 format. Free, fast, and secure conversion processed locally in your browser."
     },
     {
@@ -616,8 +591,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/audio-trim",
         acceptedTypes: "audio/*,.mp3,.wav,.m4a,.aac,.ogg",
         multiple: false,
-        seoTitle: "Audio Trimmer Online – Cut Audio Files Free | FileVora",
-        seoDescription: "Trim and cut audio files online for free. Fast audio editing in your browser with FileVora."
+        seoTitle: "Audio Trimmer Online – Cut Audio Files Free | ConvertLocally",
+        seoDescription: "Trim and cut audio files online for free. Fast audio editing in your browser with ConvertLocally."
     },
     {
         id: "audio-compress",
@@ -629,8 +604,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/audio-compress",
         acceptedTypes: "audio/*,.mp3,.wav,.m4a,.aac",
         multiple: false,
-        seoTitle: "Compress Audio Files Online – Free | FileVora",
-        seoDescription: "Compress audio files to reduce size without quality loss. Free online audio compression with FileVora."
+        seoTitle: "Compress Audio Files Online – Free | ConvertLocally",
+        seoDescription: "Compress audio files to reduce size without quality loss. Free online audio compression with ConvertLocally."
     },
     */
 
@@ -645,7 +620,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/video-to-gif",
         acceptedTypes: "video/*",
         multiple: false,
-        seoTitle: "Video to GIF Converter Online Free | FileVora",
+        seoTitle: "Video to GIF Converter Online Free | ConvertLocally",
         seoDescription: "Convert video to GIF online for free. Create animated GIFs from MP4, WebM, MOV videos. Custom frame rate and size."
     },
     {
@@ -658,7 +633,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/video-to-gif",
         acceptedTypes: "video/mp4",
         multiple: false,
-        seoTitle: "MP4 to GIF Converter Online Free | FileVora",
+        seoTitle: "MP4 to GIF Converter Online Free | ConvertLocally",
         seoDescription: "Convert MP4 to GIF online for free. Create animated GIFs from MP4 videos with custom settings."
     },
     {
@@ -671,7 +646,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/webm-to-gif",
         acceptedTypes: "video/webm",
         multiple: false,
-        seoTitle: "WebM to GIF Converter Online Free | FileVora",
+        seoTitle: "WebM to GIF Converter Online Free | ConvertLocally",
         seoDescription: "Convert WebM to GIF online for free. Create animated GIFs from WebM videos instantly."
     },
     {
@@ -684,7 +659,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/apng-to-gif",
         acceptedTypes: "image/apng,image/png",
         multiple: false,
-        seoTitle: "APNG to GIF Converter Online Free | FileVora",
+        seoTitle: "APNG to GIF Converter Online Free | ConvertLocally",
         seoDescription: "Convert APNG to GIF online for free. Transform animated PNG to universally compatible GIF format."
     },
     {
@@ -697,7 +672,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/gif-to-mp4",
         acceptedTypes: "image/gif",
         multiple: false,
-        seoTitle: "GIF to MP4 Converter Online Free | FileVora",
+        seoTitle: "GIF to MP4 Converter Online Free | ConvertLocally",
         seoDescription: "Convert GIF to MP4 video online for free. Reduce file size by up to 90% compared to GIF."
     },
     {
@@ -710,7 +685,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/gif-to-apng",
         acceptedTypes: "image/gif",
         multiple: false,
-        seoTitle: "GIF to APNG Converter Online Free | FileVora",
+        seoTitle: "GIF to APNG Converter Online Free | ConvertLocally",
         seoDescription: "Convert GIF to APNG online for free. Get higher quality animated PNG from GIF files."
     },
     {
@@ -723,7 +698,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/images-to-gif",
         acceptedTypes: "image/*",
         multiple: true,
-        seoTitle: "Image to GIF Converter Online Free – Create Animated GIFs | FileVora",
+        seoTitle: "Image to GIF Converter Online Free – Create Animated GIFs | ConvertLocally",
         seoDescription: "Convert images to animated GIF online for free. Combine multiple images into a GIF animation."
     },
     {
@@ -736,7 +711,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/mov-to-gif",
         acceptedTypes: "video/quicktime",
         multiple: false,
-        seoTitle: "MOV to GIF Converter Online Free | FileVora",
+        seoTitle: "MOV to GIF Converter Online Free | ConvertLocally",
         seoDescription: "Convert MOV to GIF online for free. Create animated GIFs from Apple QuickTime MOV videos."
     },
     {
@@ -749,7 +724,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/avi-to-gif",
         acceptedTypes: "video/x-msvideo",
         multiple: false,
-        seoTitle: "AVI to GIF Converter Online Free | FileVora",
+        seoTitle: "AVI to GIF Converter Online Free | ConvertLocally",
         seoDescription: "Convert AVI to GIF online for free. Create animated GIFs from AVI video files."
     },
 
@@ -766,7 +741,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "*",
         multiple: false,
         type: "interactive",
-        seoTitle: "Length Converter Online Free – Meters, Feet | FileVora",
+        seoTitle: "Length Converter Online Free – Meters, Feet | ConvertLocally",
         seoDescription: "Convert between length units. Meters to feet, inches to cm, miles to km, and more."
     },
     {
@@ -780,7 +755,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "*",
         multiple: false,
         type: "interactive",
-        seoTitle: "Weight Converter Online Free – KG, LB | FileVora",
+        seoTitle: "Weight Converter Online Free – KG, LB | ConvertLocally",
         seoDescription: "Convert between weight units. Kilograms to pounds, ounces to grams, and more."
     },
     {
@@ -794,7 +769,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "*",
         multiple: false,
         type: "interactive",
-        seoTitle: "Temperature Converter Online Free | FileVora",
+        seoTitle: "Temperature Converter Online Free | ConvertLocally",
         seoDescription: "Convert Celsius to Fahrenheit, Kelvin, and more. Free online temperature converter."
     },
     {
@@ -808,7 +783,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "*",
         multiple: false,
         type: "interactive",
-        seoTitle: "Speed Converter Online Free | FileVora",
+        seoTitle: "Speed Converter Online Free | ConvertLocally",
         seoDescription: "Convert between speed units online. MPH to KPH, knots, and more."
     },
     {
@@ -822,7 +797,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "*",
         multiple: false,
         type: "interactive",
-        seoTitle: "Volume Converter Online Free | FileVora",
+        seoTitle: "Volume Converter Online Free | ConvertLocally",
         seoDescription: "Convert between volume units. Liters to gallons, cups to ml, and more."
     },
     {
@@ -836,7 +811,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "*",
         multiple: false,
         type: "interactive",
-        seoTitle: "Area Converter Online Free | FileVora",
+        seoTitle: "Area Converter Online Free | ConvertLocally",
         seoDescription: "Convert between area units. Square feet to square meters, acres, hectares."
     },
 
@@ -852,7 +827,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "*",
         multiple: false,
         type: "interactive",
-        seoTitle: "UTC Time Converter Online Free | FileVora",
+        seoTitle: "UTC Time Converter Online Free | ConvertLocally",
         seoDescription: "Convert UTC time to local time. Free online UTC clock and timezone converter."
     },
     {
@@ -866,7 +841,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "*",
         multiple: false,
         type: "interactive",
-        seoTitle: "Time Zone Map Online Free | FileVora",
+        seoTitle: "Time Zone Map Online Free | ConvertLocally",
         seoDescription: "Interactive world time zone map. View current time across all time zones."
     },
     {
@@ -880,7 +855,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "*",
         multiple: false,
         type: "interactive",
-        seoTitle: "PST to EST Time Converter Online Free | FileVora",
+        seoTitle: "PST to EST Time Converter Online Free | ConvertLocally",
         seoDescription: "Convert Pacific to Eastern time online. Quick timezone comparison tool."
     },
 
@@ -895,7 +870,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/archive-convert",
         acceptedTypes: ".rar",
         multiple: false,
-        seoTitle: "RAR to ZIP Converter Online Free | FileVora",
+        seoTitle: "RAR to ZIP Converter Online Free | ConvertLocally",
         seoDescription: "Convert RAR to ZIP online for free. Open and re-compress RAR archives to universally compatible ZIP."
     },
     {
@@ -908,7 +883,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/archive-convert",
         acceptedTypes: ".7z",
         multiple: false,
-        seoTitle: "7Z Extractor Online Free – Open 7Z Files | FileVora",
+        seoTitle: "7Z Extractor Online Free – Open 7Z Files | ConvertLocally",
         seoDescription: "Extract 7Z files online for free. Open and decompress 7-Zip archives directly in your browser."
     },
     {
@@ -921,7 +896,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/archive-convert",
         acceptedTypes: ".tar.gz,.tgz",
         multiple: false,
-        seoTitle: "TAR.GZ Converter Online Free | FileVora",
+        seoTitle: "TAR.GZ Converter Online Free | ConvertLocally",
         seoDescription: "Open and convert TAR.GZ archives online for free. Extract compressed Linux archives in your browser."
     },
 
@@ -937,7 +912,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "*",
         multiple: false,
         type: "interactive",
-        seoTitle: "Unit Converter Online Free – All-in-One | FileVora",
+        seoTitle: "Unit Converter Online Free – All-in-One | ConvertLocally",
         seoDescription: "Convert any units online for free. Length, weight, temperature, volume, area, speed."
     },
     {
@@ -951,7 +926,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "*",
         multiple: false,
         type: "interactive",
-        seoTitle: "Time Converter Online Free | FileVora",
+        seoTitle: "Time Converter Online Free | ConvertLocally",
         seoDescription: "Convert between time units. Hours to minutes, seconds, milliseconds, and more."
     },
     {
@@ -964,7 +939,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/coming-soon",
         acceptedTypes: ".zip,.rar,.7z",
         multiple: false,
-        seoTitle: "Archive Converter Online Free – ZIP, RAR, 7Z, TAR | FileVora",
+        seoTitle: "Archive Converter Online Free – ZIP, RAR, 7Z, TAR | ConvertLocally",
         seoDescription: "Convert between archive formats online for free. Support for ZIP, RAR, 7Z, TAR.GZ, and more."
     },
 
@@ -980,7 +955,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: ".pdf,application/pdf",
         multiple: false,
         type: "interactive",
-        seoTitle: "Chat with PDF – AI PDF Reader Online Free | FileVora",
+        seoTitle: "Chat with PDF – AI PDF Reader Online Free | ConvertLocally",
         seoDescription: "Chat with your PDF documents using AI. Ask questions, get summaries. Free, no signup."
     },
     // --- Video Tools ---
@@ -995,7 +970,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "video/*",
         multiple: false,
         presetOptions: { target_format: "mp3" },
-        seoTitle: "Video to MP3 Converter Online Free | FileVora",
+        seoTitle: "Video to MP3 Converter Online Free | ConvertLocally",
         seoDescription: "Extract audio from video as MP3 online for free. Convert any video to MP3 audio."
     },
 
@@ -1010,8 +985,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/compress-audio",
         acceptedTypes: "audio/*",
         multiple: false,
-        seoTitle: "Audio Converter Online – Free & Secure | FileVora",
-        seoDescription: "Convert audio files to MP3, WAV, and more online for free. Fast and secure audio conversion with FileVora."
+        seoTitle: "Audio Converter Online – Free & Secure | ConvertLocally",
+        seoDescription: "Convert audio files to MP3, WAV, and more online for free. Fast and secure audio conversion with ConvertLocally."
     },
     {
         id: "convert-audio",
@@ -1024,7 +999,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "audio/*,video/*,.mp3,.wav,.flac,.ogg,.mogg,.oga,.opus,.aac,.alac,.m4a,.caf,.wma,.amr,.ac3,.aiff,.aifc,.aif,.mp1,.mp2,.mpc,.dsd,.dsf,.dff,.mqa,.au,.m4b,.voc,.weba,.mkv,.mp4,.avi,.mov,.webm,.ts,.mts,.m2ts,.wmv,.mpg,.mpeg,.flv,.f4v,.vob,.m4v,.3gp,.3g2,.mxf,.ogv,.rm,.rmvb,.divx",
         multiple: false,
         presetOptions: { target_format: "mp3" },
-        seoTitle: "Audio Converter Online Free – MP3, WAV, OGG | FileVora",
+        seoTitle: "Audio Converter Online Free – MP3, WAV, OGG | ConvertLocally",
         seoDescription: "Convert between audio formats online for free. MP3, WAV, OGG, FLAC, AAC supported."
     },
     {
@@ -1037,7 +1012,7 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/volume-booster",
         acceptedTypes: "audio/*",
         multiple: false,
-        seoTitle: "Volume Booster Online Free – Increase Audio Volume | FileVora",
+        seoTitle: "Volume Booster Online Free – Increase Audio Volume | ConvertLocally",
         seoDescription: "Boost audio volume online for free. Increase the volume of MP3, WAV, and other audio files."
     },
     {
@@ -1051,7 +1026,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "*",
         multiple: false,
         type: "interactive",
-        seoTitle: "Voice Recorder Online Free | FileVora",
+        seoTitle: "Voice Recorder Online Free | ConvertLocally",
         seoDescription: "Record audio in your browser for free. Save as MP3 or WAV. No installation needed."
     },
 
@@ -1067,7 +1042,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/*",
         multiple: true,
         type: "interactive",
-        seoTitle: "Photo Collage Maker Online Free | FileVora",
+        seoTitle: "Photo Collage Maker Online Free | ConvertLocally",
         seoDescription: "Create beautiful photo collages online for free. Multiple layouts, no watermark."
     },
     {
@@ -1081,7 +1056,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/*",
         multiple: false,
         type: "interactive",
-        seoTitle: "Image Resizer Online Free – Resize Photos | FileVora",
+        seoTitle: "Image Resizer Online Free – Resize Photos | ConvertLocally",
         seoDescription: "Resize images online for free. Change dimensions, scale by percentage. No watermark."
     },
     {
@@ -1095,7 +1070,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/*",
         multiple: false,
         type: "interactive",
-        seoTitle: "Crop Image Online Free | FileVora",
+        seoTitle: "Crop Image Online Free | ConvertLocally",
         seoDescription: "Crop images online for free. Custom crop, aspect ratio presets for social media."
     },
     {
@@ -1109,7 +1084,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "*",
         multiple: false,
         type: "interactive",
-        seoTitle: "Color Picker Online Free – HEX, RGB, HSL | FileVora",
+        seoTitle: "Color Picker Online Free – HEX, RGB, HSL | ConvertLocally",
         seoDescription: "Pick colors from any image. Get HEX, RGB, HSL values. Extract color palettes instantly."
     },
     {
@@ -1123,7 +1098,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/*",
         multiple: false,
         type: "interactive",
-        seoTitle: "Meme Generator Online Free | FileVora",
+        seoTitle: "Meme Generator Online Free | ConvertLocally",
         seoDescription: "Create memes online for free. Add text to images. No watermark, download instantly."
     },
     {
@@ -1137,7 +1112,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/*",
         multiple: false,
         type: "interactive",
-        seoTitle: "Photo Editor Online Free | FileVora",
+        seoTitle: "Photo Editor Online Free | ConvertLocally",
         seoDescription: "Edit photos online for free. Adjust brightness, contrast, saturation. Apply filters."
     },
     {
@@ -1151,7 +1126,7 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "*",
         multiple: false,
         type: "interactive",
-        seoTitle: "QR Code Generator Online Free | FileVora",
+        seoTitle: "QR Code Generator Online Free | ConvertLocally",
         seoDescription: "Generate QR codes online for free. Create QR codes for URLs, text, WiFi, and more."
     },
 

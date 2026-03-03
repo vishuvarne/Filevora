@@ -272,7 +272,7 @@ export default function Footer() {
 
                     <div className="flex flex-col sm:flex-row items-center gap-4">
                         <div className="font-bold text-2xl text-foreground tracking-tight">
-                            File<span className="text-primary">Vora</span>
+                            Convert<span className="text-primary">Locally</span>
                         </div>
                         <div className="hidden sm:block w-[1px] h-4 bg-border"></div>
                         <div className="flex gap-4 text-xs sm:text-sm">

@@ -46,7 +46,7 @@ out/
 .env.test.local
 .env.production.local
 
-# FileVora specific
+# ConvertLocally specific
 backend/storage/
 *.db
 *.sqlite

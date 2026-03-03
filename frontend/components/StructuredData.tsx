@@ -18,7 +18,7 @@ export default function StructuredData({ tool }: StructuredDataProps) {
             "@type": "SoftwareApplication",
             "name": tool.seoTitle || tool.name,
             "description": tool.seoDescription || tool.description,
-            "url": `https://filevora.web.app/tools/${tool.id}`,
+            "url": `https://convertlocally.web.app/tools/${tool.id}`,
             "applicationCategory": "UtilitiesApplication",
             "applicationSubCategory": "File Converter",
             "operatingSystem": "Any",
@@ -45,31 +45,31 @@ export default function StructuredData({ tool }: StructuredDataProps) {
                     "@type": "ListItem",
                     "position": 1,
                     "name": "Home",
-                    "item": "https://filevora.web.app/"
+                    "item": "https://convertlocally.web.app/"
                 },
                 {
                     "@type": "ListItem",
                     "position": 2,
                     "name": tool.category,
-                    "item": `https://filevora.web.app/#${tool.category.toLowerCase().replace(/ /g, '-')}`
+                    "item": `https://convertlocally.web.app/#${tool.category.toLowerCase().replace(/ /g, '-')}`
                 },
                 {
                     "@type": "ListItem",
                     "position": 3,
                     "name": tool.name,
-                    "item": `https://filevora.web.app/tools/${tool.id}`
+                    "item": `https://convertlocally.web.app/tools/${tool.id}`
                 }
             ]
         },
         {
             "@type": "WebPage",
-            "name": tool.seoTitle || `${tool.name} Online - Free | FileVora`,
+            "name": tool.seoTitle || `${tool.name} Online - Free | ConvertLocally`,
             "description": tool.seoDescription || tool.description,
-            "url": `https://filevora.web.app/tools/${tool.id}`,
+            "url": `https://convertlocally.web.app/tools/${tool.id}`,
             "isPartOf": {
                 "@type": "WebSite",
-                "name": "FileVora",
-                "url": "https://filevora.web.app"
+                "name": "ConvertLocally",
+                "url": "https://convertlocally.web.app"
             },
             "inLanguage": "en",
             "dateModified": new Date().toISOString().split('T')[0]
@@ -77,11 +77,11 @@ export default function StructuredData({ tool }: StructuredDataProps) {
         {
             "@type": "HowTo",
             "name": `How to use the ${tool.name} tool`,
-            "description": `Step by step guide on using the ${tool.name} tool on FileVora.`,
+            "description": `Step by step guide on using the ${tool.name} tool on ConvertLocally.`,
             "step": [
                 {
                     "@type": "HowToStep",
-                    "url": `https://filevora.web.app/tools/${tool.id}#step1`,
+                    "url": `https://convertlocally.web.app/tools/${tool.id}#step1`,
                     "name": steps.step1.title,
                     "itemListElement": [{
                         "@type": "HowToDirection",
@@ -90,7 +90,7 @@ export default function StructuredData({ tool }: StructuredDataProps) {
                 },
                 {
                     "@type": "HowToStep",
-                    "url": `https://filevora.web.app/tools/${tool.id}#step2`,
+                    "url": `https://convertlocally.web.app/tools/${tool.id}#step2`,
                     "name": steps.step2.title,
                     "itemListElement": [{
                         "@type": "HowToDirection",
@@ -99,7 +99,7 @@ export default function StructuredData({ tool }: StructuredDataProps) {
                 },
                 {
                     "@type": "HowToStep",
-                    "url": `https://filevora.web.app/tools/${tool.id}#step3`,
+                    "url": `https://convertlocally.web.app/tools/${tool.id}#step3`,
                     "name": steps.step3.title,
                     "itemListElement": [{
                         "@type": "HowToDirection",

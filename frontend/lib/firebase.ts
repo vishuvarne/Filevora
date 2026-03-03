@@ -4,9 +4,9 @@ import { getFirestore } from "firebase/firestore/lite";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCGkyolRmjQwamqZI58yWe0Eu2N3h72gkc",
-    authDomain: "filevora.firebaseapp.com",
-    projectId: "filevora",
-    storageBucket: "filevora.firebasestorage.app",
+    authDomain: "convertlocally.firebaseapp.com",
+    projectId: "convertlocally",
+    storageBucket: "convertlocally.firebasestorage.app",
     messagingSenderId: "877315241969",
     appId: "1:877315241969:web:6f0b67e9ff5807fd737650",
     measurementId: "G-XP1S81KBQ8"

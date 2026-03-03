@@ -72,10 +72,10 @@ export default function ProfilePage() {
                     <div className="flex items-center justify-between">
                         <Link href="/" prefetch={false} className="flex items-center gap-2">
                             <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-extrabold text-xl">
-                                F
+                                C
                             </div>
                             <span className="text-xl font-bold text-slate-900">
-                                File<span className="text-blue-600">Vora</span>
+                                Convert<span className="text-blue-600">Locally</span>
                             </span>
                         </Link>
                         <Link href="/" prefetch={false} className="text-sm text-slate-600 hover:text-slate-900 transition-colors">
@@ -245,7 +245,7 @@ export default function ProfilePage() {
                                                 </div>
                                                 {log.downloadUrl && (
                                                     <a
-                                                        href={`https://filevora.onrender.com${log.downloadUrl}`}
+                                                        href={`https://convertlocally.onrender.com${log.downloadUrl}`}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                         className="px-4 py-2 text-sm font-semibold text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
@@ -262,7 +262,7 @@ export default function ProfilePage() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                         </svg>
                                         <h3 className="text-lg font-semibold text-slate-900 mb-2">No conversion history yet</h3>
-                                        <p className="text-slate-500 mb-6">Start using FileVora to see your conversion history here</p>
+                                        <p className="text-slate-500 mb-6">Start using ConvertLocally to see your conversion history here</p>
                                         <Link href="/" prefetch={false} className="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors">
                                             Browse Tools
                                         </Link>

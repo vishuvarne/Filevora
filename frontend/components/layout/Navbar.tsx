@@ -158,10 +158,10 @@ export default function Navbar() {
                                 color: "var(--nb-text)",
                             } : undefined}
                         >
-                            F
+                            C
                         </div>
                         <span className="text-xl font-bold tracking-tight text-foreground">
-                            File<span className="text-primary">Vora</span>
+                            Convert<span className="text-primary">Locally</span>
                         </span>
                     </Link>
 

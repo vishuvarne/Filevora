@@ -15,7 +15,7 @@ const SecuritySection = dynamic(() => import("@/components/SecuritySection"));
 const ProcessingFAQ = dynamic(() => import("@/components/ProcessingFAQ"));
 
 export const metadata: Metadata = {
-  title: "FileVora - Premium Online File Converter | PDF, Image, Video Tools",
+  title: "ConvertLocally - Premium Online File Converter | PDF, Image, Video Tools",
   description: "Free online converter with 60+ tools. Merge PDFs, convert PDF to Word/Excel, compress images, create GIFs from videos. No signup, no watermarks, unlimited use.",
   keywords: [
     "pdf to word", "pdf to excel", "merge pdf", "compress pdf", "pdf to jpg", "split pdf", "pdf converter free", "combine pdf",

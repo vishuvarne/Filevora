@@ -19,7 +19,9 @@ export default function QRCodeGenerator() {
         link.download = "qrcode.png";
         link.href = qrUrl;
         link.target = "_blank";
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
     };
 
     return (

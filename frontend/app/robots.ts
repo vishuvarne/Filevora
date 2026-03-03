@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
             allow: "/",
             disallow: ["/profile", "/api/", "/temp/"],
         },
-        sitemap: "https://filevora.web.app/sitemap.xml",
+        sitemap: "https://convertlocally.web.app/sitemap.xml",
     };
 }

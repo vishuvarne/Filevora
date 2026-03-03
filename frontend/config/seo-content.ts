@@ -72,11 +72,11 @@ export const TOOL_SEO_CONTENT: Record<string, ToolSEOContent> = {
             { title: "Archive Photos", desc: "Combine related memories into a single PDF album that takes up less space and is easy to share.", icon: "database" }
         ],
         faqs: [
-            { question: "How do I convert an image to PDF for free?", answer: "Upload your image (JPG, PNG, WebP, HEIC, BMP, or TIFF) to FileVora's Image to PDF converter. Click convert, and your PDF is ready to download instantly. No signup, no watermark, completely free." },
-            { question: "Can I combine multiple images into one PDF?", answer: "Yes! FileVora lets you upload multiple images at once and combines them into a single PDF document. Each image gets its own page, perfectly centered on A4-sized pages." },
-            { question: "What image formats can I convert to PDF?", answer: "FileVora supports all major image formats: JPG/JPEG, PNG, WebP, HEIC (iPhone photos), BMP, TIFF, GIF, and AVIF. Simply drag and drop any image file to convert it to PDF." },
-            { question: "Is it safe to convert images to PDF online?", answer: "FileVora processes all conversions directly in your browser using WebAssembly. Your files never leave your device — they are not uploaded to any server. This makes it the most secure image to PDF converter available." },
-            { question: "How do I convert a photo from my phone to PDF?", answer: "Open FileVora on your phone's browser, tap the upload area to select photos from your gallery, and tap convert. Works on iPhone (HEIC photos), Android, and all mobile devices. No app installation needed." }
+            { question: "How do I convert an image to PDF for free?", answer: "Upload your image (JPG, PNG, WebP, HEIC, BMP, or TIFF) to ConvertLocally's Image to PDF converter. Click convert, and your PDF is ready to download instantly. No signup, no watermark, completely free." },
+            { question: "Can I combine multiple images into one PDF?", answer: "Yes! ConvertLocally lets you upload multiple images at once and combines them into a single PDF document. Each image gets its own page, perfectly centered on A4-sized pages." },
+            { question: "What image formats can I convert to PDF?", answer: "ConvertLocally supports all major image formats: JPG/JPEG, PNG, WebP, HEIC (iPhone photos), BMP, TIFF, GIF, and AVIF. Simply drag and drop any image file to convert it to PDF." },
+            { question: "Is it safe to convert images to PDF online?", answer: "ConvertLocally processes all conversions directly in your browser using WebAssembly. Your files never leave your device — they are not uploaded to any server. This makes it the most secure image to PDF converter available." },
+            { question: "How do I convert a photo from my phone to PDF?", answer: "Open ConvertLocally on your phone's browser, tap the upload area to select photos from your gallery, and tap convert. Works on iPhone (HEIC photos), Android, and all mobile devices. No app installation needed." }
         ]
     },
     "jpg-to-pdf": {
@@ -99,9 +99,9 @@ export const TOOL_SEO_CONTENT: Record<string, ToolSEOContent> = {
             { title: "Portfolio Creation", desc: "Easily compile your best JPG photography work into a single portfolio document.", icon: "database" }
         ],
         faqs: [
-            { question: "How to convert JPG to PDF online for free?", answer: "Upload your JPG file to FileVora's JPG to PDF converter. The conversion happens instantly in your browser — no signup, no watermark, completely free. Download your PDF with one click." },
-            { question: "Can I merge multiple JPG files into one PDF?", answer: "Yes! Upload multiple JPG images and FileVora will combine them into a single multi-page PDF. Each JPG becomes a separate page, centered and scaled to fit A4 size." },
-            { question: "Is there a file size limit for JPG to PDF conversion?", answer: "FileVora supports JPG files up to 100MB each. Since conversion happens locally in your browser, there are no server-side limits. You can convert as many files as you want, completely free." }
+            { question: "How to convert JPG to PDF online for free?", answer: "Upload your JPG file to ConvertLocally's JPG to PDF converter. The conversion happens instantly in your browser — no signup, no watermark, completely free. Download your PDF with one click." },
+            { question: "Can I merge multiple JPG files into one PDF?", answer: "Yes! Upload multiple JPG images and ConvertLocally will combine them into a single multi-page PDF. Each JPG becomes a separate page, centered and scaled to fit A4 size." },
+            { question: "Is there a file size limit for JPG to PDF conversion?", answer: "ConvertLocally supports JPG files up to 100MB each. Since conversion happens locally in your browser, there are no server-side limits. You can convert as many files as you want, completely free." }
         ]
     },
     "merge-pdf": {
@@ -121,8 +121,8 @@ export const TOOL_SEO_CONTENT: Record<string, ToolSEOContent> = {
             { title: "Clean Up Storage", desc: "Join multiple related mini-PDFs into single categorized files for better organization.", icon: "database" }
         ],
         faqs: [
-            { question: "How do I merge PDF files online for free?", answer: "Upload multiple PDF files to FileVora's Merge PDF tool. Drag to reorder if needed, then click merge. Your combined PDF is ready to download instantly. No signup required." },
-            { question: "Does merging PDFs reduce quality?", answer: "No, merging PDFs with FileVora simply combines the pages without altering the quality or resolution of the original files." },
+            { question: "How do I merge PDF files online for free?", answer: "Upload multiple PDF files to ConvertLocally's Merge PDF tool. Drag to reorder if needed, then click merge. Your combined PDF is ready to download instantly. No signup required." },
+            { question: "Does merging PDFs reduce quality?", answer: "No, merging PDFs with ConvertLocally simply combines the pages without altering the quality or resolution of the original files." },
             { question: "Is my merged PDF secure?", answer: "Yes, merging happens securely in your browser. Your files are never stored on our servers, ensuring total privacy." }
         ]
     },
@@ -143,9 +143,8 @@ export const TOOL_SEO_CONTENT: Record<string, ToolSEOContent> = {
             { title: "Save Disk Space", desc: "Reduce the size of archived PDFs to drastically lower your cloud storage usage.", icon: "database" }
         ],
         faqs: [
-            { question: "How can I compress a PDF file for free?", answer: "Upload your PDF to FileVora's Compress PDF tool. It automatically reduces file size while maintaining quality. Processing happens in your browser — your file never leaves your device." },
-            { question: "Will my PDF lose quality after compression?", answer: "Our advanced compression algorithms are designed to reduce file size significantly while keeping text crisp and images clear. The visual difference is minimal." },
-            { question: "Can I compress a password-protected PDF?", answer: "Currently, you must remove the password using our PDF Remove Password tool before compressing the file." }
+            { question: "How can I compress a PDF file for free?", answer: "Upload your PDF to ConvertLocally's Compress PDF tool. It automatically reduces file size while maintaining quality. Processing happens in your browser — your file never leaves your device." },
+            { question: "Will my PDF lose quality after compression?", answer: "Our advanced compression algorithms are designed to reduce file size significantly while keeping text crisp and images clear. The visual difference is minimal." }
         ]
     },
     "pdf-to-word": {
@@ -164,8 +163,8 @@ export const TOOL_SEO_CONTENT: Record<string, ToolSEOContent> = {
             { title: "Update Resumes", desc: "Convert your old PDF resume back to Word format to update your work experience and skills.", icon: "database" }
         ],
         faqs: [
-            { question: "How do I convert PDF to Word for free?", answer: "Upload your PDF to FileVora's PDF to Word converter. The tool extracts text and formatting to create an editable Word document (.docx). Free, fast, and no email required." },
-            { question: "Will the Word document keep my layout?", answer: "Yes, FileVora uses advanced layout preservation algorithms to ensure your new Word document looks as close to the original PDF as possible, including tables, images, and fonts." },
+            { question: "How do I convert PDF to Word for free?", answer: "Upload your PDF to ConvertLocally's PDF to Word converter. The tool extracts text and formatting to create an editable Word document (.docx). Free, fast, and no email required." },
+            { question: "Will the Word document keep my layout?", answer: "Yes, ConvertLocally uses advanced layout preservation algorithms to ensure your new Word document looks as close to the original PDF as possible, including tables, images, and fonts." },
             { question: "Is the text fully editable?", answer: "Absolutely. Once converted to .docx format, you can freely edit, delete, or add text using Microsoft Word, Google Docs, or LibreOffice." },
             { question: "Do you support scanned PDFs?", answer: "For scanned PDFs, we perform basic text extraction. For best results, PDFs with selectable text are highly recommended." }
         ]
@@ -186,9 +185,9 @@ export const TOOL_SEO_CONTENT: Record<string, ToolSEOContent> = {
             { title: "Cross-Platform Sharing", desc: "Ensure your document looks identical on Windows, Mac, iOS, and Android by converting to PDF.", icon: "database" }
         ],
         faqs: [
-            { question: "How do I convert Word to PDF online?", answer: "Upload your Word document (.docx) to FileVora. It converts to PDF preserving formatting, fonts, and layout. The conversion uses LibreOffice WASM and runs entirely in your browser." },
-            { question: "Will the PDF look exactly like my Word file?", answer: "Yes! FileVora utilizes an industry-standard conversion engine that perfectly retains your original fonts, images, tables, and pagination." },
-            { question: "Do I need Microsoft Word installed?", answer: "No. FileVora handles the entire conversion process in the cloud, meaning you do not need Microsoft Office installed on your device." }
+            { question: "How do I convert Word to PDF online?", answer: "Upload your Word document (.docx) to ConvertLocally. It converts to PDF preserving formatting, fonts, and layout. The conversion uses LibreOffice WASM and runs entirely in your browser." },
+            { question: "Will the PDF look exactly like my Word file?", answer: "Yes! ConvertLocally utilizes an industry-standard conversion engine that perfectly retains your original fonts, images, tables, and pagination." },
+            { question: "Do I need Microsoft Word installed?", answer: "No. ConvertLocally handles the entire conversion process in the cloud, meaning you do not need Microsoft Office installed on your device." }
         ]
     },
 
@@ -209,7 +208,7 @@ export const TOOL_SEO_CONTENT: Record<string, ToolSEOContent> = {
             { title: "Save Space", desc: "Dramatically decrease image file sizes on your hard drive by converting lossless PNGs to JPGs.", icon: "database" }
         ],
         faqs: [
-            { question: "How do I convert PNG to JPG?", answer: "Upload your PNG file to FileVora's PNG to JPG converter. It converts instantly in your browser with adjustable quality. Free, unlimited conversions with no watermark." },
+            { question: "How do I convert PNG to JPG?", answer: "Upload your PNG file to ConvertLocally's PNG to JPG converter. It converts instantly in your browser with adjustable quality. Free, unlimited conversions with no watermark." },
             { question: "What happens to the transparent background?", answer: "Since JPG format does not support transparency, any transparent areas in your PNG will be automatically filled with a solid white background during conversion." },
             { question: "Is PNG or JPG better for photos?", answer: "JPG is generally much better for photographs as it provides excellent quality at a significantly smaller file size than PNG." }
         ]
@@ -221,7 +220,7 @@ export const TOOL_SEO_CONTENT: Record<string, ToolSEOContent> = {
         ],
         howToSteps: {
             step1: { title: "Select JPG Photo", description: "Upload the JPEG or JPG image you wish to convert." },
-            step2: { title: "Lossless Processing", description: "FileVora converts the image data into a lossless PNG format." },
+            step2: { title: "Lossless Processing", description: "ConvertLocally converts the image data into a lossless PNG format." },
             step3: { title: "Get PNG File", description: "Download your newly converted PNG image with crystal-clear quality." }
         },
         useCases: [
@@ -230,7 +229,7 @@ export const TOOL_SEO_CONTENT: Record<string, ToolSEOContent> = {
             { title: "Avoid Compression", desc: "Save JPGs as PNGs to prevent further quality loss during repeated editing and saving.", icon: "database" }
         ],
         faqs: [
-            { question: "How to convert JPG to PNG online?", answer: "Upload your JPG to FileVora's converter. It creates a lossless PNG. Processing happens locally — your images stay private." },
+            { question: "How to convert JPG to PNG online?", answer: "Upload your JPG to ConvertLocally's converter. It creates a lossless PNG. Processing happens locally — your images stay private." },
             { question: "Will converting JPG to PNG improve quality?", answer: "Converting a JPG to PNG will not miraculously restore lost details or improve the original quality, but it will ensure that saving the file multiple times in the future will not further degrade its quality." },
             { question: "Can this tool make the background transparent?", answer: "This specific tool only converts the format. To remove a background, you would need our dedicated Background Remover tool." }
         ]
@@ -251,7 +250,7 @@ export const TOOL_SEO_CONTENT: Record<string, ToolSEOContent> = {
             { title: "Social Media Uploads", desc: "Easily convert HEIC to JPG before uploading photos to websites that do not yet support Apple's format.", icon: "database" }
         ],
         faqs: [
-            { question: "How to convert iPhone HEIC photos to JPG?", answer: "Upload your HEIC files to FileVora. It converts Apple's HEIC format to universally compatible JPG instantly. Works on any device with a web browser." },
+            { question: "How to convert iPhone HEIC photos to JPG?", answer: "Upload your HEIC files to ConvertLocally. It converts Apple's HEIC format to universally compatible JPG instantly. Works on any device with a web browser." },
             { question: "Why are my iPhone photos HEIC?", answer: "Apple uses HEIC (High-Efficiency Image Container) by default to save storage space, but it is not universally supported on all devices or websites." },
             { question: "Are my personal photos uploaded to the cloud?", answer: "No. Our HEIC to JPG conversion happens entirely locally inside your browser padding. Your private photos are completely secure." }
         ]
@@ -274,15 +273,15 @@ export const TOOL_SEO_CONTENT: Record<string, ToolSEOContent> = {
             { title: "Save Music", desc: "Convert music video files into MP3 format to save storage and listen offline.", icon: "database" }
         ],
         faqs: [
-            { question: "How do I extract audio from an MP4 video?", answer: "Upload your MP4 to FileVora's converter. It rapidly extracts the audio track and provides you with a clean MP3 file. The process is free and requires no registration." },
-            { question: "Is the audio quality degraded during conversion?", answer: "FileVora extracts the audio stream smoothly, ensuring maximum bitrate retention for crystal-clear MP3 sound." },
+            { question: "How do I extract audio from an MP4 video?", answer: "Upload your MP4 to ConvertLocally's converter. It rapidly extracts the audio track and provides you with a clean MP3 file. The process is free and requires no registration." },
+            { question: "Is the audio quality degraded during conversion?", answer: "ConvertLocally extracts the audio stream smoothly, ensuring maximum bitrate retention for crystal-clear MP3 sound." },
             { question: "Do you support video formats other than MP4?", answer: "Yes, you can also upload MOV, AVI, FLV, and WebM files to extract audio to MP3." }
         ]
     },
 
     // Catch-all fallback
     "default": {
-        keywords: ["free online file converter", "file conversion tool", "FileVora convert"],
+        keywords: ["free online file converter", "file conversion tool", "ConvertLocally convert"],
         howToSteps: {
             step1: { title: "Select your File", description: "Upload the file you want to convert from your computer or mobile device." },
             step2: { title: "Processing", description: "Our advanced engine will quickly and securely process your file." },
@@ -290,7 +289,7 @@ export const TOOL_SEO_CONTENT: Record<string, ToolSEOContent> = {
         },
         useCases: GENERIC_USE_CASES,
         faqs: [
-            { question: "Is this tool free to use?", answer: "Yes, all tools on FileVora are 100% free with no hidden fees or subscriptions." },
+            { question: "Is this tool free to use?", answer: "Yes, all tools on ConvertLocally are 100% free with no hidden fees or subscriptions." },
             { question: "Do I need to create an account?", answer: "No, you can use all our tools instantly without signing in or providing an email address." },
             { question: "Are my files secure?", answer: "Absolutely. All processing is done securely, and files are automatically deleted after 1 hour." }
         ]

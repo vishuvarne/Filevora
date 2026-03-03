@@ -1,6 +1,6 @@
-# Deployment Guide for FileVora
+# Deployment Guide for ConvertLocally
 
-This guide covers how to deploy the FileVora application to a production environment.
+This guide covers how to deploy the ConvertLocally application to a production environment.
 
 ## Prerequisites
 
@@ -33,8 +33,8 @@ For a simple single-server deployment, you can use the included `docker-compose.
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/filevora.git
-   cd filevora
+   git clone https://github.com/yourusername/convertlocally.git
+   cd convertlocally
    ```
 
 2. **Configure Environment:**
@@ -63,7 +63,7 @@ For future schema changes, integrating **Alembic** is recommended.
 - [ ] **Security**: Change `JWT_SECRET_KEY` to a strong secret.
 - [ ] **HTTPS**: Set up a reverse proxy (Nginx, Traefik, or Cloudflare Tunnel) to serve the application over HTTPS.
 - [ ] **Database**: Use a managed PostgreSQL database for data persistence and reliability.
-- [ ] **Storage**: For ephemeral storage cleanup, the backend runs a background task. Ensure the `storage` volume is mounted correctly if persistence is needed (though for FileVora, files are temporary).
+- [ ] **Storage**: For ephemeral storage cleanup, the backend runs a background task. Ensure the `storage` volume is mounted correctly if persistence is needed (though for ConvertLocally, files are temporary).
 
 ## Troubleshooting
 
