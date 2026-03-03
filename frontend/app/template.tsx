@@ -1,11 +1,19 @@
 "use client";
 
-import { m, LazyMotion, domAnimation } from "framer-motion";
+import { m, LazyMotion, domAnimation, MotionConfig } from "framer-motion";
 import { FEATURES } from "@/config/features";
 
 export default function Template({ children }: { children: React.ReactNode }) {
     if (!FEATURES.ENABLE_ANIMATIONS) {
-        return <>{children}</>;
+        return (
+            <LazyMotion features={domAnimation}>
+                <MotionConfig reducedMotion="always">
+                    <div className="flex-1 flex flex-col min-h-0 relative">
+                        {children}
+                    </div>
+                </MotionConfig>
+            </LazyMotion>
+        );
     }
 
     return (
