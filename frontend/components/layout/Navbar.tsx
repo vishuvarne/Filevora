@@ -713,26 +713,6 @@ export default function Navbar() {
                         )}
                     </div>
                 </div>
-
-                {/* Mobile: Auth buttons */}
-                <div className="p-4 border-t border-border bg-secondary space-y-3 shrink-0">
-                    <Link
-                        href="/login"
-                        prefetch={false}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="block w-full py-3.5 text-center rounded-xl border border-input font-bold text-foreground hover:bg-secondary active:bg-secondary/80 transition-colors"
-                    >
-                        Log In
-                    </Link>
-                    <Link
-                        href="/signup"
-                        prefetch={false}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="block w-full py-3.5 text-center rounded-xl bg-primary text-primary-foreground font-bold hover:bg-primary/90 active:scale-[0.98] shadow-lg shadow-primary/25 transition-all"
-                    >
-                        Sign Up
-                    </Link>
-                </div>
             </div>
         </nav>
     );

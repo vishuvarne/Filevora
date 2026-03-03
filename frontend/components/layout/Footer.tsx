@@ -210,7 +210,7 @@ export default function Footer() {
                         <ul className="space-y-3 text-muted-foreground">
                             <li><Link href="/help" prefetch={false} className="hover:text-primary transition-colors">Help Center</Link></li>
                             <li><Link href="/faq" prefetch={false} className="hover:text-primary transition-colors">FAQ</Link></li>
-                            <li><Link href="/api" prefetch={false} className="hover:text-primary transition-colors">API</Link></li>
+
                             <li><Link href="/donate" prefetch={false} className="hover:text-primary transition-colors">Donate</Link></li>
                             <li><Link href="/status" prefetch={false} className="hover:text-primary transition-colors">System Status</Link></li>
                         </ul>

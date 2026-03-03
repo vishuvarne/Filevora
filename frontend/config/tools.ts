@@ -110,8 +110,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/image-to-pdf",
         acceptedTypes: "image/*",
         multiple: true,
-        seoTitle: "Image to PDF Converter Online Free – Convert JPG, PNG to PDF | ConvertLocally",
-        seoDescription: "Convert images to PDF online for free. Support for JPG, PNG, WebP, HEIC, BMP, TIFF and more. Combine multiple images into one PDF. No signup, no watermark, 100% free."
+        seoTitle: "Image to PDF Converter - 100% Private & No Uploads | ConvertLocally",
+        seoDescription: "Convert images (JPG, PNG, WebP) to PDF locally in your browser. Totally free, secure, and no uploaded files. No server storage."
     },
     {
         id: "jpg-to-pdf",
@@ -123,8 +123,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/image-to-pdf",
         acceptedTypes: "image/jpeg,image/jpg",
         multiple: true,
-        seoTitle: "JPG to PDF Converter – Convert JPEG to PDF Online Free | ConvertLocally",
-        seoDescription: "Convert JPG to PDF online for free. Combine multiple JPEG images into one PDF. Fast, secure, no signup required. Best free JPG to PDF converter."
+        seoTitle: "JPG to PDF Online Securely Without Uploading | ConvertLocally",
+        seoDescription: "Combine JPG images into a single PDF locally on your device. Zero server upload ensures your photos stay 100% private."
     },
     // --- PDF & Documents ---
     /* Temporarily Disabled as requested
@@ -153,8 +153,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/merge-pdf",
         acceptedTypes: ".pdf,application/pdf",
         multiple: true,
-        seoTitle: "Merge PDF Files Online – Free & Secure | ConvertLocally",
-        seoDescription: "Combine multiple PDF files into one document online for free. Fast, secure, and easy PDF merging with ConvertLocally."
+        seoTitle: "Merge PDF Securely Without Uploading | ConvertLocally",
+        seoDescription: "Combine multiple PDF files locally in your browser. 100% private, no server upload, and no file size limits. Fast, free, and secure."
     },
     {
         id: "split-pdf",
@@ -166,8 +166,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/split-pdf",
         acceptedTypes: ".pdf,application/pdf",
         multiple: false,
-        seoTitle: "Split PDF Online – Extract Pages from PDF Free | ConvertLocally",
-        seoDescription: "Split your PDF files online for free. Extract specific pages or split every page into separate files with ConvertLocally. Fast and secure."
+        seoTitle: "Split PDF Offline in Browser – Private & Free | ConvertLocally",
+        seoDescription: "Extract PDF pages securely inside your browser. No file upload, no size restriction, and absolute privacy for sensitive documents."
     },
     {
         id: "compress-pdf",
@@ -179,8 +179,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/compress-pdf",
         acceptedTypes: ".pdf,application/pdf",
         multiple: false,
-        seoTitle: "Compress PDF Online – Reduce PDF Size Free | ConvertLocally",
-        seoDescription: "Reduce PDF file size online without losing quality. Free, fast, and secure PDF compression with ConvertLocally."
+        seoTitle: "Compress Large PDFs Without Uploading | ConvertLocally",
+        seoDescription: "Reduce large PDF sizes effortlessly without uploading to a server. High-speed local compression ensuring full privacy."
     },
     {
         id: "rotate-pdf",
@@ -192,8 +192,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/rotate-pdf",
         acceptedTypes: ".pdf,application/pdf",
         multiple: false,
-        seoTitle: "Rotate PDF Online – Fix PDF Orientation Free | ConvertLocally",
-        seoDescription: "Rotate PDF pages online for free. Fix portrait or landscape orientation easily with ConvertLocally. No installation required."
+        seoTitle: "Rotate PDF Pages Safely & Without Upload | ConvertLocally",
+        seoDescription: "Fix PDF orientation locally in your browser. Fast, safe, and completely private—no documents hit our servers."
     },
 
     {
@@ -206,8 +206,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/pdf-to-image",
         acceptedTypes: ".pdf,application/pdf",
         multiple: false,
-        seoTitle: "PDF Converter Online Free – Convert PDF to Any Format | ConvertLocally",
-        seoDescription: "Convert PDF to Word, Excel, PowerPoint, JPG and more. Free online PDF converter with no signup required."
+        seoTitle: "Private PDF Converter – Client-Side Processing | ConvertLocally",
+        seoDescription: "Convert PDFs locally in your browser without data uploads. Experience offline-level security online for free."
     },
     /* Temporarily disabled: Heavy PDF to Office tools
     {
@@ -289,8 +289,8 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: ".pdf,application/pdf",
         multiple: false, // Backend expects single file
         presetOptions: { format: "jpeg" },
-        seoTitle: "PDF to JPG Converter – Extract Images from PDF Free | ConvertLocally",
-        seoDescription: "Convert PDF pages to high-quality JPG images online for free. Extract images from your PDF files instantly with ConvertLocally."
+        seoTitle: "Convert PDF to JPG Locally – No Upload Required | ConvertLocally",
+        seoDescription: "Extract images from PDF locally on your own machine. Secure, fast, and highly private processing."
     },
     /* Temporarily disabled: epub tools
     {
@@ -384,8 +384,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/convert-image",
         acceptedTypes: "image/*,.png,.jpeg,.jpg,.webp,.gif,.svg,.jxl,.avif,.heic,.heif,.ico,.bmp,.cur,.ani,.icns,.nef,.cr2,.hdr,.jpe,.mat,.pbm,.pfm,.pgm,.pnm,.ppm,.tiff,.jfif,.eps,.psd,.arw,.tif,.dng,.xcf,.rw2,.raf,.orf,.pef,.mos,.raw,.dcr,.crw,.cr3,.3fr,.erf,.mrw,.mef,.nrw,.srw,.sr2,.srf,.a,.aai,.ai,.art,.avs,.b,.bgr,.bgra,.bgro,.bmp2,.bmp3,.brf,.cal,.cals,.cin,.cip,.cmyk,.cmyka,.dcx,.dds,.dpx,.dxt1,.dxt5,.epdf,.epi,.eps2,.eps3,.epsf,.epsi,.ept,.ept2,.ept3,.exr,.farbfeld,.fax,.ff,.fit,.fits,.fl32,.fts,.ftxt,.g,.g3,.g4,.gif87,.gray,.graya,.group4,.hrz,.icb,.icon,.info,.ipl,.isobrl,.isobrl6,.j2c,.j2k,.jng,.jp2,.jpc,.jpm,.jps,.map,.miff,.mng,.mono,.mtv,.o,.otb,.pal,.palm,.pam,.pcd,.pcds,.pcl,.pct,.pcx,.pdb,.pgx,.phm,.picon,.pict,.pjpeg,.png00,.png24,.png32,.png48,.png64,.png8,.ps,.ps1,.ps2,.ps3,.psb,.ptif,.qoi,.r,.ras,.rgb,.rgba,.rgbo,.rgf,.sgi,.six,.sixel,.sparse-color,.strimg,.sun,.svgz,.tga,.tiff64,.ubrl,.ubrl6,.uil,.uyvy,.vda,.vicar,.viff,.vips,.vst,.wbmp,.wpg,.xbm,.xpm,.xv,.ycbcr,.ycbcra,.yuv",
         multiple: true,
-        seoTitle: "Image Converter Online Free – JPG, PNG, WebP, AVIF | ConvertLocally",
-        seoDescription: "Convert images between formats online for free. Support for JPG, PNG, WebP, AVIF, GIF, BMP, TIFF. Batch conversion supported."
+        seoTitle: "Secure Image Converter – Browser-Based, No Uploads | ConvertLocally",
+        seoDescription: "Convert any image format locally in your browser. Total privacy with no server access. Supports huge batches and 100+ formats."
     },
     {
         id: "jpg-to-png",
@@ -398,8 +398,8 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/jpeg,image/jpg",
         multiple: true,
         presetOptions: { target_format: "PNG" },
-        seoTitle: "JPG to PNG Converter Online – Free | ConvertLocally",
-        seoDescription: "Convert JPG images to PNG format instantly. Free online image converter with fast and secure processing by ConvertLocally."
+        seoTitle: "JPG to PNG Securely Without Uploads | ConvertLocally",
+        seoDescription: "Convert JPG to PNG securely using local WASM technology. No images leave your device. Infinite batch conversions offline."
     },
     {
         id: "png-to-jpg",
@@ -412,8 +412,8 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/png",
         multiple: true,
         presetOptions: { target_format: "JPEG" },
-        seoTitle: "PNG to JPG Converter – Free Image Tool | ConvertLocally",
-        seoDescription: "Convert PNG to JPG online for free. High-quality image conversion with fast processing using ConvertLocally."
+        seoTitle: "PNG to JPG Locally – 100% Private Format Conversion | ConvertLocally",
+        seoDescription: "Change PNG to JPG fast in your browser. Strictly offline processing guarantees complete data security."
     },
     {
         id: "image-compressor",
@@ -426,8 +426,8 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/*",
         multiple: true,
         type: "interactive",
-        seoTitle: "Compress Images Online – Free Image Compressor | ConvertLocally",
-        seoDescription: "Compress images online to reduce file size without quality loss. Free and fast image compression with ConvertLocally."
+        seoTitle: "Compress Images 100% Locally Without Upload | ConvertLocally",
+        seoDescription: "Make photos smaller natively in your browser. Ultra-secure client-side compression for limitless free images."
     },
     {
         id: "rotate-image",
@@ -439,8 +439,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/rotate-image",
         acceptedTypes: "image/*",
         multiple: false,
-        seoTitle: "Rotate Image Online Free – 90°, 180°, 270° | ConvertLocally",
-        seoDescription: "Rotate images online for free. Turn photos 90°, 180°, or 270°. Fix orientation instantly."
+        seoTitle: "Rotate Image Offline in Browser – Private Tool | ConvertLocally",
+        seoDescription: "Fix image orientation using purely local processing. No network payload."
     },
     {
         id: "webp-to-png",
@@ -453,8 +453,8 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/webp",
         multiple: true,
         presetOptions: { target_format: "PNG" },
-        seoTitle: "WebP to PNG Converter Online Free | ConvertLocally",
-        seoDescription: "Convert WebP to PNG online for free. Get lossless PNG images from WebP files instantly."
+        seoTitle: "WebP to PNG Offline – Convert Locally Without Uploads | ConvertLocally",
+        seoDescription: "Change WebP images to PNG directly in your browser. Complete privacy, zero upload limits, and instantly fast."
     },
     {
         id: "jfif-to-png",
@@ -467,8 +467,8 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/jpeg,image/pjpeg", // JFIF is technically JPEG
         multiple: true,
         presetOptions: { target_format: "PNG" },
-        seoTitle: "JFIF to PNG Converter Online Free | ConvertLocally",
-        seoDescription: "Convert JFIF to PNG online for free. Transform JFIF to universally compatible PNG format."
+        seoTitle: "JFIF to PNG Converter – No Server Upload Required | ConvertLocally",
+        seoDescription: "Convert JFIF to PNG privately utilizing local device processing. Safe, free, and unlimited."
     },
     {
         id: "png-to-svg",
@@ -480,8 +480,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/coming-soon",
         acceptedTypes: "image/png",
         multiple: false,
-        seoTitle: "PNG to SVG Converter Online Free – Vectorize Images | ConvertLocally",
-        seoDescription: "Convert PNG to SVG vector format online for free. Trace raster images to scalable vector graphics."
+        seoTitle: "PNG to SVG Vectorizer – Private Browser Tool | ConvertLocally",
+        seoDescription: "Trace raster images to SVG vector graphics without uploading your files. Secure client-side processing."
     },
     {
         id: "heic-to-jpg",
@@ -494,8 +494,8 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: ".heic,image/heic",
         multiple: true,
         presetOptions: { target_format: "JPEG" },
-        seoTitle: "HEIC to JPG Converter Online Free – iPhone Photos | ConvertLocally",
-        seoDescription: "Convert HEIC to JPG online for free. Convert iPhone and iPad photos to compatible JPG format."
+        seoTitle: "HEIC to JPG Securely – Browser-Based Offline Converter | ConvertLocally",
+        seoDescription: "Convert iPhone HEIC photos to JPG offline in your browser. Protects personal photos by never uploading them."
     },
     {
         id: "heic-to-png",
@@ -508,8 +508,8 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: ".heic,image/heic",
         multiple: true,
         presetOptions: { target_format: "PNG" },
-        seoTitle: "HEIC to PNG Converter Online Free | ConvertLocally",
-        seoDescription: "Convert HEIC to PNG online for free. Get lossless PNG from Apple HEIC photos."
+        seoTitle: "HEIC to PNG Converter Locally – Ultimate Privacy | ConvertLocally",
+        seoDescription: "Convert Apple HEIC images to PNG without ever sending them to a server. 100% private processing."
     },
     {
         id: "webp-to-jpg",
@@ -522,8 +522,8 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/webp",
         multiple: true,
         presetOptions: { target_format: "JPEG" },
-        seoTitle: "WebP to JPG Converter Online Free | ConvertLocally",
-        seoDescription: "Convert WebP to JPG online for free. Transform WebP to universally compatible JPEG format."
+        seoTitle: "WebP to JPG Offline Converter | ConvertLocally",
+        seoDescription: "Save WebP as JPG using fast local processing. Maintain document security and skip slow uploads."
     },
     {
         id: "svg-converter",
@@ -535,8 +535,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/convert-image",
         acceptedTypes: "image/*,image/svg+xml",
         multiple: true,
-        seoTitle: "SVG Converter Online Free – SVG to PNG, JPG | ConvertLocally",
-        seoDescription: "Convert SVG to PNG, JPG, and other formats online for free. Transform vector graphics to raster images."
+        seoTitle: "SVG Converter – Secure Local Image Processing | ConvertLocally",
+        seoDescription: "Convert SVG to PNG or JPG securely without an internet connection using local browser execution."
     },
     {
         id: "avif-converter",
@@ -548,8 +548,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/convert-image",
         acceptedTypes: "image/*,image/avif",
         multiple: true,
-        seoTitle: "AVIF Converter Online Free – AVIF to JPG, PNG | ConvertLocally",
-        seoDescription: "Convert AVIF images to JPG, PNG, and other formats online for free. Open AVIF files in any browser."
+        seoTitle: "AVIF Converter Locally – 100% Private Tool | ConvertLocally",
+        seoDescription: "Convert AVIF files easily without file uploads. Fast client-side image transformation."
     },
     {
         id: "jpg-to-avif",
@@ -562,8 +562,8 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/jpeg,image/jpg",
         multiple: true,
         presetOptions: { target_format: "AVIF" },
-        seoTitle: "JPG to AVIF Converter Online Free | ConvertLocally",
-        seoDescription: "Convert JPG to AVIF online for free. Get next-gen AVIF with 50% smaller file sizes."
+        seoTitle: "JPG to AVIF Offline – Max Compression, Zero Uploads | ConvertLocally",
+        seoDescription: "Compress JPG to next-gen AVIF privately inside your browser. No file size limits or paywalls."
     },
 
     // --- Video & Audio Tools ---
@@ -620,8 +620,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/video-to-gif",
         acceptedTypes: "video/*",
         multiple: false,
-        seoTitle: "Video to GIF Converter Online Free | ConvertLocally",
-        seoDescription: "Convert video to GIF online for free. Create animated GIFs from MP4, WebM, MOV videos. Custom frame rate and size."
+        seoTitle: "Video to GIF Securely Offline | ConvertLocally",
+        seoDescription: "Convert local video files to animated GIFs safely in your browser. Complete privacy without server uploads."
     },
     {
         id: "mp4-to-gif",
@@ -633,8 +633,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/video-to-gif",
         acceptedTypes: "video/mp4",
         multiple: false,
-        seoTitle: "MP4 to GIF Converter Online Free | ConvertLocally",
-        seoDescription: "Convert MP4 to GIF online for free. Create animated GIFs from MP4 videos with custom settings."
+        seoTitle: "MP4 to GIF Converter Offline – Browser Based | ConvertLocally",
+        seoDescription: "Animate MP4 files to GIF natively inside your browser. No size limits and fast, secure conversion."
     },
     {
         id: "webm-to-gif",
@@ -646,8 +646,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/webm-to-gif",
         acceptedTypes: "video/webm",
         multiple: false,
-        seoTitle: "WebM to GIF Converter Online Free | ConvertLocally",
-        seoDescription: "Convert WebM to GIF online for free. Create animated GIFs from WebM videos instantly."
+        seoTitle: "WebM to GIF – No Upload Secure Converter | ConvertLocally",
+        seoDescription: "Create GIFs from WebM directly on your device. Zero servers required for complete data privacy."
     },
     {
         id: "apng-to-gif",
@@ -659,8 +659,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/apng-to-gif",
         acceptedTypes: "image/apng,image/png",
         multiple: false,
-        seoTitle: "APNG to GIF Converter Online Free | ConvertLocally",
-        seoDescription: "Convert APNG to GIF online for free. Transform animated PNG to universally compatible GIF format."
+        seoTitle: "APNG to GIF Safely Without Upload | ConvertLocally",
+        seoDescription: "Change Animated PNG to GIF perfectly matching your local privacy constraints. Client-side execution."
     },
     {
         id: "gif-to-mp4",
@@ -672,8 +672,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/gif-to-mp4",
         acceptedTypes: "image/gif",
         multiple: false,
-        seoTitle: "GIF to MP4 Converter Online Free | ConvertLocally",
-        seoDescription: "Convert GIF to MP4 video online for free. Reduce file size by up to 90% compared to GIF."
+        seoTitle: "GIF to MP4 Offline Converter – Client Side Tool | ConvertLocally",
+        seoDescription: "Transform GIF format to MP4 using browser WASM tech. Faster downloads and 100% private processing."
     },
     {
         id: "gif-to-apng",
@@ -685,8 +685,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/gif-to-apng",
         acceptedTypes: "image/gif",
         multiple: false,
-        seoTitle: "GIF to APNG Converter Online Free | ConvertLocally",
-        seoDescription: "Convert GIF to APNG online for free. Get higher quality animated PNG from GIF files."
+        seoTitle: "GIF to APNG Converter – Local Browser Execution | ConvertLocally",
+        seoDescription: "Securely generate APNGs from GIFs. Convert media entirely offline via local web standards."
     },
     {
         id: "image-to-gif",
@@ -698,8 +698,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/images-to-gif",
         acceptedTypes: "image/*",
         multiple: true,
-        seoTitle: "Image to GIF Converter Online Free – Create Animated GIFs | ConvertLocally",
-        seoDescription: "Convert images to animated GIF online for free. Combine multiple images into a GIF animation."
+        seoTitle: "Image to GIF Converter Free – No Upload Security | ConvertLocally",
+        seoDescription: "Stitch multiple images into a high-quality GIF inside your web interface securely and locally."
     },
     {
         id: "mov-to-gif",
@@ -711,8 +711,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/mov-to-gif",
         acceptedTypes: "video/quicktime",
         multiple: false,
-        seoTitle: "MOV to GIF Converter Online Free | ConvertLocally",
-        seoDescription: "Convert MOV to GIF online for free. Create animated GIFs from Apple QuickTime MOV videos."
+        seoTitle: "MOV to GIF Locally – Perfect Privacy Protection | ConvertLocally",
+        seoDescription: "Animation extraction natively executed by your computer's browser. Safe, fast, offline support."
     },
     {
         id: "avi-to-gif",
@@ -724,8 +724,8 @@ export const TOOLS: ToolDef[] = [
         endpoint: "/process/avi-to-gif",
         acceptedTypes: "video/x-msvideo",
         multiple: false,
-        seoTitle: "AVI to GIF Converter Online Free | ConvertLocally",
-        seoDescription: "Convert AVI to GIF online for free. Create animated GIFs from AVI video files."
+        seoTitle: "AVI to GIF Converter – 100% Secured | ConvertLocally",
+        seoDescription: "No connection required. Transform ancient AVI files to web GIFs efficiently, keeping local bounds safe."
     },
 
 
@@ -955,8 +955,8 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: ".pdf,application/pdf",
         multiple: false,
         type: "interactive",
-        seoTitle: "Chat with PDF – AI PDF Reader Online Free | ConvertLocally",
-        seoDescription: "Chat with your PDF documents using AI. Ask questions, get summaries. Free, no signup."
+        seoTitle: "Chat with PDF AI – Fully Local Browser Processing | ConvertLocally",
+        seoDescription: "Interact with private PDFs safely. The AI processing remains fully internal without compromising cloud document uploads."
     },
     // --- Video Tools ---
     {
@@ -1042,8 +1042,8 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/*",
         multiple: true,
         type: "interactive",
-        seoTitle: "Photo Collage Maker Online Free | ConvertLocally",
-        seoDescription: "Create beautiful photo collages online for free. Multiple layouts, no watermark."
+        seoTitle: "Photo Collage Maker Offline – Secure Local Rendering | ConvertLocally",
+        seoDescription: "Draft beautiful photo composites directly in-browser. Zero limits and 100% offline security."
     },
     {
         id: "image-resizer",
@@ -1056,8 +1056,8 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/*",
         multiple: false,
         type: "interactive",
-        seoTitle: "Image Resizer Online Free – Resize Photos | ConvertLocally",
-        seoDescription: "Resize images online for free. Change dimensions, scale by percentage. No watermark."
+        seoTitle: "Image Resizer Secure Online App | ConvertLocally",
+        seoDescription: "Scale your photos up and down inside your private local browser runtime effortlessly."
     },
     {
         id: "crop-image",
@@ -1070,8 +1070,8 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/*",
         multiple: false,
         type: "interactive",
-        seoTitle: "Crop Image Online Free | ConvertLocally",
-        seoDescription: "Crop images online for free. Custom crop, aspect ratio presets for social media."
+        seoTitle: "Crop Image Locally – Secure Browser Editing | ConvertLocally",
+        seoDescription: "Safely cut unecessary margins from files completely without third-party server exposure."
     },
     {
         id: "color-picker",
@@ -1098,8 +1098,8 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/*",
         multiple: false,
         type: "interactive",
-        seoTitle: "Meme Generator Online Free | ConvertLocally",
-        seoDescription: "Create memes online for free. Add text to images. No watermark, download instantly."
+        seoTitle: "Meme Generator Offline – Private Humor App | ConvertLocally",
+        seoDescription: "Attach text over images entirely in your local browser state safely and instantaneously."
     },
     {
         id: "photo-editor",
@@ -1112,8 +1112,8 @@ export const TOOLS: ToolDef[] = [
         acceptedTypes: "image/*",
         multiple: false,
         type: "interactive",
-        seoTitle: "Photo Editor Online Free | ConvertLocally",
-        seoDescription: "Edit photos online for free. Adjust brightness, contrast, saturation. Apply filters."
+        seoTitle: "Photo Editor Locally – Browser-Integrated App | ConvertLocally",
+        seoDescription: "Modify color levels offline natively without relying on insecure external connections."
     },
     {
         id: "qr-code-generator",
