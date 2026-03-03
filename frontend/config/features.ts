@@ -13,7 +13,7 @@ export const FEATURES = {
     ENABLE_WASM_CONVERSION: true, // Core to the application, no backend cost
 
     // Performance features
-    ENABLE_ANIMATIONS: true, // Smooth transitions via LazyMotion
+    ENABLE_ANIMATIONS: false, // Smooth transitions disabled to improve LCP
 
     // UI features
     SHOW_ADS: false,

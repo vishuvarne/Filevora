@@ -163,14 +163,14 @@ export default function ConversionSuccessModal({
 
                 <div className="flex flex-wrap items-center justify-center gap-2">
                     {tool.id === 'compress-pdf' && originalSize ? (
-                        <div className="w-full max-w-md mx-auto my-6 bg-slate-900 rounded-2xl p-6 flex items-center justify-between border border-slate-800 shadow-xl">
-                            <div className="flex flex-col items-center flex-1 border-r border-slate-800">
-                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Saved</span>
+                        <div className="w-full max-w-md mx-auto my-6 bg-slate-900 rounded-2xl p-6 flex items-center justify-between border-[3px] border-slate-900 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] dark:shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] transition-transform hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_rgba(15,23,42,1)]">
+                            <div className="flex flex-col items-center flex-1 border-r-2 border-slate-700">
+                                <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-1">Saved</span>
                                 <span className="text-4xl font-black text-green-400">{savedPercent}%</span>
                             </div>
                             <div className="flex flex-col items-center flex-1">
-                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">New Size</span>
-                                <span className="text-4xl font-black text-white">{(result.compressed_size / 1024 / 1024).toFixed(2)} <span className="text-sm font-bold text-slate-500">MB</span></span>
+                                <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-1">New Size</span>
+                                <span className="text-4xl font-black text-white">{(result.compressed_size / 1024 / 1024).toFixed(2)} <span className="text-sm font-black text-slate-400">MB</span></span>
                             </div>
                         </div>
                     ) : (

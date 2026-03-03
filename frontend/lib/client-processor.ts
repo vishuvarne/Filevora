@@ -164,7 +164,8 @@ export const processLocally = async (
                 level: options.compressionLevel || 'basic',
                 quality: options.pdfQuality,
                 dpi: options.pdfDpi,
-                useManual: options.useManual
+                compressionMode: options.pdfCompressionMode,
+                targetSizeKB: options.pdfTargetSizeKB
             }, [], bundle, onChunk, onProgress, signal, true);
             break;
         case 'pdf-password-protect':

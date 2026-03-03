@@ -35,14 +35,14 @@ export default function Home() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-0 sm:mt-1">
 
-        {/* Recently Used Tools */}
-        <div className="relative z-30">
-          <RecentlyUsed />
-        </div>
-
         {/* Tools Grid Section */}
         <div className="relative z-30">
           <ToolsGrid />
+        </div>
+
+        {/* Recently Used Tools - Moved below ToolsGrid to prevent layout shifts (CLS) on initial load */}
+        <div className="relative z-30">
+          <RecentlyUsed />
         </div>
 
         <HowItWorks />

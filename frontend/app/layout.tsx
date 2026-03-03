@@ -7,7 +7,6 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { AppNavigationProvider } from "@/context/AppNavigationProvider";
 import { Suspense } from "react";
 import { ThemeStyleProvider } from "@/context/ThemeStyleContext";
-import StickyFooterAd from "@/components/ads/StickyFooterAd";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -112,6 +111,7 @@ import { inter, poppins, spaceGrotesk, jetbrainsMono } from "@/lib/fonts";
 import "./globals.css";
 import { SpeculationRules } from "@/components/SpeculationRules";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 
 
 export default function RootLayout({
@@ -232,12 +232,10 @@ export default function RootLayout({
               <Footer />
             </FooterWrapper>
 
-            {/* Global Session-Persistent Sticky Ad */}
-            <StickyFooterAd adSlotId="YOUR_STICKY_AD_SLOT_ID" />
-
           </ThemeStyleProvider>
         </AppNavigationProvider>
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );

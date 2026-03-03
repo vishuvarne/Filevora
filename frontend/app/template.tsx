@@ -11,11 +11,13 @@ export default function Template({ children }: { children: React.ReactNode }) {
     return (
         <LazyMotion features={domAnimation}>
             <m.div
-                initial={{ opacity: 0.9 }}
-                animate={{ opacity: 1 }}
+                initial={{ opacity: 0, scale: 0.98, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{
-                    duration: 0.1,
-                    ease: "linear"
+                    type: "spring",
+                    stiffness: 350,
+                    damping: 25,
+                    mass: 0.5
                 }}
                 className="flex-1 flex flex-col min-h-0 relative"
             >

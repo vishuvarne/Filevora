@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { NavigationProvider, UnifiedRouter } from './NavigationContext';
 import React, { useMemo, Suspense } from 'react';
 
@@ -11,7 +11,6 @@ import React, { useMemo, Suspense } from 'react';
 function AppNavigationInner({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const router = useRouter();
-    const searchParams = useSearchParams();
 
     const unifiedRouter: UnifiedRouter = useMemo(() => ({
         push: (url: string) => router.push(url),
@@ -21,13 +20,13 @@ function AppNavigationInner({ children }: { children: React.ReactNode }) {
         pathname: pathname || '',
         query: {}, // App router uses searchParams
         searchParams: {
-            get: (key: string) => searchParams?.get(key) ?? null,
-            getAll: (key: string) => searchParams?.getAll(key) ?? [],
-            has: (key: string) => searchParams?.has(key) ?? false,
+            get: (key: string) => null,
+            getAll: (key: string) => [],
+            has: (key: string) => false,
         },
         isReady: true,
         type: 'app'
-    }), [pathname, router, searchParams]);
+    }), [pathname, router]);
 
     return (
         <NavigationProvider value={unifiedRouter}>

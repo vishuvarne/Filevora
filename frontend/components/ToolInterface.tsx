@@ -31,6 +31,7 @@ const MemeGenerator = dynamic(() => import("@/components/tools/MemeGenerator"), 
 const PhotoEditor = dynamic(() => import("@/components/tools/PhotoEditor"), { loading: () => <ToolLoadingSkeleton /> });
 const QRCodeGenerator = dynamic(() => import("@/components/tools/QRCodeGenerator"), { loading: () => <ToolLoadingSkeleton /> });
 const ImageCompressor = dynamic(() => import("@/components/tools/ImageCompressor"), { loading: () => <ToolLoadingSkeleton /> });
+
 import ToolInfoSection from "@/components/ToolInfoSection";
 const VoiceRecorder = dynamic(() => import("@/components/tools/VoiceRecorder"), { loading: () => <ToolLoadingSkeleton /> });
 const PDFChat = dynamic(() => import("@/components/tools/PDFChat"), { loading: () => <ToolLoadingSkeleton /> });
@@ -437,7 +438,10 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
     const [pdfQuality, setPdfQuality] = useState(85);
     const [pdfDpi, setPdfDpi] = useState(150);
     const [showDragOverlay, setShowDragOverlay] = useState(false);
-    const [useManualCompression, setUseManualCompression] = useState(false);
+
+    // Compression Modes: 'easy', 'manual', 'target'
+    const [pdfCompressionMode, setPdfCompressionMode] = useState<'easy' | 'manual' | 'target'>('easy');
+    const [pdfTargetSizeKB, setPdfTargetSizeKB] = useState(100);
 
     // Split PDF Options
     const [splitMode, setSplitMode] = useState<'range' | 'pages' | 'size'>('range');
@@ -551,7 +555,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
             }
         } else if (suggestion.type === 'compression') {
             setCompressionLevel(suggestion.value);
-            setUseManualCompression(false);
+            setPdfCompressionMode('easy');
             if (suggestion.autoRun) {
                 handleProcess({ compressionLevel: suggestion.value });
             }
@@ -579,7 +583,8 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
         setCompressionLevel("basic");
         setPdfQuality(85);
         setPdfDpi(150);
-        setUseManualCompression(false);
+        setPdfCompressionMode('easy');
+        setPdfTargetSizeKB(100);
         setSplitMode('range');
         setCustomRanges([{ from: '1', to: '1' }]);
         setFixedRange(1);
@@ -814,6 +819,10 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                         targetFormat,
                         compressionLevel,
                         quality,
+                        pdfQuality,
+                        pdfDpi,
+                        pdfCompressionMode,
+                        pdfTargetSizeKB,
                         password: pdfPassword,
                         pdfOrientation,
                         pdfPageSize,
@@ -882,7 +891,9 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
             }
 
             if (tool.id === "compress-pdf") {
-                if (useManualCompression && !overrides?.compressionLevel) { // If manual and no override
+                if (pdfCompressionMode === 'target') {
+                    formData.append("target_size_kb", pdfTargetSizeKB.toString());
+                } else if (pdfCompressionMode === 'manual' && !overrides?.compressionLevel) { // If manual and no override
                     formData.append("quality", pdfQuality.toString());
                     formData.append("dpi", pdfDpi.toString());
                 } else {
@@ -986,18 +997,19 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                     <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-500 pb-32">
 
                         {/* Header Row */}
-                        <div className="flex items-center justify-between mb-3">
-                            <div className="flex items-center gap-3">
-                                <div className={`w-11 h-11 shrink-0 bg-white dark:bg-slate-800 rounded-xl flex flex-col items-center justify-center shadow-sm border border-slate-200 dark:border-slate-700`}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-5 h-5 text-red-500`}>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-3 gap-3">
+                            <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3 w-full">
+                                <div className={`w-10 h-10 sm:w-11 sm:h-11 shrink-0 bg-white dark:bg-slate-800 rounded-xl sm:rounded-[14px] flex flex-col items-center justify-center border-[2px] sm:border-[3px] border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] sm:shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] dark:border-slate-700`}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={`w-4 h-4 sm:w-5 sm:h-5 text-red-500`}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d={tool.iconPath} />
                                     </svg>
                                 </div>
-                                <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                                    <h1 className="text-xl sm:text-2xl font-extrabold text-foreground leading-tight tracking-tight">{tool.name}</h1>
+                                <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                                    <h1 className="text-lg sm:text-2xl font-black text-foreground leading-tight tracking-tight uppercase">{tool.name}</h1>
                                     <GhostModeBadge
                                         mode={isGhostMode ? "local" : "cloud"}
                                         onClick={isGhostMode ? () => setShowGhostExplainer(true) : undefined}
+                                        className="shrink-0"
                                     />
                                 </div>
                             </div>
@@ -1059,363 +1071,411 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                     onChange={handleAddMoreFiles}
                                 />
 
-                                {/* Mobile: Full-screen settings overlay - kept outside regular flow */}
-                                {settingsExpanded && (
-                                    <>
-                                        {/* Backdrop */}
-                                        <div className="lg:hidden fixed inset-0 z-[99] bg-black/40 backdrop-blur-sm animate-in fade-in duration-300" onClick={() => setSettingsExpanded(false)} />
-                                        <div className="lg:hidden fixed inset-x-0 bottom-0 z-[100] flex flex-col bg-background rounded-t-3xl shadow-2xl max-h-[65vh] animate-in slide-in-from-bottom-32 fade-in duration-500 ease-out border-t border-slate-200 dark:border-slate-700">
-                                            {/* Overlay Header */}
-                                            <div className="shrink-0 flex items-center justify-between px-5 py-4 border-b border-border bg-card/80 backdrop-blur-xl">
-                                                <div className="flex items-center gap-3">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-primary">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                    </svg>
-                                                    <h2 className="text-xl font-extrabold text-foreground">Settings</h2>
+                                <AnimatePresence>
+                                    {settingsExpanded && (
+                                        <>
+                                            {/* Backdrop */}
+                                            <m.div
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                exit={{ opacity: 0 }}
+                                                transition={{ duration: 0.2 }}
+                                                className="lg:hidden fixed inset-0 z-[99] bg-black/40 backdrop-blur-sm"
+                                                onClick={() => setSettingsExpanded(false)}
+                                            />
+                                            <m.div
+                                                initial={{ y: "100%" }}
+                                                animate={{ y: 0 }}
+                                                exit={{ y: "100%" }}
+                                                transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+                                                className="lg:hidden fixed inset-x-0 bottom-0 z-[100] flex flex-col bg-background rounded-t-[2rem] shadow-2xl max-h-[75vh] border-[3px] border-b-0 border-slate-900 dark:border-slate-700"
+                                            >
+                                                {/* Overlay Header */}
+                                                <div className="shrink-0 flex items-center justify-between px-5 py-4 border-b border-border bg-card/80 backdrop-blur-xl">
+                                                    <div className="flex items-center gap-3">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-primary">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                        </svg>
+                                                        <h2 className="text-xl font-extrabold text-foreground">Settings</h2>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => setSettingsExpanded(false)}
+                                                        className="p-2 -mr-2 text-muted-foreground hover:text-foreground rounded-full transition-colors active:scale-95 bg-slate-100 dark:bg-slate-800"
+                                                        aria-label="Close"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                        </svg>
+                                                    </button>
                                                 </div>
-                                                <button
-                                                    onClick={() => setSettingsExpanded(false)}
-                                                    className="p-2 -mr-2 text-muted-foreground hover:text-foreground rounded-full transition-colors active:scale-95 bg-slate-100 dark:bg-slate-800"
-                                                    aria-label="Close"
-                                                >
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                                    </svg>
-                                                </button>
-                                            </div>
 
-                                            {/* Overlay Body — scrollable */}
-                                            <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6 pb-32">
-                                                <div className="flex flex-col gap-6 w-full">
-                                                    {tool.id.includes("rotate") && (
-                                                        <div className="space-y-3">
-                                                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Rotation Angle</label>
-                                                            <div className="flex gap-2">
-                                                                {[90, 180, 270].map(angle => (
-                                                                    <button
-                                                                        key={angle}
-                                                                        onClick={() => setRotateAngle(angle)}
-                                                                        className={`flex-1 py-3 rounded-xl text-sm font-bold border transition-all ${rotateAngle === angle
-                                                                            ? `${tool.theme.bgLight} ${tool.theme.border} ${tool.theme.text} shadow-sm scale-[1.02]`
-                                                                            : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-muted-foreground hover:scale-[1.02]'
-                                                                            }`}
-                                                                    >
-                                                                        {angle}°
-                                                                    </button>
-                                                                ))}
-                                                            </div>
-                                                        </div>
-                                                    )}
-
-                                                    {(tool.id === 'image-to-pdf' || tool.id === 'jpg-to-pdf') && (
-                                                        <div className="space-y-6">
-                                                            {/* Page Orientation */}
+                                                {/* Overlay Body — scrollable */}
+                                                <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6 pb-32">
+                                                    <div className="flex flex-col gap-6 w-full">
+                                                        {tool.id.includes("rotate") && (
                                                             <div className="space-y-3">
-                                                                <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Page orientation</label>
-                                                                <div className="flex gap-3">
-                                                                    {[
-                                                                        { id: 'portrait' as const, label: 'Portrait', icon: (<svg viewBox="0 0 24 32" className="w-5 h-7" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="2" width="18" height="28" rx="2" /></svg>) },
-                                                                        { id: 'landscape' as const, label: 'Landscape', icon: (<svg viewBox="0 0 32 24" className="w-7 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="3" width="28" height="18" rx="2" /></svg>) },
-                                                                    ].map(opt => (
+                                                                <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Rotation Angle</label>
+                                                                <div className="flex gap-2">
+                                                                    {[90, 180, 270].map(angle => (
                                                                         <button
-                                                                            key={opt.id}
-                                                                            onClick={() => setPdfOrientation(opt.id)}
-                                                                            className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-xl text-sm font-bold border transition-all ${pdfOrientation === opt.id
+                                                                            key={angle}
+                                                                            onClick={() => setRotateAngle(angle)}
+                                                                            className={`flex-1 py-3 rounded-xl text-sm font-bold border transition-all ${rotateAngle === angle
                                                                                 ? `${tool.theme.bgLight} ${tool.theme.border} ${tool.theme.text} shadow-sm scale-[1.02]`
                                                                                 : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-muted-foreground hover:scale-[1.02]'
                                                                                 }`}
                                                                         >
-                                                                            {opt.icon}
-                                                                            {opt.label}
+                                                                            {angle}°
                                                                         </button>
                                                                     ))}
                                                                 </div>
                                                             </div>
+                                                        )}
 
-                                                            {/* Page Size */}
-                                                            <div className="space-y-3">
-                                                                <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Page size</label>
-                                                                <select
-                                                                    value={pdfPageSize}
-                                                                    onChange={(e) => setPdfPageSize(e.target.value as 'fit' | 'a4' | 'letter')}
-                                                                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-foreground font-medium text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all appearance-none cursor-pointer"
-                                                                    style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E")`, backgroundPosition: 'right 0.75rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.25rem' }}
-                                                                >
-                                                                    <option value="fit">Fit (Same page size as image)</option>
-                                                                    <option value="a4">A4 (297×210 mm)</option>
-                                                                    <option value="letter">US Letter (215×279.4 mm)</option>
-                                                                </select>
-                                                            </div>
-
-                                                            {/* Margin */}
-                                                            <div className="space-y-3">
-                                                                <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Margin</label>
-                                                                <div className="flex gap-3">
-                                                                    {[
-                                                                        { id: 'none' as const, label: 'No margin', icon: (<svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="2" width="20" height="20" rx="2" /><rect x="4" y="4" width="16" height="16" rx="1" fill="currentColor" opacity="0.15" /></svg>) },
-                                                                        { id: 'small' as const, label: 'Small', icon: (<svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="2" width="20" height="20" rx="2" /><rect x="6" y="6" width="12" height="12" rx="1" fill="currentColor" opacity="0.15" /></svg>) },
-                                                                        { id: 'big' as const, label: 'Big', icon: (<svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="2" width="20" height="20" rx="2" /><rect x="8" y="8" width="8" height="8" rx="1" fill="currentColor" opacity="0.15" /></svg>) },
-                                                                    ].map(opt => (
-                                                                        <button
-                                                                            key={opt.id}
-                                                                            onClick={() => setPdfMargin(opt.id)}
-                                                                            className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-xl text-sm font-bold border transition-all ${pdfMargin === opt.id
-                                                                                ? `${tool.theme.bgLight} ${tool.theme.border} ${tool.theme.text} shadow-sm scale-[1.02]`
-                                                                                : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-muted-foreground hover:scale-[1.02]'
-                                                                                }`}
-                                                                        >
-                                                                            {opt.icon}
-                                                                            {opt.label}
-                                                                        </button>
-                                                                    ))}
-                                                                </div>
-                                                            </div>
-
-                                                            {/* Merge all */}
-                                                            <label className="flex items-center gap-3 cursor-pointer group mt-2">
-                                                                <div className={`relative w-11 h-6 rounded-full transition-colors ${mergeAll ? 'bg-primary' : 'bg-slate-300 dark:bg-slate-600'}`} onClick={() => setMergeAll(!mergeAll)}>
-                                                                    <div className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform ${mergeAll ? 'translate-x-5' : ''}`} />
-                                                                </div>
-                                                                <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Merge all images in one PDF</span>
-                                                            </label>
-                                                        </div>
-                                                    )}
-
-                                                    {tool.id === "split-pdf" && (
-                                                        <div className="space-y-6">
-                                                            {pdfPageCount > 0 && (
-                                                                <div className="text-xs text-muted-foreground space-y-0.5">
-                                                                    <p>Original file size: <b>{pdfFileSize > 1024 * 1024 ? (pdfFileSize / 1024 / 1024).toFixed(2) + ' MB' : (pdfFileSize / 1024).toFixed(0) + ' KB'}</b></p>
-                                                                    <p>Total pages: <b>{pdfPageCount}</b></p>
-                                                                </div>
-                                                            )}
-                                                            <div className="space-y-3">
-                                                                <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Split mode</label>
-                                                                <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
-                                                                    {(['range', 'pages', 'size'] as const).map(mode => (
-                                                                        <button key={mode} onClick={() => setSplitMode(mode)} className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all flex flex-col items-center justify-center gap-1 ${splitMode === mode ? 'bg-white dark:bg-slate-700 text-primary shadow-sm border border-primary/20' : 'text-muted-foreground hover:text-foreground'}`}>
-                                                                            {mode === 'range' && <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></svg>}
-                                                                            {mode === 'pages' && <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="8" height="10" rx="1" /><rect x="13" y="3" width="8" height="10" rx="1" /><rect x="3" y="15" width="8" height="6" rx="1" /><rect x="13" y="15" width="8" height="6" rx="1" /></svg>}
-                                                                            {mode === 'size' && <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="4" width="9" height="12" rx="1" /><rect x="13" y="4" width="9" height="12" rx="1" /><path d="M6.5 20h11" strokeLinecap="round" /></svg>}
-                                                                            <span className="capitalize">{mode === 'pages' ? 'Extract' : mode}</span>
-                                                                        </button>
-                                                                    ))}
-                                                                </div>
-                                                            </div>
-                                                            {splitMode === 'range' && (
-                                                                <div className="space-y-4">
-                                                                    <div className="space-y-3 max-h-[40vh] overflow-y-auto pr-1">
-                                                                        {customRanges.map((range, idx) => (
-                                                                            <div key={idx} className="flex flex-col gap-1.5 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-border">
-                                                                                <div className="flex items-center justify-between">
-                                                                                    <span className="text-xs font-bold text-foreground">Range {idx + 1}</span>
-                                                                                    {customRanges.length > 1 && (<button onClick={() => setCustomRanges(customRanges.filter((_, i) => i !== idx))} className="text-muted-foreground hover:text-red-500 transition-colors p-1"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>)}
-                                                                                </div>
-                                                                                <div className="flex items-center gap-2">
-                                                                                    <div className="flex-1 flex items-center border border-border rounded-lg bg-card overflow-hidden focus-within:ring-2 focus-within:ring-primary/30">
-                                                                                        <span className="px-3 py-2 text-xs text-muted-foreground bg-muted/50 border-r border-border font-medium">from</span>
-                                                                                        <input type="number" min="1" max={pdfPageCount || undefined} value={range.from} onChange={(e) => { const nr = [...customRanges]; nr[idx].from = Math.min(parseInt(e.target.value) || 1, pdfPageCount || Infinity).toString(); setCustomRanges(nr); }} className="w-full px-3 py-2 text-sm font-bold bg-transparent outline-none text-center" />
-                                                                                    </div>
-                                                                                    <div className="flex-1 flex items-center border border-border rounded-lg bg-card overflow-hidden focus-within:ring-2 focus-within:ring-primary/30">
-                                                                                        <span className="px-3 py-2 text-xs text-muted-foreground bg-muted/50 border-r border-border font-medium">to</span>
-                                                                                        <input type="number" min="1" max={pdfPageCount || undefined} value={range.to} onChange={(e) => { const nr = [...customRanges]; nr[idx].to = Math.min(parseInt(e.target.value) || 1, pdfPageCount || Infinity).toString(); setCustomRanges(nr); }} className="w-full px-3 py-2 text-sm font-bold bg-transparent outline-none text-center" />
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        ))}
-                                                                    </div>
-                                                                    <button onClick={() => { const lastTo = Math.min(parseInt(customRanges[customRanges.length - 1]?.to) || 0, (pdfPageCount || Infinity) - 1); const next = Math.min(lastTo + 1, pdfPageCount || Infinity); setCustomRanges([...customRanges, { from: next.toString(), to: next.toString() }]); }} className="w-full py-2.5 bg-white dark:bg-slate-800 border-2 border-primary text-primary rounded-xl text-sm font-bold hover:bg-primary/5 transition-colors flex items-center justify-center gap-2">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                                                                        Add Range
-                                                                    </button>
-                                                                    <label className="flex items-center gap-3 cursor-pointer group mt-2">
-                                                                        <div className={`relative w-6 h-6 rounded-md border-2 transition-colors flex items-center justify-center ${splitMergeRanges ? 'bg-primary border-primary' : 'border-slate-300 dark:border-slate-600 group-hover:border-primary/50'}`} onClick={() => setSplitMergeRanges(!splitMergeRanges)}>
-                                                                            {splitMergeRanges && <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
-                                                                        </div>
-                                                                        <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Merge all ranges in one PDF</span>
-                                                                    </label>
-                                                                </div>
-                                                            )}
-                                                            {splitMode === 'pages' && (
-                                                                <div className="space-y-4">
-                                                                    <div className="flex gap-2 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
-                                                                        <button onClick={() => setExtractMode('all')} className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${extractMode === 'all' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Extract all pages</button>
-                                                                        <button onClick={() => setExtractMode('select')} className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${extractMode === 'select' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Select pages</button>
-                                                                    </div>
-                                                                    {extractMode === 'select' && (
-                                                                        <div className="space-y-3">
-                                                                            <label className="text-xs font-bold text-muted-foreground">Pages to extract:</label>
-                                                                            <input type="text" placeholder="e.g. 1-3,6" value={extractPagesInput} onChange={(e) => { setExtractPagesInput(e.target.value); const pages = new Set<number>(); e.target.value.split(',').forEach(part => { const t = part.trim(); if (t.includes('-')) { const [a, b] = t.split('-').map(Number); if (!isNaN(a) && !isNaN(b)) for (let i = a; i <= b; i++) pages.add(i); } else { const n = parseInt(t); if (!isNaN(n)) pages.add(n); } }); setSelectedPages(pages); }} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-border rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-primary/30 transition-all" />
-                                                                            <label className="flex items-center gap-3 cursor-pointer group">
-                                                                                <div className={`relative w-6 h-6 rounded-md border-2 transition-colors flex items-center justify-center ${splitMergeRanges ? 'bg-primary border-primary' : 'border-slate-300 dark:border-slate-600 group-hover:border-primary/50'}`} onClick={() => setSplitMergeRanges(!splitMergeRanges)}>
-                                                                                    {splitMergeRanges && <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
-                                                                                </div>
-                                                                                <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Merge extracted pages into one PDF</span>
-                                                                            </label>
-                                                                            {selectedPages.size > 0 && (
-                                                                                <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800 text-xs text-blue-700 dark:text-blue-300">
-                                                                                    <b>{selectedPages.size}</b> page{selectedPages.size > 1 ? 's' : ''} selected. {splitMergeRanges ? '1 merged PDF' : `${selectedPages.size} PDF${selectedPages.size > 1 ? 's' : ''}`} will be created.
-                                                                                </div>
-                                                                            )}
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            )}
-                                                            {splitMode === 'size' && (
-                                                                <div className="space-y-4">
-                                                                    <label className="text-sm font-bold text-foreground">Maximum size per file:</label>
-                                                                    <div className="flex items-center gap-3">
-                                                                        <input type="number" min="1" value={sizeLimit} onChange={(e) => setSizeLimit(parseInt(e.target.value) || 1)} className="w-24 px-4 py-2.5 border-2 border-border rounded-xl text-lg font-bold bg-card text-center outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all" />
-                                                                        <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
-                                                                            <button onClick={() => setSizeUnit('KB')} className={`px-4 py-1.5 text-sm font-bold rounded-lg transition-all ${sizeUnit === 'KB' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground'}`}>KB</button>
-                                                                            <button onClick={() => setSizeUnit('MB')} className={`px-4 py-1.5 text-sm font-bold rounded-lg transition-all ${sizeUnit === 'MB' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground'}`}>MB</button>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800 text-xs text-blue-700 dark:text-blue-300">
-                                                                        ℹ️ This PDF will be split into files no larger than <b>{sizeLimit} {sizeUnit}</b> each.
-                                                                    </div>
-                                                                    <label className="flex items-center gap-3 cursor-pointer group">
-                                                                        <div className={`relative w-6 h-6 rounded-md border-2 transition-colors flex items-center justify-center ${allowCompression ? 'bg-primary border-primary' : 'border-slate-300 dark:border-slate-600 group-hover:border-primary/50'}`} onClick={() => setAllowCompression(!allowCompression)}>
-                                                                            {allowCompression && <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
-                                                                        </div>
-                                                                        <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Allow compression</span>
-                                                                    </label>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    )}
-
-                                                    {tool.id === "compress-pdf" && (
-                                                        <div className="space-y-4">
-                                                            <div className="flex items-center justify-between">
-                                                                <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Compression Mode</label>
-                                                                <button
-                                                                    onClick={() => setUseManualCompression(!useManualCompression)}
-                                                                    className="text-xs text-primary hover:underline font-bold bg-primary/10 px-3 py-1 rounded-full transition-colors"
-                                                                >
-                                                                    {useManualCompression ? "Switch to Easy Mode" : "Switch to Manual Mode"}
-                                                                </button>
-                                                            </div>
-
-                                                            {!useManualCompression ? (
-                                                                <div className="grid grid-cols-1 gap-3">
-                                                                    {[
-                                                                        { id: 'extreme', label: 'Extreme', desc: 'Low quality, high compression', mult: 0.15 },
-                                                                        { id: 'recommended', label: 'Recommended', desc: 'Good quality, good compression', mult: 0.45 },
-                                                                        { id: 'basic', label: 'Basic', desc: 'High quality, text focused', mult: 0.85 }
-                                                                    ].map((mode) => {
-                                                                        const totalSize = files.reduce((acc, f) => acc + f.size, 0);
-                                                                        let estSizeStr = null;
-                                                                        if (totalSize > 0) {
-                                                                            const estBytes = totalSize * mode.mult;
-                                                                            estSizeStr = estBytes > 1024 * 1024
-                                                                                ? `~${(estBytes / 1024 / 1024).toFixed(1)} MB`
-                                                                                : `~${(estBytes / 1024).toFixed(0)} KB`;
-                                                                        }
-                                                                        return (
+                                                        {(tool.id === 'image-to-pdf' || tool.id === 'jpg-to-pdf') && (
+                                                            <div className="space-y-6">
+                                                                {/* Page Orientation */}
+                                                                <div className="space-y-3">
+                                                                    <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Page orientation</label>
+                                                                    <div className="flex gap-3">
+                                                                        {[
+                                                                            { id: 'portrait' as const, label: 'Portrait', icon: (<svg viewBox="0 0 24 32" className="w-5 h-7" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="2" width="18" height="28" rx="2" /></svg>) },
+                                                                            { id: 'landscape' as const, label: 'Landscape', icon: (<svg viewBox="0 0 32 24" className="w-7 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="3" width="28" height="18" rx="2" /></svg>) },
+                                                                        ].map(opt => (
                                                                             <button
-                                                                                key={mode.id}
-                                                                                onClick={() => setCompressionLevel(mode.id)}
-                                                                                className={`relative text-left p-4 rounded-xl border transition-all ${compressionLevel === mode.id
-                                                                                    ? 'border-primary bg-primary/5 ring-1 ring-primary shadow-sm'
-                                                                                    : 'border-border hover:border-primary/50 hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm'
+                                                                                key={opt.id}
+                                                                                onClick={() => setPdfOrientation(opt.id)}
+                                                                                className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-xl text-sm font-bold border transition-all ${pdfOrientation === opt.id
+                                                                                    ? `${tool.theme.bgLight} ${tool.theme.border} ${tool.theme.text} shadow-sm scale-[1.02]`
+                                                                                    : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-muted-foreground hover:scale-[1.02]'
                                                                                     }`}
                                                                             >
-                                                                                <div className={`font-bold text-sm mb-1 ${compressionLevel === mode.id ? 'text-primary' : 'text-foreground'}`}>{mode.label}</div>
-                                                                                {estSizeStr && <div className="text-[10px] font-mono font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded w-fit mb-1.5">{estSizeStr}</div>}
-                                                                                <div className="text-xs text-muted-foreground leading-snug">{mode.desc}</div>
+                                                                                {opt.icon}
+                                                                                {opt.label}
                                                                             </button>
-                                                                        );
-                                                                    })}
-                                                                </div>
-                                                            ) : (
-                                                                <div className="space-y-6 p-5 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-border">
-                                                                    <div>
-                                                                        <div className="flex justify-between mb-3">
-                                                                            <label className="text-sm font-bold text-foreground">Image Quality</label>
-                                                                            <span className="text-sm font-mono text-primary font-bold bg-primary/10 px-2 py-0.5 rounded-md">{pdfQuality}%</span>
-                                                                        </div>
-                                                                        <RangeSlider
-                                                                            value={pdfQuality}
-                                                                            min={10}
-                                                                            max={100}
-                                                                            step={5}
-                                                                            onChange={setPdfQuality}
-                                                                        />
-                                                                    </div>
-                                                                    <div>
-                                                                        <div className="flex justify-between mb-3">
-                                                                            <label className="text-sm font-bold text-foreground">Maximum DPI</label>
-                                                                            <span className="text-sm font-mono text-primary font-bold bg-primary/10 px-2 py-0.5 rounded-md">{pdfDpi} DPI</span>
-                                                                        </div>
-                                                                        <RangeSlider
-                                                                            value={pdfDpi}
-                                                                            min={72}
-                                                                            max={600}
-                                                                            step={20}
-                                                                            onChange={setPdfDpi}
-                                                                        />
+                                                                        ))}
                                                                     </div>
                                                                 </div>
-                                                            )}
-                                                        </div>
-                                                    )}
 
-                                                    {showFormatSelector && (
-                                                        <div className="space-y-3">
-                                                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Target Format</label>
-                                                            <div className="relative">
-                                                                <FormatSelector
-                                                                    value={targetFormat}
-                                                                    onChange={setTargetFormat}
-                                                                    options={tool.id === "convert-audio" ? AUDIO_CONVERTER_FORMATS : IMAGE_CONVERTER_FORMATS}
-                                                                    theme="light"
+                                                                {/* Page Size */}
+                                                                <div className="space-y-3">
+                                                                    <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Page size</label>
+                                                                    <select
+                                                                        value={pdfPageSize}
+                                                                        onChange={(e) => setPdfPageSize(e.target.value as 'fit' | 'a4' | 'letter')}
+                                                                        className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-foreground font-medium text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all appearance-none cursor-pointer"
+                                                                        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E")`, backgroundPosition: 'right 0.75rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.25rem' }}
+                                                                    >
+                                                                        <option value="fit">Fit (Same page size as image)</option>
+                                                                        <option value="a4">A4 (297×210 mm)</option>
+                                                                        <option value="letter">US Letter (215×279.4 mm)</option>
+                                                                    </select>
+                                                                </div>
+
+                                                                {/* Margin */}
+                                                                <div className="space-y-3">
+                                                                    <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Margin</label>
+                                                                    <div className="flex gap-3">
+                                                                        {[
+                                                                            { id: 'none' as const, label: 'No margin', icon: (<svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="2" width="20" height="20" rx="2" /><rect x="4" y="4" width="16" height="16" rx="1" fill="currentColor" opacity="0.15" /></svg>) },
+                                                                            { id: 'small' as const, label: 'Small', icon: (<svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="2" width="20" height="20" rx="2" /><rect x="6" y="6" width="12" height="12" rx="1" fill="currentColor" opacity="0.15" /></svg>) },
+                                                                            { id: 'big' as const, label: 'Big', icon: (<svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="2" width="20" height="20" rx="2" /><rect x="8" y="8" width="8" height="8" rx="1" fill="currentColor" opacity="0.15" /></svg>) },
+                                                                        ].map(opt => (
+                                                                            <button
+                                                                                key={opt.id}
+                                                                                onClick={() => setPdfMargin(opt.id)}
+                                                                                className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-xl text-sm font-bold border transition-all ${pdfMargin === opt.id
+                                                                                    ? `${tool.theme.bgLight} ${tool.theme.border} ${tool.theme.text} shadow-sm scale-[1.02]`
+                                                                                    : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-muted-foreground hover:scale-[1.02]'
+                                                                                    }`}
+                                                                            >
+                                                                                {opt.icon}
+                                                                                {opt.label}
+                                                                            </button>
+                                                                        ))}
+                                                                    </div>
+                                                                </div>
+
+                                                                {/* Merge all */}
+                                                                <label className="flex items-center gap-3 cursor-pointer group mt-2">
+                                                                    <div className={`relative w-11 h-6 rounded-full transition-colors ${mergeAll ? 'bg-primary' : 'bg-slate-300 dark:bg-slate-600'}`} onClick={() => setMergeAll(!mergeAll)}>
+                                                                        <div className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform ${mergeAll ? 'translate-x-5' : ''}`} />
+                                                                    </div>
+                                                                    <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Merge all images in one PDF</span>
+                                                                </label>
+                                                            </div>
+                                                        )}
+
+                                                        {tool.id === "split-pdf" && (
+                                                            <div className="space-y-6">
+                                                                {pdfPageCount > 0 && (
+                                                                    <div className="text-xs text-muted-foreground space-y-0.5">
+                                                                        <p>Original file size: <b>{pdfFileSize > 1024 * 1024 ? (pdfFileSize / 1024 / 1024).toFixed(2) + ' MB' : (pdfFileSize / 1024).toFixed(0) + ' KB'}</b></p>
+                                                                        <p>Total pages: <b>{pdfPageCount}</b></p>
+                                                                    </div>
+                                                                )}
+                                                                <div className="space-y-3">
+                                                                    <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Split mode</label>
+                                                                    <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                                                                        {(['range', 'pages', 'size'] as const).map(mode => (
+                                                                            <button key={mode} onClick={() => setSplitMode(mode)} className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all flex flex-col items-center justify-center gap-1 ${splitMode === mode ? 'bg-white dark:bg-slate-700 text-primary shadow-sm border border-primary/20' : 'text-muted-foreground hover:text-foreground'}`}>
+                                                                                {mode === 'range' && <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></svg>}
+                                                                                {mode === 'pages' && <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="8" height="10" rx="1" /><rect x="13" y="3" width="8" height="10" rx="1" /><rect x="3" y="15" width="8" height="6" rx="1" /><rect x="13" y="15" width="8" height="6" rx="1" /></svg>}
+                                                                                {mode === 'size' && <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="4" width="9" height="12" rx="1" /><rect x="13" y="4" width="9" height="12" rx="1" /><path d="M6.5 20h11" strokeLinecap="round" /></svg>}
+                                                                                <span className="capitalize">{mode === 'pages' ? 'Extract' : mode}</span>
+                                                                            </button>
+                                                                        ))}
+                                                                    </div>
+                                                                </div>
+                                                                {splitMode === 'range' && (
+                                                                    <div className="space-y-4">
+                                                                        <div className="space-y-3 max-h-[40vh] overflow-y-auto pr-1">
+                                                                            {customRanges.map((range, idx) => (
+                                                                                <div key={idx} className="flex flex-col gap-1.5 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-border">
+                                                                                    <div className="flex items-center justify-between">
+                                                                                        <span className="text-xs font-bold text-foreground">Range {idx + 1}</span>
+                                                                                        {customRanges.length > 1 && (<button onClick={() => setCustomRanges(customRanges.filter((_, i) => i !== idx))} className="text-muted-foreground hover:text-red-500 transition-colors p-1"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>)}
+                                                                                    </div>
+                                                                                    <div className="flex items-center gap-2">
+                                                                                        <div className="flex-1 flex items-center border border-border rounded-lg bg-card overflow-hidden focus-within:ring-2 focus-within:ring-primary/30">
+                                                                                            <span className="px-3 py-2 text-xs text-muted-foreground bg-muted/50 border-r border-border font-medium">from</span>
+                                                                                            <input type="number" min="1" max={pdfPageCount || undefined} value={range.from} onChange={(e) => { const nr = [...customRanges]; nr[idx].from = Math.min(parseInt(e.target.value) || 1, pdfPageCount || Infinity).toString(); setCustomRanges(nr); }} className="w-full px-3 py-2 text-sm font-bold bg-transparent outline-none text-center" />
+                                                                                        </div>
+                                                                                        <div className="flex-1 flex items-center border border-border rounded-lg bg-card overflow-hidden focus-within:ring-2 focus-within:ring-primary/30">
+                                                                                            <span className="px-3 py-2 text-xs text-muted-foreground bg-muted/50 border-r border-border font-medium">to</span>
+                                                                                            <input type="number" min="1" max={pdfPageCount || undefined} value={range.to} onChange={(e) => { const nr = [...customRanges]; nr[idx].to = Math.min(parseInt(e.target.value) || 1, pdfPageCount || Infinity).toString(); setCustomRanges(nr); }} className="w-full px-3 py-2 text-sm font-bold bg-transparent outline-none text-center" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            ))}
+                                                                        </div>
+                                                                        <button onClick={() => { const lastTo = Math.min(parseInt(customRanges[customRanges.length - 1]?.to) || 0, (pdfPageCount || Infinity) - 1); const next = Math.min(lastTo + 1, pdfPageCount || Infinity); setCustomRanges([...customRanges, { from: next.toString(), to: next.toString() }]); }} className="w-full py-2.5 bg-white dark:bg-slate-800 border-2 border-primary text-primary rounded-xl text-sm font-bold hover:bg-primary/5 transition-colors flex items-center justify-center gap-2">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                                                                            Add Range
+                                                                        </button>
+                                                                        <label className="flex items-center gap-3 cursor-pointer group mt-2">
+                                                                            <div className={`relative w-6 h-6 rounded-md border-2 transition-colors flex items-center justify-center ${splitMergeRanges ? 'bg-primary border-primary' : 'border-slate-300 dark:border-slate-600 group-hover:border-primary/50'}`} onClick={() => setSplitMergeRanges(!splitMergeRanges)}>
+                                                                                {splitMergeRanges && <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
+                                                                            </div>
+                                                                            <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Merge all ranges in one PDF</span>
+                                                                        </label>
+                                                                    </div>
+                                                                )}
+                                                                {splitMode === 'pages' && (
+                                                                    <div className="space-y-4">
+                                                                        <div className="flex gap-2 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                                                                            <button onClick={() => setExtractMode('all')} className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${extractMode === 'all' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Extract all pages</button>
+                                                                            <button onClick={() => setExtractMode('select')} className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${extractMode === 'select' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Select pages</button>
+                                                                        </div>
+                                                                        {extractMode === 'select' && (
+                                                                            <div className="space-y-3">
+                                                                                <label className="text-xs font-bold text-muted-foreground">Pages to extract:</label>
+                                                                                <input type="text" placeholder="e.g. 1-3,6" value={extractPagesInput} onChange={(e) => { setExtractPagesInput(e.target.value); const pages = new Set<number>(); e.target.value.split(',').forEach(part => { const t = part.trim(); if (t.includes('-')) { const [a, b] = t.split('-').map(Number); if (!isNaN(a) && !isNaN(b)) for (let i = a; i <= b; i++) pages.add(i); } else { const n = parseInt(t); if (!isNaN(n)) pages.add(n); } }); setSelectedPages(pages); }} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-border rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-primary/30 transition-all" />
+                                                                                <label className="flex items-center gap-3 cursor-pointer group">
+                                                                                    <div className={`relative w-6 h-6 rounded-md border-2 transition-colors flex items-center justify-center ${splitMergeRanges ? 'bg-primary border-primary' : 'border-slate-300 dark:border-slate-600 group-hover:border-primary/50'}`} onClick={() => setSplitMergeRanges(!splitMergeRanges)}>
+                                                                                        {splitMergeRanges && <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
+                                                                                    </div>
+                                                                                    <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Merge extracted pages into one PDF</span>
+                                                                                </label>
+                                                                                {selectedPages.size > 0 && (
+                                                                                    <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800 text-xs text-blue-700 dark:text-blue-300">
+                                                                                        <b>{selectedPages.size}</b> page{selectedPages.size > 1 ? 's' : ''} selected. {splitMergeRanges ? '1 merged PDF' : `${selectedPages.size} PDF${selectedPages.size > 1 ? 's' : ''}`} will be created.
+                                                                                    </div>
+                                                                                )}
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                )}
+                                                                {splitMode === 'size' && (
+                                                                    <div className="space-y-4">
+                                                                        <label className="text-sm font-bold text-foreground">Maximum size per file:</label>
+                                                                        <div className="flex items-center gap-3">
+                                                                            <input type="number" min="1" value={sizeLimit} onChange={(e) => setSizeLimit(parseInt(e.target.value) || 1)} className="w-24 px-4 py-2.5 border-2 border-border rounded-xl text-lg font-bold bg-card text-center outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all" />
+                                                                            <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                                                                                <button onClick={() => setSizeUnit('KB')} className={`px-4 py-1.5 text-sm font-bold rounded-lg transition-all ${sizeUnit === 'KB' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground'}`}>KB</button>
+                                                                                <button onClick={() => setSizeUnit('MB')} className={`px-4 py-1.5 text-sm font-bold rounded-lg transition-all ${sizeUnit === 'MB' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground'}`}>MB</button>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800 text-xs text-blue-700 dark:text-blue-300">
+                                                                            ℹ️ This PDF will be split into files no larger than <b>{sizeLimit} {sizeUnit}</b> each.
+                                                                        </div>
+                                                                        <label className="flex items-center gap-3 cursor-pointer group">
+                                                                            <div className={`relative w-6 h-6 rounded-md border-2 transition-colors flex items-center justify-center ${allowCompression ? 'bg-primary border-primary' : 'border-slate-300 dark:border-slate-600 group-hover:border-primary/50'}`} onClick={() => setAllowCompression(!allowCompression)}>
+                                                                                {allowCompression && <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
+                                                                            </div>
+                                                                            <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Allow compression</span>
+                                                                        </label>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        )}
+
+                                                        {tool.id === "compress-pdf" && (
+                                                            <div className="space-y-4">
+                                                                <div className="flex items-center justify-between flex-wrap gap-2">
+                                                                    <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Compression Mode</label>
+                                                                    <div className="flex items-center gap-1 bg-primary/10 p-1 rounded-lg">
+                                                                        <button
+                                                                            onClick={() => setPdfCompressionMode('easy')}
+                                                                            className={`text-xs font-bold px-3 py-1.5 rounded-md transition-colors ${pdfCompressionMode === 'easy' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-primary hover:bg-primary/20'}`}
+                                                                        >
+                                                                            Easy
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={() => setPdfCompressionMode('manual')}
+                                                                            className={`text-xs font-bold px-3 py-1.5 rounded-md transition-colors ${pdfCompressionMode === 'manual' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-primary hover:bg-primary/20'}`}
+                                                                        >
+                                                                            Manual
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={() => setPdfCompressionMode('target')}
+                                                                            className={`text-xs font-bold px-3 py-1.5 rounded-md transition-colors ${pdfCompressionMode === 'target' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-primary hover:bg-primary/20'}`}
+                                                                        >
+                                                                            Target Size
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+
+                                                                {pdfCompressionMode === 'easy' && (
+                                                                    <div className="grid grid-cols-1 gap-3">
+                                                                        {[
+                                                                            { id: 'extreme', label: 'Extreme', desc: 'Low quality, high compression', mult: 0.15 },
+                                                                            { id: 'recommended', label: 'Recommended', desc: 'Good quality, good compression', mult: 0.45 },
+                                                                            { id: 'basic', label: 'Basic', desc: 'High quality, text focused', mult: 0.85 }
+                                                                        ].map((mode) => {
+                                                                            const totalSize = files.reduce((acc, f) => acc + f.size, 0);
+                                                                            let estSizeStr = null;
+                                                                            if (totalSize > 0) {
+                                                                                const estBytes = totalSize * mode.mult;
+                                                                                estSizeStr = estBytes > 1024 * 1024
+                                                                                    ? `~${(estBytes / 1024 / 1024).toFixed(1)} MB`
+                                                                                    : `~${(estBytes / 1024).toFixed(0)} KB`;
+                                                                            }
+                                                                            return (
+                                                                                <button
+                                                                                    key={mode.id}
+                                                                                    onClick={() => setCompressionLevel(mode.id)}
+                                                                                    className={`relative text-left p-4 rounded-xl border transition-all ${compressionLevel === mode.id
+                                                                                        ? 'border-primary bg-primary/5 ring-1 ring-primary shadow-sm'
+                                                                                        : 'border-border hover:border-primary/50 hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm'
+                                                                                        }`}
+                                                                                >
+                                                                                    <div className={`font-bold text-sm mb-1 ${compressionLevel === mode.id ? 'text-primary' : 'text-foreground'}`}>{mode.label}</div>
+                                                                                    {estSizeStr && <div className="text-[10px] font-mono font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded w-fit mb-1.5">{estSizeStr}</div>}
+                                                                                    <div className="text-xs text-muted-foreground leading-snug">{mode.desc}</div>
+                                                                                </button>
+                                                                            );
+                                                                        })}
+                                                                    </div>
+                                                                )}
+
+                                                                {pdfCompressionMode === 'manual' && (
+                                                                    <div className="space-y-6 p-5 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-border">
+                                                                        <div>
+                                                                            <div className="flex justify-between mb-3">
+                                                                                <label className="text-sm font-bold text-foreground">Image Quality</label>
+                                                                                <span className="text-sm font-mono text-primary font-bold bg-primary/10 px-2 py-0.5 rounded-md">{pdfQuality}%</span>
+                                                                            </div>
+                                                                            <RangeSlider
+                                                                                value={pdfQuality}
+                                                                                min={10}
+                                                                                max={100}
+                                                                                step={5}
+                                                                                onChange={setPdfQuality}
+                                                                            />
+                                                                        </div>
+                                                                        <div>
+                                                                            <div className="flex justify-between mb-3">
+                                                                                <label className="text-sm font-bold text-foreground">Maximum DPI</label>
+                                                                                <span className="text-sm font-mono text-primary font-bold bg-primary/10 px-2 py-0.5 rounded-md">{pdfDpi} DPI</span>
+                                                                            </div>
+                                                                            <RangeSlider
+                                                                                value={pdfDpi}
+                                                                                min={72}
+                                                                                max={600}
+                                                                                step={20}
+                                                                                onChange={setPdfDpi}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+
+                                                                {pdfCompressionMode === 'target' && (
+                                                                    <div className="space-y-6 p-5 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-border">
+                                                                        <div>
+                                                                            <label className="block text-sm font-bold text-foreground mb-3">Target Size (KB)</label>
+                                                                            <input
+                                                                                type="number"
+                                                                                min={1}
+                                                                                value={pdfTargetSizeKB || ""}
+                                                                                onChange={(e) => setPdfTargetSizeKB(parseInt(e.target.value) || 0)}
+                                                                                placeholder="e.g. 100"
+                                                                                className="w-full rounded-xl border border-border bg-white dark:bg-black p-3 focus:ring-2 focus:ring-primary outline-none text-foreground font-semibold"
+                                                                            />
+                                                                            <p className="text-xs text-muted-foreground mt-3 leading-relaxed">We will aggressively iterate down image quality and DPI inside the PDF to meet this target size.</p>
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        )}
+
+                                                        {showFormatSelector && (
+                                                            <div className="space-y-3">
+                                                                <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Target Format</label>
+                                                                <div className="relative">
+                                                                    <FormatSelector
+                                                                        value={targetFormat}
+                                                                        onChange={setTargetFormat}
+                                                                        options={tool.id === "convert-audio" ? AUDIO_CONVERTER_FORMATS : IMAGE_CONVERTER_FORMATS}
+                                                                        theme="light"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        )}
+
+                                                        {tool.id === "convert-image" && (
+                                                            <div className="space-y-3">
+                                                                <div className="flex justify-between items-center mb-1">
+                                                                    <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Quality</label>
+                                                                    <span className="text-sm font-mono text-primary font-bold bg-primary/10 px-2 py-0.5 rounded-md">{quality}%</span>
+                                                                </div>
+                                                                <RangeSlider
+                                                                    value={quality}
+                                                                    min={1}
+                                                                    max={100}
+                                                                    onChange={setQuality}
                                                                 />
                                                             </div>
-                                                        </div>
-                                                    )}
-
-                                                    {tool.id === "convert-image" && (
-                                                        <div className="space-y-3">
-                                                            <div className="flex justify-between items-center mb-1">
-                                                                <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Quality</label>
-                                                                <span className="text-sm font-mono text-primary font-bold bg-primary/10 px-2 py-0.5 rounded-md">{quality}%</span>
-                                                            </div>
-                                                            <RangeSlider
-                                                                value={quality}
-                                                                min={1}
-                                                                max={100}
-                                                                onChange={setQuality}
-                                                            />
-                                                        </div>
-                                                    )}
+                                                        )}
+                                                    </div>
+                                                    <AIAssistant
+                                                        tool={tool}
+                                                        files={files}
+                                                        currentFormat={targetFormat}
+                                                        compressionLevel={compressionLevel}
+                                                        quality={quality}
+                                                        onApply={handleAIRecommendation}
+                                                    />
                                                 </div>
-                                                <AIAssistant
-                                                    tool={tool}
-                                                    files={files}
-                                                    currentFormat={targetFormat}
-                                                    compressionLevel={compressionLevel}
-                                                    quality={quality}
-                                                    onApply={handleAIRecommendation}
-                                                />
-                                            </div>
 
-                                            {/* Sticky Bottom Done Button for Thumb Access */}
-                                            <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-background via-background to-transparent pt-12 animate-in fade-in slide-in-from-bottom-8 duration-500 delay-150">
-                                                <button
-                                                    onClick={() => setSettingsExpanded(false)}
-                                                    className="w-full py-4 rounded-2xl bg-primary text-primary-foreground text-base font-extrabold transition-all hover:bg-primary/90 active:scale-[0.98] shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-primary/25 flex items-center justify-center gap-2"
-                                                >
-                                                    Apply Settings
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-5 h-5">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </>
-                                )}{/* End mobile settings overlay */}
+                                                {/* Sticky Bottom Done Button for Thumb Access */}
+                                                <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-background via-background to-transparent pt-12 animate-in fade-in slide-in-from-bottom-8 duration-500 delay-150">
+                                                    <button
+                                                        onClick={() => setSettingsExpanded(false)}
+                                                        className="w-full py-4 rounded-2xl bg-primary text-white text-sm sm:text-base font-black uppercase tracking-wider transition-all border-[3px] border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:scale-95 active:shadow-none flex items-center justify-center gap-2"
+                                                    >
+                                                        Apply Settings
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </m.div>
+                                        </>
+                                    )}
+                                </AnimatePresence>
+                                {/* End mobile settings overlay */}
 
                                 {/* Desktop Two-Column Layout: Files LEFT, Options RIGHT */}
                                 {files.length > 0 && (
@@ -1426,18 +1486,18 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                             {/* Mobile: Settings overlay trigger — above files */}
                                             <button
                                                 onClick={() => setSettingsExpanded(true)}
-                                                className="lg:hidden group/settings flex items-center justify-between w-full px-5 py-4 bg-[#f4f4f5] dark:bg-slate-800 border-[3px] border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none rounded-2xl text-[15px] font-black uppercase tracking-wider text-slate-800 dark:text-slate-200 transition-all duration-200 ease-out"
+                                                className="lg:hidden group/settings flex items-center justify-between w-full px-4 py-3 sm:px-5 sm:py-4 bg-white dark:bg-slate-800 border-[3px] border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none active:scale-95 rounded-[1.25rem] text-[13px] sm:text-[15px] font-black uppercase tracking-wider text-slate-800 dark:text-slate-200 transition-all duration-200 ease-out"
                                             >
-                                                <span className="flex items-center gap-3 text-primary">
-                                                    <div className="bg-primary/10 p-2 rounded-xl transition-transform duration-200 group-active/settings:scale-90 group-active/settings:rotate-45">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
+                                                <span className="flex items-center gap-2.5 sm:gap-3 text-primary">
+                                                    <div className="bg-primary/10 p-1.5 sm:p-2 rounded-xl transition-transform duration-200 group-active/settings:scale-90 group-active/settings:rotate-45 border-2 border-primary/20">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5">
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                                         </svg>
                                                     </div>
-                                                    Configure Tool Settings
+                                                    Settings
                                                 </span>
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5 text-primary/50 mr-1 transition-transform duration-200 group-active/settings:translate-x-1">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5 text-slate-900 dark:text-slate-300 mr-0.5 transition-transform duration-200 group-hover/settings:translate-x-1 group-active/settings:scale-95">
                                                     <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                                                 </svg>
                                             </button>
@@ -1682,59 +1742,6 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                         </div>
                                                     )}
 
-                                                    {tool.id === "compress-pdf" && (
-                                                        <div className="space-y-4">
-                                                            <div className="flex items-center justify-between">
-                                                                <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Compression</label>
-                                                                <button
-                                                                    onClick={() => setUseManualCompression(!useManualCompression)}
-                                                                    className="text-xs font-black uppercase tracking-wider text-primary bg-primary/10 px-3 py-1.5 rounded-full border-2 border-primary/30 shadow-[2px_2px_0px_0px_rgba(15,23,42,0.1)] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.1)] active:translate-y-0 active:shadow-none transition-all"
-                                                                >
-                                                                    {useManualCompression ? "Easy" : "Manual"}
-                                                                </button>
-                                                            </div>
-
-                                                            {!useManualCompression ? (
-                                                                <div className="flex flex-col gap-2">
-                                                                    {[
-                                                                        { id: 'extreme', label: 'Extreme', desc: 'Max compression' },
-                                                                        { id: 'recommended', label: 'Recommended', desc: 'Balanced' },
-                                                                        { id: 'basic', label: 'Basic', desc: 'High quality' }
-                                                                    ].map((mode) => (
-                                                                        <button
-                                                                            key={mode.id}
-                                                                            onClick={() => setCompressionLevel(mode.id)}
-                                                                            className={`text-left px-4 py-3 rounded-xl border text-sm transition-all ${compressionLevel === mode.id
-                                                                                ? 'border-primary bg-primary/5 ring-1 ring-primary'
-                                                                                : 'border-border hover:border-primary/50 hover:bg-slate-50 dark:hover:bg-slate-800'
-                                                                                }`}
-                                                                        >
-                                                                            <div className={`font-bold ${compressionLevel === mode.id ? 'text-primary' : 'text-foreground'}`}>{mode.label}</div>
-                                                                            <div className="text-xs text-muted-foreground">{mode.desc}</div>
-                                                                        </button>
-                                                                    ))}
-                                                                </div>
-                                                            ) : (
-                                                                <div className="space-y-4 p-3 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-border">
-                                                                    <div>
-                                                                        <div className="flex justify-between mb-2">
-                                                                            <label className="text-xs font-bold text-foreground">Quality</label>
-                                                                            <span className="text-xs font-mono text-primary font-bold">{pdfQuality}%</span>
-                                                                        </div>
-                                                                        <RangeSlider value={pdfQuality} min={10} max={100} step={5} onChange={setPdfQuality} />
-                                                                    </div>
-                                                                    <div>
-                                                                        <div className="flex justify-between mb-2">
-                                                                            <label className="text-xs font-bold text-foreground">Max DPI</label>
-                                                                            <span className="text-xs font-mono text-primary font-bold">{pdfDpi}</span>
-                                                                        </div>
-                                                                        <RangeSlider value={pdfDpi} min={72} max={600} step={20} onChange={setPdfDpi} />
-                                                                    </div>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    )}
-
                                                     {tool.id === "split-pdf" && (
                                                         <div className="space-y-5">
                                                             {pdfPageCount > 0 && (
@@ -1834,6 +1841,115 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                                         </div>
                                                                         <span className="text-xs font-bold text-foreground group-hover:text-primary transition-colors">Allow compression</span>
                                                                     </label>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )}
+
+                                                    {tool.id === "compress-pdf" && (
+                                                        <div className="space-y-6">
+                                                            <div className="space-y-3">
+                                                                <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Compression Mode</label>
+                                                                <div className="flex gap-2">
+                                                                    <button
+                                                                        onClick={() => setPdfCompressionMode('easy')}
+                                                                        className={`flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-wider border-[2px] transition-all duration-200 ${pdfCompressionMode === 'easy' ? `${tool.theme.bgLight} border-slate-900 ${tool.theme.text} shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] -translate-y-0.5` : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 text-muted-foreground hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'}`}
+                                                                    >
+                                                                        Easy
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => setPdfCompressionMode('manual')}
+                                                                        className={`flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-wider border-[2px] transition-all duration-200 ${pdfCompressionMode === 'manual' ? `${tool.theme.bgLight} border-slate-900 ${tool.theme.text} shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] -translate-y-0.5` : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 text-muted-foreground hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'}`}
+                                                                    >
+                                                                        Advanced
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => setPdfCompressionMode('target')}
+                                                                        className={`flex-1 py-3 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider border-[2px] transition-all duration-200 ${pdfCompressionMode === 'target' ? `${tool.theme.bgLight} border-slate-900 ${tool.theme.text} shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] -translate-y-0.5` : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 text-muted-foreground hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'}`}
+                                                                    >
+                                                                        Target Size
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+
+                                                            {pdfCompressionMode === 'easy' && (
+                                                                <div className="space-y-3">
+                                                                    {[
+                                                                        { id: 'extreme', label: 'Extreme', desc: 'Low quality, high compression', mult: 0.15 },
+                                                                        { id: 'recommended', label: 'Recommended', desc: 'Good quality, good compression', mult: 0.45 },
+                                                                        { id: 'basic', label: 'Basic', desc: 'High quality, text focused', mult: 0.85 }
+                                                                    ].map((mode) => {
+                                                                        const totalSize = files.reduce((acc, f) => acc + f.size, 0);
+                                                                        let estSizeStr = null;
+                                                                        if (totalSize > 0) {
+                                                                            const estBytes = totalSize * mode.mult;
+                                                                            estSizeStr = estBytes > 1024 * 1024
+                                                                                ? `~${(estBytes / 1024 / 1024).toFixed(1)} MB`
+                                                                                : `~${(estBytes / 1024).toFixed(0)} KB`;
+                                                                        }
+                                                                        return (
+                                                                            <button
+                                                                                key={mode.id}
+                                                                                onClick={() => setCompressionLevel(mode.id)}
+                                                                                className={`w-full text-left py-4 px-4 rounded-xl border-[2px] transition-all duration-200 flex flex-col gap-1 ${compressionLevel === mode.id
+                                                                                    ? `${tool.theme.bgLight} border-slate-900 ${tool.theme.text} shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] -translate-y-0.5`
+                                                                                    : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'
+                                                                                    }`}
+                                                                            >
+                                                                                <div className="flex items-center justify-between w-full">
+                                                                                    <span className="font-black uppercase tracking-wider text-sm">{mode.label}</span>
+                                                                                    {estSizeStr && <span className="font-mono font-bold text-[10px] bg-white/50 dark:bg-black/20 px-2 py-0.5 rounded-md border border-slate-900/10 dark:border-white/10">{estSizeStr}</span>}
+                                                                                </div>
+                                                                                <span className="text-xs font-semibold opacity-80">{mode.desc}</span>
+                                                                            </button>
+                                                                        );
+                                                                    })}
+                                                                </div>
+                                                            )}
+
+                                                            {pdfCompressionMode === 'manual' && (
+                                                                <div className="space-y-6">
+                                                                    <div className="space-y-3">
+                                                                        <div className="flex justify-between items-center">
+                                                                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Image Quality</label>
+                                                                            <span className="text-sm font-mono font-black">{pdfQuality}%</span>
+                                                                        </div>
+                                                                        <RangeSlider
+                                                                            value={pdfQuality}
+                                                                            min={10}
+                                                                            max={100}
+                                                                            step={5}
+                                                                            onChange={setPdfQuality}
+                                                                        />
+                                                                    </div>
+                                                                    <div className="space-y-3">
+                                                                        <div className="flex justify-between items-center">
+                                                                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Maximum DPI</label>
+                                                                            <span className="text-sm font-mono font-black">{pdfDpi} DPI</span>
+                                                                        </div>
+                                                                        <RangeSlider
+                                                                            value={pdfDpi}
+                                                                            min={72}
+                                                                            max={600}
+                                                                            step={20}
+                                                                            onChange={setPdfDpi}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                            )}
+
+                                                            {pdfCompressionMode === 'target' && (
+                                                                <div className="space-y-4">
+                                                                    <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wider mb-2">Target Size (KB)</label>
+                                                                    <input
+                                                                        type="number"
+                                                                        min={1}
+                                                                        value={pdfTargetSizeKB || ""}
+                                                                        onChange={(e) => setPdfTargetSizeKB(parseInt(e.target.value) || 0)}
+                                                                        placeholder="e.g. 100"
+                                                                        className="w-full px-4 py-3 rounded-xl border-[2px] border-slate-900 dark:border-slate-700 bg-white dark:bg-slate-800 text-foreground font-black text-lg focus:outline-none shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] transition-all placeholder:font-semibold placeholder:text-slate-400"
+                                                                    />
+                                                                    <p className="text-xs font-medium text-muted-foreground leading-relaxed">Aggressively iterate down image quality and DPI inside the PDF to meet this target size.</p>
                                                                 </div>
                                                             )}
                                                         </div>

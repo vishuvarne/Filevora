@@ -684,7 +684,7 @@ async function compressWithStage0(file, jobId) {
 // ============================================================================
 // HYBRID COMPRESSION (High-End Devices)
 // ============================================================================
-async function compressWithHybrid(file, level, quality, dpi, useManual, jobId) {
+async function compressWithHybrid(file, level, quality, dpi, useManual, jobId, compressionMode, targetSizeKB) {
     const startTime = performance.now();
 
     // Higher Quality Calibrated Presets
@@ -696,167 +696,199 @@ async function compressWithHybrid(file, level, quality, dpi, useManual, jobId) {
         'basic': { dpi: 220, quality: 0.9 }
     };
 
-    const settings = useManual
-        ? { dpi: dpi || 150, quality: (quality || 85) / 100 }
-        : (presets[level] || presets.balanced);
+    let baseDpi = 150;
+    let baseQuality = 0.75;
+
+    if (compressionMode === 'target') {
+        baseDpi = 150;
+        baseQuality = 0.8;
+    } else if (useManual || compressionMode === 'manual') {
+        baseDpi = dpi || 150;
+        baseQuality = (quality || 85) / 100;
+    } else {
+        const st = presets[level] || presets.balanced;
+        baseDpi = st.dpi;
+        baseQuality = st.quality;
+    }
 
     console.log('[Hybrid] Starting deep compression:', {
         level,
-        targetDPI: settings.dpi,
-        quality: settings.quality
+        targetDPI: baseDpi,
+        quality: baseQuality,
+        compressionMode,
+        targetSizeKB
     });
 
-    const pdfDoc = await PDFDocument.load(file, { ignoreEncryption: true });
-    const pages = pdfDoc.getPages();
-    const totalPages = pages.length;
-    let imagesProcessed = 0;
-    let imagesCompressedCount = 0;
+    const targetBytes = targetSizeKB ? targetSizeKB * 1024 : null;
+    const maxIterations = compressionMode === 'target' ? 4 : 1;
+    let bestResult = null;
 
-    // Map to track and deduplicate compressed images
-    const originalToNewRef = new Map();
+    let currentDpi = baseDpi;
+    let currentQuality = baseQuality;
 
-    for (let i = 0; i < totalPages; i++) {
-        const page = pages[i];
+    for (let iter = 0; iter < maxIterations; iter++) {
+        const pdfDoc = await PDFDocument.load(file, { ignoreEncryption: true });
+        const pages = pdfDoc.getPages();
+        const totalPages = pages.length;
+        let imagesProcessed = 0;
+        let imagesCompressedCount = 0;
 
-        // Progress update
-        self.postMessage({
-            type: 'progress',
-            jobId,
-            percent: Math.round((i / totalPages) * 100),
-            message: `Processing page ${i + 1}/${totalPages}...`
-        });
+        // Map to track and deduplicate compressed images
+        const originalToNewRef = new Map();
 
-        const resources = pdfDoc.context.lookup(page.node.Resources());
-        if (!resources || !(resources instanceof PDFDict)) continue;
+        for (let i = 0; i < totalPages; i++) {
+            const page = pages[i];
 
-        const xObjects = pdfDoc.context.lookup(resources.get(PDFName.of('XObject')));
-        if (!(xObjects instanceof PDFDict)) continue;
+            // Progress update
+            self.postMessage({
+                type: 'progress',
+                jobId,
+                percent: Math.round(((iter * totalPages + i) / (maxIterations * totalPages)) * 100),
+                message: compressionMode === 'target'
+                    ? `Iterative compression round ${iter + 1}/${maxIterations} - page ${i + 1}/${totalPages}...`
+                    : `Processing page ${i + 1}/${totalPages}...`
+            });
 
-        const xObjectEntries = xObjects.entries();
-        for (const [name, xObjectRaw] of xObjectEntries) {
-            const xObject = pdfDoc.context.lookup(xObjectRaw);
-            const ref = pdfDoc.context.getObjectRef(xObject);
-            if (!ref) continue;
+            const resources = pdfDoc.context.lookup(page.node.Resources());
+            if (!resources || !(resources instanceof PDFDict)) continue;
 
-            const refHash = ref.toString();
-            imagesProcessed++;
+            const xObjects = pdfDoc.context.lookup(resources.get(PDFName.of('XObject')));
+            if (!(xObjects instanceof PDFDict)) continue;
 
-            // If already processed this shared image, reuse the new reference
-            if (originalToNewRef.has(refHash)) {
-                xObjects.set(name, originalToNewRef.get(refHash));
-                continue;
-            }
+            const xObjectEntries = xObjects.entries();
+            for (const [name, xObjectRaw] of xObjectEntries) {
+                const xObject = pdfDoc.context.lookup(xObjectRaw);
+                const ref = pdfDoc.context.getObjectRef(xObject);
+                if (!ref) continue;
 
-            if (xObject instanceof PDFStream) {
-                const dict = xObject.dict;
-                const subtype = dict.get(PDFName.of('Subtype'));
+                const refHash = ref.toString();
+                imagesProcessed++;
 
-                if (subtype === PDFName.of('Image')) {
-                    const filter = pdfDoc.context.lookup(dict.get(PDFName.of('Filter')));
-                    const isJpg = filter === PDFName.of('DCTDecode') ||
-                        filter === PDFName.of('DCT') ||
-                        (Array.isArray(filter) && (filter.includes(PDFName.of('DCTDecode')) || filter.includes(PDFName.of('DCT'))));
+                // If already processed this shared image, reuse the new reference
+                if (originalToNewRef.has(refHash)) {
+                    xObjects.set(name, originalToNewRef.get(refHash));
+                    continue;
+                }
 
-                    const width = dict.get(PDFName.of('Width'))?.numberValue || 0;
-                    const height = dict.get(PDFName.of('Height'))?.numberValue || 0;
-                    const targetLongestSide = settings.dpi * 11;
+                if (xObject instanceof PDFStream) {
+                    const dict = xObject.dict;
+                    const subtype = dict.get(PDFName.of('Subtype'));
 
-                    if (isJpg || width > targetLongestSide || height > targetLongestSide) {
-                        let bitmap = null;
-                        try {
-                            const imgBytes = xObject.contents;
-                            const blob = new Blob([imgBytes]);
-                            bitmap = await createImageBitmap(blob);
+                    if (subtype === PDFName.of('Image')) {
+                        const filter = pdfDoc.context.lookup(dict.get(PDFName.of('Filter')));
+                        const isJpg = filter === PDFName.of('DCTDecode') ||
+                            filter === PDFName.of('DCT') ||
+                            (Array.isArray(filter) && (filter.includes(PDFName.of('DCTDecode')) || filter.includes(PDFName.of('DCT'))));
 
-                            const scale = Math.min(1, targetLongestSide / Math.max(bitmap.width, bitmap.height));
+                        const width = dict.get(PDFName.of('Width'))?.numberValue || 0;
+                        const height = dict.get(PDFName.of('Height'))?.numberValue || 0;
+                        const targetLongestSide = currentDpi * 11;
 
-                            if (scale < 0.95 || settings.quality < 0.6) {
-                                const newWidth = Math.round(bitmap.width * scale);
-                                const newHeight = Math.round(bitmap.height * scale);
+                        if (isJpg || width > targetLongestSide || height > targetLongestSide) {
+                            let bitmap = null;
+                            try {
+                                const imgBytes = xObject.contents;
+                                const blob = new Blob([imgBytes]);
+                                bitmap = await createImageBitmap(blob);
 
-                                const canvas = new OffscreenCanvas(newWidth, newHeight);
-                                const ctx = canvas.getContext('2d');
-                                ctx.drawImage(bitmap, 0, 0, newWidth, newHeight);
+                                const scale = Math.min(1, targetLongestSide / Math.max(bitmap.width, bitmap.height));
 
-                                const compressedBlob = await canvas.convertToBlob({
-                                    type: 'image/jpeg',
-                                    quality: settings.quality
-                                });
+                                if (scale < 0.95 || currentQuality < 0.6) {
+                                    const newWidth = Math.max(1, Math.round(bitmap.width * scale));
+                                    const newHeight = Math.max(1, Math.round(bitmap.height * scale));
 
-                                const newBytes = new Uint8Array(await compressedBlob.arrayBuffer());
+                                    const canvas = new OffscreenCanvas(newWidth, newHeight);
+                                    const ctx = canvas.getContext('2d');
+                                    ctx.drawImage(bitmap, 0, 0, newWidth, newHeight);
 
-                                // Extreme mode should always prioritize size even for small gains
-                                // Other modes should require at least 5% reduction to justify quality loss
-                                const sizeThreshold = level === 'extreme' ? 0.99 : 0.95;
+                                    const compressedBlob = await canvas.convertToBlob({
+                                        type: 'image/jpeg',
+                                        quality: currentQuality
+                                    });
 
-                                if (newBytes.length < imgBytes.length * sizeThreshold) {
-                                    const embeddedImage = await pdfDoc.embedJpg(newBytes);
-                                    originalToNewRef.set(refHash, embeddedImage.ref);
-                                    xObjects.set(name, embeddedImage.ref);
-                                    imagesCompressedCount++;
+                                    const newBytes = new Uint8Array(await compressedBlob.arrayBuffer());
+
+                                    // Extreme mode should always prioritize size even for small gains
+                                    // Other modes should require at least 5% reduction to justify quality loss
+                                    const sizeThreshold = (level === 'extreme' || compressionMode === 'target') ? 0.99 : 0.95;
+
+                                    if (newBytes.length < imgBytes.length * sizeThreshold) {
+                                        const embeddedImage = await pdfDoc.embedJpg(newBytes);
+                                        originalToNewRef.set(refHash, embeddedImage.ref);
+                                        xObjects.set(name, embeddedImage.ref);
+                                        imagesCompressedCount++;
+                                    } else {
+                                        originalToNewRef.set(refHash, ref);
+                                    }
                                 } else {
                                     originalToNewRef.set(refHash, ref);
                                 }
-                            } else {
+                            } catch (err) {
+                                console.warn('[Hybrid] Image compression skipped:', err.message);
                                 originalToNewRef.set(refHash, ref);
+                            } finally {
+                                if (bitmap) bitmap.close();
                             }
-                        } catch (err) {
-                            console.warn('[Hybrid] Image compression skipped:', err.message);
-                            originalToNewRef.set(refHash, ref);
-                        } finally {
-                            if (bitmap) bitmap.close();
                         }
                     }
                 }
             }
         }
+
+        console.log(`[Hybrid] Round ${iter + 1}: Processed ${imagesProcessed} objects, compressed ${imagesCompressedCount}`);
+
+        // Clean save strategy to remove de-referenced objects
+        const cleanPdf = await PDFDocument.create();
+        const copiedPages = await cleanPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+        copiedPages.forEach(p => cleanPdf.addPage(p));
+
+        const compressedPdfBytes = await cleanPdf.save({
+            useObjectStreams: true,
+            addDefaultPage: false,
+            updateFieldAppearances: false
+        });
+
+        const endTime = performance.now();
+        const processingTime = endTime - startTime;
+
+        const originalSize = file.byteLength;
+        const compressedSize = compressedPdfBytes.byteLength;
+        const reduction = ((originalSize - compressedSize) / originalSize) * 100;
+
+        bestResult = {
+            buffer: compressedPdfBytes,
+            filename: `compressed_${Date.now()}.pdf`,
+            original_size: originalSize,
+            compressed_size: compressedSize,
+            reduction_percent: Math.max(0, Math.round(reduction)),
+            engine_used: 'hybrid',
+            processing_time_ms: Math.round(processingTime),
+            images_processed: imagesProcessed,
+            images_compressed: imagesCompressedCount
+        };
+
+        if (compressionMode === 'target') {
+            if (compressedSize <= targetBytes) {
+                console.log(`[Hybrid] Target size ${targetSizeKB}KB met in round ${iter + 1}. Output size: ${(compressedSize / 1024).toFixed(1)}KB`);
+                break;
+            }
+            if (iter < maxIterations - 1) {
+                // Aggressively drop settings for next iteration
+                currentDpi = Math.max(30, Math.floor(currentDpi * 0.6)); // Drop DPI drastically
+                currentQuality = Math.max(0.1, currentQuality - 0.25); // Drop Quality drastically
+                console.log(`[Hybrid] Size ${compressedSize} exceeds target ${targetBytes}, reducing DPI to ${currentDpi} and Quality to ${currentQuality}`);
+            }
+        }
     }
 
-    console.log(`[Hybrid] Processed ${imagesProcessed} objects, compressed ${imagesCompressedCount}`);
-
-    // Clean save strategy to remove de-referenced objects
-    const cleanPdf = await PDFDocument.create();
-    const copiedPages = await cleanPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
-    copiedPages.forEach(p => cleanPdf.addPage(p));
-
-    const compressedPdfBytes = await cleanPdf.save({
-        useObjectStreams: true,
-        addDefaultPage: false,
-        updateFieldAppearances: false
-    });
-
-    const endTime = performance.now();
-    const processingTime = endTime - startTime;
-
-    const originalSize = file.byteLength;
-    const compressedSize = compressedPdfBytes.byteLength;
-    const reduction = ((originalSize - compressedSize) / originalSize) * 100;
-
-    console.log('[Hybrid] Compression complete:', {
-        originalSize: `${(originalSize / 1024 / 1024).toFixed(2)} MB`,
-        compressedSize: `${(compressedSize / 1024 / 1024).toFixed(2)} MB`,
-        reduction: `${reduction.toFixed(1)}%`,
-        processingTime: `${processingTime.toFixed(0)}ms`
-    });
-
-    return {
-        buffer: compressedPdfBytes,
-        filename: `compressed_${Date.now()}.pdf`,
-        original_size: originalSize,
-        compressed_size: compressedSize,
-        reduction_percent: Math.max(0, Math.round(reduction)),
-        engine_used: 'hybrid',
-        processing_time_ms: Math.round(processingTime),
-        images_processed: imagesProcessed,
-        images_compressed: imagesCompressedCount
-    };
+    return bestResult;
 }
 
 // ============================================================================
 // COMPRESSION ROUTER (Device-Adaptive)
 // ============================================================================
 async function compressPDF(payload) {
-    let { file, level, quality, dpi, useManual, jobId } = payload;
+    let { file, level, quality, dpi, useManual, jobId, compressionMode, targetSizeKB } = payload;
     file = await ensureBuffer(file);
 
     // Detect device class
@@ -874,7 +906,7 @@ async function compressPDF(payload) {
         return await compressWithStage0(file, jobId);
     } else {
         // High-end devices: Hybrid deep compression
-        return await compressWithHybrid(file, level, quality, dpi, useManual, jobId);
+        return await compressWithHybrid(file, level, quality, dpi, useManual, jobId, compressionMode, targetSizeKB);
     }
 }
 

@@ -160,7 +160,7 @@ export default function Navbar() {
                         >
                             F
                         </div>
-                        <span className="text-xl font-bold tracking-tight text-foreground transition-all">
+                        <span className="text-xl font-bold tracking-tight text-foreground">
                             File<span className="text-primary">Vora</span>
                         </span>
                     </Link>
