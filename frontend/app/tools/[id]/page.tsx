@@ -62,10 +62,6 @@ export default async function ToolPage({ params }: Props) {
         notFound();
     }
 
-    if (tool.endpoint === "/coming-soon") {
-        redirect("/coming-soon");
-    }
-
     return (
         <main className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/20 pb-20 pt-4">
             <StructuredData tool={tool} />
@@ -77,7 +73,6 @@ export default async function ToolPage({ params }: Props) {
 // Generate static params for faster at-edge delivery and SEO
 export async function generateStaticParams() {
     return TOOLS
-        .filter(tool => tool.endpoint !== "/coming-soon")
         .map((tool) => ({
             id: tool.id,
         }));

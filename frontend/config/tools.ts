@@ -209,7 +209,6 @@ export const TOOLS: ToolDef[] = [
         seoTitle: "Private PDF Converter – Client-Side Processing | ConvertLocally",
         seoDescription: "Convert PDFs locally in your browser without data uploads. Experience offline-level security online for free."
     },
-    /* Temporarily disabled: Heavy PDF to Office tools
     {
         id: "pdf-to-word",
         name: "PDF to Word",
@@ -217,7 +216,7 @@ export const TOOLS: ToolDef[] = [
         category: "PDF & Documents",
         iconPath: "M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z",
         theme: THEMES.blue,
-        endpoint: "/process/pdf-to-word",
+        endpoint: "/coming-soon",
         acceptedTypes: ".pdf,application/pdf",
         multiple: false,
         seoTitle: "PDF to Word Converter – Free & Fast | ConvertLocally",
@@ -230,14 +229,12 @@ export const TOOLS: ToolDef[] = [
         category: "PDF & Documents",
         iconPath: "M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z",
         theme: THEMES.orange,
-        endpoint: "/process/pdf-to-ppt",
+        endpoint: "/coming-soon",
         acceptedTypes: ".pdf,application/pdf",
         multiple: false,
         seoTitle: "PDF to PowerPoint Converter Online – Free | ConvertLocally",
         seoDescription: "Convert PDF files to editable PowerPoint presentations online. Free, secure, and preserves layout with ConvertLocally."
     },
-    */
-    /* Temporarily disabled: Office tools
     {
         id: "word-to-pdf",
         name: "Word to PDF",
@@ -245,7 +242,7 @@ export const TOOLS: ToolDef[] = [
         category: "PDF & Documents",
         iconPath: "M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z",
         theme: THEMES.blue,
-        endpoint: "/process/docx-to-pdf",
+        endpoint: "/coming-soon",
         acceptedTypes: ".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         multiple: false,
         seoTitle: "Word to PDF Converter Online – Free | ConvertLocally",
@@ -258,7 +255,7 @@ export const TOOLS: ToolDef[] = [
         category: "PDF & Documents",
         iconPath: "M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z",
         theme: THEMES.green,
-        endpoint: "/process/xlsx-to-pdf",
+        endpoint: "/coming-soon",
         acceptedTypes: ".xlsx,.xls",
         multiple: false,
         seoTitle: "Excel to PDF Converter Online – Free | ConvertLocally",
@@ -271,13 +268,12 @@ export const TOOLS: ToolDef[] = [
         category: "PDF & Documents",
         iconPath: "M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z",
         theme: THEMES.orange,
-        endpoint: "/process/pptx-to-pdf",
+        endpoint: "/coming-soon",
         acceptedTypes: ".pptx,.ppt",
         multiple: false,
         seoTitle: "PPT to PDF Converter – Free & Fast | ConvertLocally",
         seoDescription: "Convert PowerPoint presentations to PDF online for free. Fast, secure, and high-quality conversion with ConvertLocally."
     },
-    */
     {
         id: "pdf-to-jpg",
         name: "PDF to JPG",

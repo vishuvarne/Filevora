@@ -26,9 +26,7 @@ export default function QRCodeGenerator() {
 
     return (
         <div className="bg-card rounded-3xl shadow-xl border border-border p-8 max-w-2xl mx-auto">
-            <h2 className="text-2xl font-bold text-foreground mb-6">QR Code Generator</h2>
-
-            <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <div>
                     <label className="block text-sm font-bold text-muted-foreground mb-2">Text or URL</label>
                     <textarea

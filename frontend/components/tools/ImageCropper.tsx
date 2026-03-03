@@ -149,8 +149,7 @@ export default function ImageCropper() {
 
     return (
         <div className="bg-card rounded-3xl shadow-xl border border-border p-8 max-w-5xl mx-auto">
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-foreground">Crop Image</h2>
+            <div className="flex justify-end mb-6">
                 <button
                     onClick={crop}
                     disabled={!selection || selection.w === 0}

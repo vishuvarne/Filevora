@@ -35,8 +35,6 @@ export default function ColorPicker() {
 
     return (
         <div className="bg-card rounded-3xl shadow-xl border border-border p-8 max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl font-bold text-foreground mb-8">Color Picker</h2>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 {/* Visual Picker */}
                 <div className="flex flex-col items-center gap-6">

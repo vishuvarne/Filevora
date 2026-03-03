@@ -108,7 +108,6 @@ export default function CollageMaker() {
     return (
         <div className="bg-card rounded-3xl shadow-xl border border-border p-4 md:p-8 max-w-5xl mx-auto">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                <h2 className="text-2xl font-bold text-foreground">Collage Maker</h2>
                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                     <button onClick={() => setLayout('grid')} className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-sm font-bold border ${layout === 'grid' ? 'bg-primary/10 border-primary text-primary' : 'border-border text-muted-foreground hover:bg-secondary'}`}>Grid</button>
                     <button onClick={() => setLayout('vertical')} className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-sm font-bold border ${layout === 'vertical' ? 'bg-primary/10 border-primary text-primary' : 'border-border text-muted-foreground hover:bg-secondary'}`}>Vertical</button>

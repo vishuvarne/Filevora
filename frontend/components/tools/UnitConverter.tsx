@@ -73,7 +73,7 @@ export default function UnitConverter({ initialCategory }: UnitConverterProps) {
 
     return (
         <div className="bg-card rounded-3xl shadow-xl border border-border p-8 max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-center text-foreground mb-8">{category} Converter</h2>
+            <h3 className="text-2xl font-bold text-center text-foreground mb-8">{category} Converter</h3>
 
             <div className="mb-8">
                 <label className="block text-sm font-bold text-muted-foreground mb-2">Select Converter Type</label>

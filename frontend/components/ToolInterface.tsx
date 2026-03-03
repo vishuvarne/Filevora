@@ -706,8 +706,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
         if (tool.id === "edit-pdf") {
             return (
                 <div className="flex-1 min-h-0 flex flex-col w-full mx-auto px-4 pb-16 relative isolate">
-                    {/* Header */}
-                    <div className="shrink-0 pt-1 pb-4">
+                    <div className="flex-1 min-h-0 flex flex-col pt-1 pb-4">
                         <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: tool.name }]} />
 
                         <div className="flex items-center justify-between mt-4">
@@ -723,7 +722,6 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                             </div>
                         </div>
                     </div>
-                    {/* Tool Component */}
                     <PDFEditor />
                 </div>
             );
@@ -731,10 +729,25 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
 
         return (
             <div className="max-w-4xl mx-auto px-4">
-                <Breadcrumbs items={[
-                    { label: "Home", href: "/" },
-                    { label: tool.name }
-                ]} />
+                <div className="shrink-0 pt-1 pb-4">
+                    <Breadcrumbs items={[
+                        { label: "Home", href: "/" },
+                        { label: tool.name }
+                    ]} />
+
+                    <div className="flex items-center justify-between mt-4 mb-4">
+                        <div className="flex items-center gap-4">
+                            <div className={`w-12 h-12 ${tool.theme.bgLight} rounded-2xl flex items-center justify-center shadow-sm border border-black/5 dark:border-white/5 shrink-0`}>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-6 h-6 ${tool.theme.text}`}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d={tool.iconPath} />
+                                </svg>
+                            </div>
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                                <h1 className="text-2xl font-extrabold text-foreground leading-tight">{tool.name}</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 {tool.id === "unit-converter" && <UnitConverter />}
                 {tool.id === "length-converter" && <UnitConverter initialCategory="Length" />}
@@ -992,1120 +1005,1143 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
             {/* Main Content Area - Subpages */}
             <div className="mt-2 w-full">
 
-                {/* 1. SELECTION SUBPAGE (Idle Status) */}
-                {status === "idle" && (
-                    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-500 pb-32">
-
-                        {/* Header Row */}
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-3 gap-3">
-                            <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3 w-full">
-                                <div className={`w-10 h-10 sm:w-11 sm:h-11 shrink-0 bg-white dark:bg-slate-800 rounded-xl sm:rounded-[14px] flex flex-col items-center justify-center border-[2px] sm:border-[3px] border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] sm:shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] dark:border-slate-700`}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={`w-4 h-4 sm:w-5 sm:h-5 text-red-500`}>
-                                        <path strokeLinecap="round" strokeLinejoin="round" d={tool.iconPath} />
-                                    </svg>
-                                </div>
-                                <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3 min-w-0 flex-1">
-                                    <h1 className="text-lg sm:text-2xl font-black text-foreground leading-tight tracking-tight uppercase">{tool.name}</h1>
-                                    <GhostModeBadge
-                                        mode={isGhostMode ? "local" : "cloud"}
-                                        onClick={isGhostMode ? () => setShowGhostExplainer(true) : undefined}
-                                        className="shrink-0"
-                                    />
-                                </div>
-                            </div>
+                {/* 0. COMING SOON PAGE (Only if endpoint is /coming-soon) */}
+                {tool.endpoint === "/coming-soon" ? (
+                    <div className="flex flex-col items-center justify-center py-20 px-6 text-center bg-card dark:bg-[#1A1D24] rounded-[2rem] border-2 border-dashed border-slate-300 dark:border-slate-700 shadow-sm animate-in fade-in zoom-in duration-500">
+                        <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 text-primary">
+                                <path strokeLinecap="round" strokeLinejoin="round" d={tool.iconPath} />
+                            </svg>
                         </div>
-
-                        {/* Main Interaction Area (Unified Card) */}
-                        <div
-                            className={`flex flex-col gap-6 relative min-h-[400px] ${files.length === 0 ? 'bg-card dark:bg-[#1A1D24] rounded-[2rem] p-6 sm:p-8 lg:p-10 shadow-xl border border-slate-200 dark:border-slate-800' : ''}`}
-                            onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                            onDrop={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                // Ignore internal card reorder drags
-                                if (e.dataTransfer.getData('text/plain')?.startsWith('card-reorder')) return;
-                                if (e.dataTransfer.files?.length) {
-                                    const droppedFiles = Array.from(e.dataTransfer.files);
-                                    handleFilesSelected(droppedFiles);
-                                }
-                            }}
+                        <h2 className="text-3xl font-black text-foreground mb-4 uppercase tracking-tight">{tool.name} is Coming Soon</h2>
+                        <p className="text-muted-foreground max-w-md mx-auto mb-8 text-lg leading-relaxed">
+                            We're currently perfecting our <b>Privacy-First</b> conversion for Office documents. This tool will be available very soon!
+                        </p>
+                        <button
+                            onClick={() => window.location.href = '/'}
+                            className="px-8 py-3.5 bg-primary text-primary-foreground font-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all uppercase tracking-wider"
                         >
+                            Explore Other Tools
+                        </button>
+                    </div>
+                ) : (
+                    <>
+                        {/* 1. SELECTION SUBPAGE (Idle Status) */}
+                        {status === "idle" && (
+                            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-500 pb-32">
 
-                            <div className="flex flex-col gap-8 w-full">
-                                {/* Full Dropzone — only when no files selected */}
-                                {files.length === 0 && (
-                                    <>
-                                        {/* Mobile Ad (Above Dropzone) */}
-                                        <div className="block md:hidden w-full max-w-[320px] mx-auto mb-2">
-                                            <AdSlot adSlotId="mobile-top-dropzone" format="mobile-banner" isTest={true} />
-                                        </div>
-
-                                        <Dropzone
-                                            onFilesSelected={handleFilesSelected}
-                                            acceptedTypes={tool.acceptedTypes}
-                                            multiple={tool.multiple}
-                                            label="Drag & Drop files here, or click to select"
-                                        />
-
-                                        {/* Mobile Ad (Below Dropzone) */}
-                                        <div className="block md:hidden w-full max-w-[320px] mx-auto mt-2">
-                                            <AdSlot adSlotId="mobile-bottom-dropzone" format="mobile-banner" isTest={true} />
-                                        </div>
-
-                                        <div className="flex items-center justify-center gap-2 text-[10px] sm:text-[11px] font-bold text-slate-800 dark:text-slate-200 bg-[#f4f4f5] dark:bg-slate-800 rounded-full px-4 py-2 w-fit mx-auto border-2 border-slate-900 dark:border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] dark:shadow-[2px_2px_0px_0px_rgba(30,41,59,1)]">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-green-600 dark:text-green-500 shrink-0">
-                                                <path fillRule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clipRule="evenodd" />
+                                {/* Header Row */}
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-3 gap-3">
+                                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3 w-full">
+                                        <div className={`w-10 h-10 sm:w-11 sm:h-11 shrink-0 bg-white dark:bg-slate-800 rounded-xl sm:rounded-[14px] flex flex-col items-center justify-center border-[2px] sm:border-[3px] border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] sm:shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] dark:border-slate-700`}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={`w-4 h-4 sm:w-5 sm:h-5 text-red-500`}>
+                                                <path strokeLinecap="round" strokeLinejoin="round" d={tool.iconPath} />
                                             </svg>
-                                            <span className="uppercase tracking-wide">{isGhostMode ? "Processed entirely on your device • No upload • No storage" : "SSL Encrypted • Auto-delete in 1h • Max 500MB"}</span>
                                         </div>
-                                    </>
-                                )}
-
-                                {/* Hidden file input for adding more files */}
-                                <input
-                                    type="file"
-                                    ref={addMoreInputRef}
-                                    className="hidden"
-                                    multiple={tool.multiple}
-                                    accept={tool.acceptedTypes}
-                                    onChange={handleAddMoreFiles}
-                                />
-
-                                <AnimatePresence>
-                                    {settingsExpanded && (
-                                        <>
-                                            {/* Backdrop */}
-                                            <m.div
-                                                initial={{ opacity: 0 }}
-                                                animate={{ opacity: 1 }}
-                                                exit={{ opacity: 0 }}
-                                                transition={{ duration: 0.2 }}
-                                                className="lg:hidden fixed inset-0 z-[99] bg-black/40 backdrop-blur-sm"
-                                                onClick={() => setSettingsExpanded(false)}
+                                        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                                            <h1 className="text-lg sm:text-2xl font-black text-foreground leading-tight tracking-tight uppercase">{tool.name}</h1>
+                                            <GhostModeBadge
+                                                mode={isGhostMode ? "local" : "cloud"}
+                                                onClick={isGhostMode ? () => setShowGhostExplainer(true) : undefined}
+                                                className="shrink-0"
                                             />
-                                            <m.div
-                                                initial={{ y: "100%" }}
-                                                animate={{ y: 0 }}
-                                                exit={{ y: "100%" }}
-                                                transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-                                                className="lg:hidden fixed inset-x-0 bottom-0 z-[100] flex flex-col bg-background rounded-t-[2rem] shadow-2xl max-h-[75vh] border-[3px] border-b-0 border-slate-900 dark:border-slate-700"
-                                            >
-                                                {/* Overlay Header */}
-                                                <div className="shrink-0 flex items-center justify-between px-5 py-4 border-b border-border bg-card/80 backdrop-blur-xl">
-                                                    <div className="flex items-center gap-3">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-primary">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                        </svg>
-                                                        <h2 className="text-xl font-extrabold text-foreground">Settings</h2>
-                                                    </div>
-                                                    <button
-                                                        onClick={() => setSettingsExpanded(false)}
-                                                        className="p-2 -mr-2 text-muted-foreground hover:text-foreground rounded-full transition-colors active:scale-95 bg-slate-100 dark:bg-slate-800"
-                                                        aria-label="Close"
-                                                    >
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                                        </svg>
-                                                    </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Main Interaction Area (Unified Card) */}
+                                <div
+                                    className={`flex flex-col gap-6 relative min-h-[400px] ${files.length === 0 ? 'bg-card dark:bg-[#1A1D24] rounded-[2rem] p-6 sm:p-8 lg:p-10 shadow-xl border border-slate-200 dark:border-slate-800' : ''}`}
+                                    onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                                    onDrop={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        // Ignore internal card reorder drags
+                                        if (e.dataTransfer.getData('text/plain')?.startsWith('card-reorder')) return;
+                                        if (e.dataTransfer.files?.length) {
+                                            const droppedFiles = Array.from(e.dataTransfer.files);
+                                            handleFilesSelected(droppedFiles);
+                                        }
+                                    }}
+                                >
+
+                                    <div className="flex flex-col gap-8 w-full">
+                                        {/* Full Dropzone — only when no files selected */}
+                                        {files.length === 0 && (
+                                            <>
+                                                {/* Mobile Ad (Above Dropzone) */}
+                                                <div className="block md:hidden w-full max-w-[320px] mx-auto mb-2">
+                                                    <AdSlot adSlotId="mobile-top-dropzone" format="mobile-banner" isTest={true} />
                                                 </div>
 
-                                                {/* Overlay Body — scrollable */}
-                                                <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6 pb-32">
-                                                    <div className="flex flex-col gap-6 w-full">
-                                                        {tool.id.includes("rotate") && (
-                                                            <div className="space-y-3">
-                                                                <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Rotation Angle</label>
-                                                                <div className="flex gap-2">
-                                                                    {[90, 180, 270].map(angle => (
-                                                                        <button
-                                                                            key={angle}
-                                                                            onClick={() => setRotateAngle(angle)}
-                                                                            className={`flex-1 py-3 rounded-xl text-sm font-bold border transition-all ${rotateAngle === angle
-                                                                                ? `${tool.theme.bgLight} ${tool.theme.border} ${tool.theme.text} shadow-sm scale-[1.02]`
-                                                                                : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-muted-foreground hover:scale-[1.02]'
-                                                                                }`}
-                                                                        >
-                                                                            {angle}°
-                                                                        </button>
-                                                                    ))}
-                                                                </div>
+                                                <Dropzone
+                                                    onFilesSelected={handleFilesSelected}
+                                                    acceptedTypes={tool.acceptedTypes}
+                                                    multiple={tool.multiple}
+                                                    label="Drag & Drop files here, or click to select"
+                                                />
+
+                                                {/* Mobile Ad (Below Dropzone) */}
+                                                <div className="block md:hidden w-full max-w-[320px] mx-auto mt-2">
+                                                    <AdSlot adSlotId="mobile-bottom-dropzone" format="mobile-banner" isTest={true} />
+                                                </div>
+
+                                                <div className="flex items-center justify-center gap-2 text-[10px] sm:text-[11px] font-bold text-slate-800 dark:text-slate-200 bg-[#f4f4f5] dark:bg-slate-800 rounded-full px-4 py-2 w-fit mx-auto border-2 border-slate-900 dark:border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] dark:shadow-[2px_2px_0px_0px_rgba(30,41,59,1)]">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-green-600 dark:text-green-500 shrink-0">
+                                                        <path fillRule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clipRule="evenodd" />
+                                                    </svg>
+                                                    <span className="uppercase tracking-wide">{isGhostMode ? "Processed entirely on your device • No upload • No storage" : "SSL Encrypted • Auto-delete in 1h • Max 500MB"}</span>
+                                                </div>
+                                            </>
+                                        )}
+
+                                        {/* Hidden file input for adding more files */}
+                                        <input
+                                            type="file"
+                                            ref={addMoreInputRef}
+                                            className="hidden"
+                                            multiple={tool.multiple}
+                                            accept={tool.acceptedTypes}
+                                            onChange={handleAddMoreFiles}
+                                        />
+
+                                        <AnimatePresence>
+                                            {settingsExpanded && (
+                                                <>
+                                                    {/* Backdrop */}
+                                                    <m.div
+                                                        initial={{ opacity: 0 }}
+                                                        animate={{ opacity: 1 }}
+                                                        exit={{ opacity: 0 }}
+                                                        transition={{ duration: 0.2 }}
+                                                        className="lg:hidden fixed inset-0 z-[99] bg-black/40 backdrop-blur-sm"
+                                                        onClick={() => setSettingsExpanded(false)}
+                                                    />
+                                                    <m.div
+                                                        initial={{ y: "100%" }}
+                                                        animate={{ y: 0 }}
+                                                        exit={{ y: "100%" }}
+                                                        transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+                                                        className="lg:hidden fixed inset-x-0 bottom-0 z-[100] flex flex-col bg-background rounded-t-[2rem] shadow-2xl max-h-[75vh] border-[3px] border-b-0 border-slate-900 dark:border-slate-700"
+                                                    >
+                                                        {/* Overlay Header */}
+                                                        <div className="shrink-0 flex items-center justify-between px-5 py-4 border-b border-border bg-card/80 backdrop-blur-xl">
+                                                            <div className="flex items-center gap-3">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-primary">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                </svg>
+                                                                <h2 className="text-xl font-extrabold text-foreground">Settings</h2>
                                                             </div>
-                                                        )}
+                                                            <button
+                                                                onClick={() => setSettingsExpanded(false)}
+                                                                className="p-2 -mr-2 text-muted-foreground hover:text-foreground rounded-full transition-colors active:scale-95 bg-slate-100 dark:bg-slate-800"
+                                                                aria-label="Close"
+                                                            >
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                                </svg>
+                                                            </button>
+                                                        </div>
 
-                                                        {(tool.id === 'image-to-pdf' || tool.id === 'jpg-to-pdf') && (
-                                                            <div className="space-y-6">
-                                                                {/* Page Orientation */}
-                                                                <div className="space-y-3">
-                                                                    <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Page orientation</label>
-                                                                    <div className="flex gap-3">
-                                                                        {[
-                                                                            { id: 'portrait' as const, label: 'Portrait', icon: (<svg viewBox="0 0 24 32" className="w-5 h-7" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="2" width="18" height="28" rx="2" /></svg>) },
-                                                                            { id: 'landscape' as const, label: 'Landscape', icon: (<svg viewBox="0 0 32 24" className="w-7 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="3" width="28" height="18" rx="2" /></svg>) },
-                                                                        ].map(opt => (
-                                                                            <button
-                                                                                key={opt.id}
-                                                                                onClick={() => setPdfOrientation(opt.id)}
-                                                                                className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-xl text-sm font-bold border transition-all ${pdfOrientation === opt.id
-                                                                                    ? `${tool.theme.bgLight} ${tool.theme.border} ${tool.theme.text} shadow-sm scale-[1.02]`
-                                                                                    : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-muted-foreground hover:scale-[1.02]'
-                                                                                    }`}
-                                                                            >
-                                                                                {opt.icon}
-                                                                                {opt.label}
-                                                                            </button>
-                                                                        ))}
-                                                                    </div>
-                                                                </div>
-
-                                                                {/* Page Size */}
-                                                                <div className="space-y-3">
-                                                                    <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Page size</label>
-                                                                    <select
-                                                                        value={pdfPageSize}
-                                                                        onChange={(e) => setPdfPageSize(e.target.value as 'fit' | 'a4' | 'letter')}
-                                                                        className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-foreground font-medium text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all appearance-none cursor-pointer"
-                                                                        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E")`, backgroundPosition: 'right 0.75rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.25rem' }}
-                                                                    >
-                                                                        <option value="fit">Fit (Same page size as image)</option>
-                                                                        <option value="a4">A4 (297×210 mm)</option>
-                                                                        <option value="letter">US Letter (215×279.4 mm)</option>
-                                                                    </select>
-                                                                </div>
-
-                                                                {/* Margin */}
-                                                                <div className="space-y-3">
-                                                                    <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Margin</label>
-                                                                    <div className="flex gap-3">
-                                                                        {[
-                                                                            { id: 'none' as const, label: 'No margin', icon: (<svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="2" width="20" height="20" rx="2" /><rect x="4" y="4" width="16" height="16" rx="1" fill="currentColor" opacity="0.15" /></svg>) },
-                                                                            { id: 'small' as const, label: 'Small', icon: (<svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="2" width="20" height="20" rx="2" /><rect x="6" y="6" width="12" height="12" rx="1" fill="currentColor" opacity="0.15" /></svg>) },
-                                                                            { id: 'big' as const, label: 'Big', icon: (<svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="2" width="20" height="20" rx="2" /><rect x="8" y="8" width="8" height="8" rx="1" fill="currentColor" opacity="0.15" /></svg>) },
-                                                                        ].map(opt => (
-                                                                            <button
-                                                                                key={opt.id}
-                                                                                onClick={() => setPdfMargin(opt.id)}
-                                                                                className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-xl text-sm font-bold border transition-all ${pdfMargin === opt.id
-                                                                                    ? `${tool.theme.bgLight} ${tool.theme.border} ${tool.theme.text} shadow-sm scale-[1.02]`
-                                                                                    : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-muted-foreground hover:scale-[1.02]'
-                                                                                    }`}
-                                                                            >
-                                                                                {opt.icon}
-                                                                                {opt.label}
-                                                                            </button>
-                                                                        ))}
-                                                                    </div>
-                                                                </div>
-
-                                                                {/* Merge all */}
-                                                                <label className="flex items-center gap-3 cursor-pointer group mt-2">
-                                                                    <div className={`relative w-11 h-6 rounded-full transition-colors ${mergeAll ? 'bg-primary' : 'bg-slate-300 dark:bg-slate-600'}`} onClick={() => setMergeAll(!mergeAll)}>
-                                                                        <div className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform ${mergeAll ? 'translate-x-5' : ''}`} />
-                                                                    </div>
-                                                                    <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Merge all images in one PDF</span>
-                                                                </label>
-                                                            </div>
-                                                        )}
-
-                                                        {tool.id === "split-pdf" && (
-                                                            <div className="space-y-6">
-                                                                {pdfPageCount > 0 && (
-                                                                    <div className="text-xs text-muted-foreground space-y-0.5">
-                                                                        <p>Original file size: <b>{pdfFileSize > 1024 * 1024 ? (pdfFileSize / 1024 / 1024).toFixed(2) + ' MB' : (pdfFileSize / 1024).toFixed(0) + ' KB'}</b></p>
-                                                                        <p>Total pages: <b>{pdfPageCount}</b></p>
-                                                                    </div>
-                                                                )}
-                                                                <div className="space-y-3">
-                                                                    <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Split mode</label>
-                                                                    <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
-                                                                        {(['range', 'pages', 'size'] as const).map(mode => (
-                                                                            <button key={mode} onClick={() => setSplitMode(mode)} className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all flex flex-col items-center justify-center gap-1 ${splitMode === mode ? 'bg-white dark:bg-slate-700 text-primary shadow-sm border border-primary/20' : 'text-muted-foreground hover:text-foreground'}`}>
-                                                                                {mode === 'range' && <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></svg>}
-                                                                                {mode === 'pages' && <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="8" height="10" rx="1" /><rect x="13" y="3" width="8" height="10" rx="1" /><rect x="3" y="15" width="8" height="6" rx="1" /><rect x="13" y="15" width="8" height="6" rx="1" /></svg>}
-                                                                                {mode === 'size' && <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="4" width="9" height="12" rx="1" /><rect x="13" y="4" width="9" height="12" rx="1" /><path d="M6.5 20h11" strokeLinecap="round" /></svg>}
-                                                                                <span className="capitalize">{mode === 'pages' ? 'Extract' : mode}</span>
-                                                                            </button>
-                                                                        ))}
-                                                                    </div>
-                                                                </div>
-                                                                {splitMode === 'range' && (
-                                                                    <div className="space-y-4">
-                                                                        <div className="space-y-3 max-h-[40vh] overflow-y-auto pr-1">
-                                                                            {customRanges.map((range, idx) => (
-                                                                                <div key={idx} className="flex flex-col gap-1.5 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-border">
-                                                                                    <div className="flex items-center justify-between">
-                                                                                        <span className="text-xs font-bold text-foreground">Range {idx + 1}</span>
-                                                                                        {customRanges.length > 1 && (<button onClick={() => setCustomRanges(customRanges.filter((_, i) => i !== idx))} className="text-muted-foreground hover:text-red-500 transition-colors p-1"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>)}
-                                                                                    </div>
-                                                                                    <div className="flex items-center gap-2">
-                                                                                        <div className="flex-1 flex items-center border border-border rounded-lg bg-card overflow-hidden focus-within:ring-2 focus-within:ring-primary/30">
-                                                                                            <span className="px-3 py-2 text-xs text-muted-foreground bg-muted/50 border-r border-border font-medium">from</span>
-                                                                                            <input type="number" min="1" max={pdfPageCount || undefined} value={range.from} onChange={(e) => { const nr = [...customRanges]; nr[idx].from = Math.min(parseInt(e.target.value) || 1, pdfPageCount || Infinity).toString(); setCustomRanges(nr); }} className="w-full px-3 py-2 text-sm font-bold bg-transparent outline-none text-center" />
-                                                                                        </div>
-                                                                                        <div className="flex-1 flex items-center border border-border rounded-lg bg-card overflow-hidden focus-within:ring-2 focus-within:ring-primary/30">
-                                                                                            <span className="px-3 py-2 text-xs text-muted-foreground bg-muted/50 border-r border-border font-medium">to</span>
-                                                                                            <input type="number" min="1" max={pdfPageCount || undefined} value={range.to} onChange={(e) => { const nr = [...customRanges]; nr[idx].to = Math.min(parseInt(e.target.value) || 1, pdfPageCount || Infinity).toString(); setCustomRanges(nr); }} className="w-full px-3 py-2 text-sm font-bold bg-transparent outline-none text-center" />
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
+                                                        {/* Overlay Body — scrollable */}
+                                                        <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6 pb-32">
+                                                            <div className="flex flex-col gap-6 w-full">
+                                                                {tool.id.includes("rotate") && (
+                                                                    <div className="space-y-3">
+                                                                        <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Rotation Angle</label>
+                                                                        <div className="flex gap-2">
+                                                                            {[90, 180, 270].map(angle => (
+                                                                                <button
+                                                                                    key={angle}
+                                                                                    onClick={() => setRotateAngle(angle)}
+                                                                                    className={`flex-1 py-3 rounded-xl text-sm font-bold border transition-all ${rotateAngle === angle
+                                                                                        ? `${tool.theme.bgLight} ${tool.theme.border} ${tool.theme.text} shadow-sm scale-[1.02]`
+                                                                                        : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-muted-foreground hover:scale-[1.02]'
+                                                                                        }`}
+                                                                                >
+                                                                                    {angle}°
+                                                                                </button>
                                                                             ))}
                                                                         </div>
-                                                                        <button onClick={() => { const lastTo = Math.min(parseInt(customRanges[customRanges.length - 1]?.to) || 0, (pdfPageCount || Infinity) - 1); const next = Math.min(lastTo + 1, pdfPageCount || Infinity); setCustomRanges([...customRanges, { from: next.toString(), to: next.toString() }]); }} className="w-full py-2.5 bg-white dark:bg-slate-800 border-2 border-primary text-primary rounded-xl text-sm font-bold hover:bg-primary/5 transition-colors flex items-center justify-center gap-2">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                                                                            Add Range
-                                                                        </button>
-                                                                        <label className="flex items-center gap-3 cursor-pointer group mt-2">
-                                                                            <div className={`relative w-6 h-6 rounded-md border-2 transition-colors flex items-center justify-center ${splitMergeRanges ? 'bg-primary border-primary' : 'border-slate-300 dark:border-slate-600 group-hover:border-primary/50'}`} onClick={() => setSplitMergeRanges(!splitMergeRanges)}>
-                                                                                {splitMergeRanges && <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
+                                                                    </div>
+                                                                )}
+
+                                                                {(tool.id === 'image-to-pdf' || tool.id === 'jpg-to-pdf') && (
+                                                                    <div className="space-y-6">
+                                                                        {/* Page Orientation */}
+                                                                        <div className="space-y-3">
+                                                                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Page orientation</label>
+                                                                            <div className="flex gap-3">
+                                                                                {[
+                                                                                    { id: 'portrait' as const, label: 'Portrait', icon: (<svg viewBox="0 0 24 32" className="w-5 h-7" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="2" width="18" height="28" rx="2" /></svg>) },
+                                                                                    { id: 'landscape' as const, label: 'Landscape', icon: (<svg viewBox="0 0 32 24" className="w-7 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="3" width="28" height="18" rx="2" /></svg>) },
+                                                                                ].map(opt => (
+                                                                                    <button
+                                                                                        key={opt.id}
+                                                                                        onClick={() => setPdfOrientation(opt.id)}
+                                                                                        className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-xl text-sm font-bold border transition-all ${pdfOrientation === opt.id
+                                                                                            ? `${tool.theme.bgLight} ${tool.theme.border} ${tool.theme.text} shadow-sm scale-[1.02]`
+                                                                                            : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-muted-foreground hover:scale-[1.02]'
+                                                                                            }`}
+                                                                                    >
+                                                                                        {opt.icon}
+                                                                                        {opt.label}
+                                                                                    </button>
+                                                                                ))}
                                                                             </div>
-                                                                            <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Merge all ranges in one PDF</span>
+                                                                        </div>
+
+                                                                        {/* Page Size */}
+                                                                        <div className="space-y-3">
+                                                                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Page size</label>
+                                                                            <select
+                                                                                value={pdfPageSize}
+                                                                                onChange={(e) => setPdfPageSize(e.target.value as 'fit' | 'a4' | 'letter')}
+                                                                                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-foreground font-medium text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all appearance-none cursor-pointer"
+                                                                                style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E")`, backgroundPosition: 'right 0.75rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.25rem' }}
+                                                                            >
+                                                                                <option value="fit">Fit (Same page size as image)</option>
+                                                                                <option value="a4">A4 (297×210 mm)</option>
+                                                                                <option value="letter">US Letter (215×279.4 mm)</option>
+                                                                            </select>
+                                                                        </div>
+
+                                                                        {/* Margin */}
+                                                                        <div className="space-y-3">
+                                                                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Margin</label>
+                                                                            <div className="flex gap-3">
+                                                                                {[
+                                                                                    { id: 'none' as const, label: 'No margin', icon: (<svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="2" width="20" height="20" rx="2" /><rect x="4" y="4" width="16" height="16" rx="1" fill="currentColor" opacity="0.15" /></svg>) },
+                                                                                    { id: 'small' as const, label: 'Small', icon: (<svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="2" width="20" height="20" rx="2" /><rect x="6" y="6" width="12" height="12" rx="1" fill="currentColor" opacity="0.15" /></svg>) },
+                                                                                    { id: 'big' as const, label: 'Big', icon: (<svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="2" width="20" height="20" rx="2" /><rect x="8" y="8" width="8" height="8" rx="1" fill="currentColor" opacity="0.15" /></svg>) },
+                                                                                ].map(opt => (
+                                                                                    <button
+                                                                                        key={opt.id}
+                                                                                        onClick={() => setPdfMargin(opt.id)}
+                                                                                        className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-xl text-sm font-bold border transition-all ${pdfMargin === opt.id
+                                                                                            ? `${tool.theme.bgLight} ${tool.theme.border} ${tool.theme.text} shadow-sm scale-[1.02]`
+                                                                                            : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-muted-foreground hover:scale-[1.02]'
+                                                                                            }`}
+                                                                                    >
+                                                                                        {opt.icon}
+                                                                                        {opt.label}
+                                                                                    </button>
+                                                                                ))}
+                                                                            </div>
+                                                                        </div>
+
+                                                                        {/* Merge all */}
+                                                                        <label className="flex items-center gap-3 cursor-pointer group mt-2">
+                                                                            <div className={`relative w-11 h-6 rounded-full transition-colors ${mergeAll ? 'bg-primary' : 'bg-slate-300 dark:bg-slate-600'}`} onClick={() => setMergeAll(!mergeAll)}>
+                                                                                <div className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform ${mergeAll ? 'translate-x-5' : ''}`} />
+                                                                            </div>
+                                                                            <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Merge all images in one PDF</span>
                                                                         </label>
                                                                     </div>
                                                                 )}
-                                                                {splitMode === 'pages' && (
-                                                                    <div className="space-y-4">
-                                                                        <div className="flex gap-2 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
-                                                                            <button onClick={() => setExtractMode('all')} className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${extractMode === 'all' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Extract all pages</button>
-                                                                            <button onClick={() => setExtractMode('select')} className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${extractMode === 'select' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Select pages</button>
+
+                                                                {tool.id === "split-pdf" && (
+                                                                    <div className="space-y-6">
+                                                                        {pdfPageCount > 0 && (
+                                                                            <div className="text-xs text-muted-foreground space-y-0.5">
+                                                                                <p>Original file size: <b>{pdfFileSize > 1024 * 1024 ? (pdfFileSize / 1024 / 1024).toFixed(2) + ' MB' : (pdfFileSize / 1024).toFixed(0) + ' KB'}</b></p>
+                                                                                <p>Total pages: <b>{pdfPageCount}</b></p>
+                                                                            </div>
+                                                                        )}
+                                                                        <div className="space-y-3">
+                                                                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Split mode</label>
+                                                                            <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                                                                                {(['range', 'pages', 'size'] as const).map(mode => (
+                                                                                    <button key={mode} onClick={() => setSplitMode(mode)} className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all flex flex-col items-center justify-center gap-1 ${splitMode === mode ? 'bg-white dark:bg-slate-700 text-primary shadow-sm border border-primary/20' : 'text-muted-foreground hover:text-foreground'}`}>
+                                                                                        {mode === 'range' && <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></svg>}
+                                                                                        {mode === 'pages' && <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="8" height="10" rx="1" /><rect x="13" y="3" width="8" height="10" rx="1" /><rect x="3" y="15" width="8" height="6" rx="1" /><rect x="13" y="15" width="8" height="6" rx="1" /></svg>}
+                                                                                        {mode === 'size' && <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="4" width="9" height="12" rx="1" /><rect x="13" y="4" width="9" height="12" rx="1" /><path d="M6.5 20h11" strokeLinecap="round" /></svg>}
+                                                                                        <span className="capitalize">{mode === 'pages' ? 'Extract' : mode}</span>
+                                                                                    </button>
+                                                                                ))}
+                                                                            </div>
                                                                         </div>
-                                                                        {extractMode === 'select' && (
-                                                                            <div className="space-y-3">
-                                                                                <label className="text-xs font-bold text-muted-foreground">Pages to extract:</label>
-                                                                                <input type="text" placeholder="e.g. 1-3,6" value={extractPagesInput} onChange={(e) => { setExtractPagesInput(e.target.value); const pages = new Set<number>(); e.target.value.split(',').forEach(part => { const t = part.trim(); if (t.includes('-')) { const [a, b] = t.split('-').map(Number); if (!isNaN(a) && !isNaN(b)) for (let i = a; i <= b; i++) pages.add(i); } else { const n = parseInt(t); if (!isNaN(n)) pages.add(n); } }); setSelectedPages(pages); }} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-border rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-primary/30 transition-all" />
-                                                                                <label className="flex items-center gap-3 cursor-pointer group">
+                                                                        {splitMode === 'range' && (
+                                                                            <div className="space-y-4">
+                                                                                <div className="space-y-3 max-h-[40vh] overflow-y-auto pr-1">
+                                                                                    {customRanges.map((range, idx) => (
+                                                                                        <div key={idx} className="flex flex-col gap-1.5 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-border">
+                                                                                            <div className="flex items-center justify-between">
+                                                                                                <span className="text-xs font-bold text-foreground">Range {idx + 1}</span>
+                                                                                                {customRanges.length > 1 && (<button onClick={() => setCustomRanges(customRanges.filter((_, i) => i !== idx))} className="text-muted-foreground hover:text-red-500 transition-colors p-1"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>)}
+                                                                                            </div>
+                                                                                            <div className="flex items-center gap-2">
+                                                                                                <div className="flex-1 flex items-center border border-border rounded-lg bg-card overflow-hidden focus-within:ring-2 focus-within:ring-primary/30">
+                                                                                                    <span className="px-3 py-2 text-xs text-muted-foreground bg-muted/50 border-r border-border font-medium">from</span>
+                                                                                                    <input type="number" min="1" max={pdfPageCount || undefined} value={range.from} onChange={(e) => { const nr = [...customRanges]; nr[idx].from = Math.min(parseInt(e.target.value) || 1, pdfPageCount || Infinity).toString(); setCustomRanges(nr); }} className="w-full px-3 py-2 text-sm font-bold bg-transparent outline-none text-center" />
+                                                                                                </div>
+                                                                                                <div className="flex-1 flex items-center border border-border rounded-lg bg-card overflow-hidden focus-within:ring-2 focus-within:ring-primary/30">
+                                                                                                    <span className="px-3 py-2 text-xs text-muted-foreground bg-muted/50 border-r border-border font-medium">to</span>
+                                                                                                    <input type="number" min="1" max={pdfPageCount || undefined} value={range.to} onChange={(e) => { const nr = [...customRanges]; nr[idx].to = Math.min(parseInt(e.target.value) || 1, pdfPageCount || Infinity).toString(); setCustomRanges(nr); }} className="w-full px-3 py-2 text-sm font-bold bg-transparent outline-none text-center" />
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    ))}
+                                                                                </div>
+                                                                                <button onClick={() => { const lastTo = Math.min(parseInt(customRanges[customRanges.length - 1]?.to) || 0, (pdfPageCount || Infinity) - 1); const next = Math.min(lastTo + 1, pdfPageCount || Infinity); setCustomRanges([...customRanges, { from: next.toString(), to: next.toString() }]); }} className="w-full py-2.5 bg-white dark:bg-slate-800 border-2 border-primary text-primary rounded-xl text-sm font-bold hover:bg-primary/5 transition-colors flex items-center justify-center gap-2">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                                                                                    Add Range
+                                                                                </button>
+                                                                                <label className="flex items-center gap-3 cursor-pointer group mt-2">
                                                                                     <div className={`relative w-6 h-6 rounded-md border-2 transition-colors flex items-center justify-center ${splitMergeRanges ? 'bg-primary border-primary' : 'border-slate-300 dark:border-slate-600 group-hover:border-primary/50'}`} onClick={() => setSplitMergeRanges(!splitMergeRanges)}>
                                                                                         {splitMergeRanges && <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
                                                                                     </div>
-                                                                                    <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Merge extracted pages into one PDF</span>
+                                                                                    <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Merge all ranges in one PDF</span>
                                                                                 </label>
-                                                                                {selectedPages.size > 0 && (
-                                                                                    <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800 text-xs text-blue-700 dark:text-blue-300">
-                                                                                        <b>{selectedPages.size}</b> page{selectedPages.size > 1 ? 's' : ''} selected. {splitMergeRanges ? '1 merged PDF' : `${selectedPages.size} PDF${selectedPages.size > 1 ? 's' : ''}`} will be created.
+                                                                            </div>
+                                                                        )}
+                                                                        {splitMode === 'pages' && (
+                                                                            <div className="space-y-4">
+                                                                                <div className="flex gap-2 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                                                                                    <button onClick={() => setExtractMode('all')} className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${extractMode === 'all' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Extract all pages</button>
+                                                                                    <button onClick={() => setExtractMode('select')} className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${extractMode === 'select' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Select pages</button>
+                                                                                </div>
+                                                                                {extractMode === 'select' && (
+                                                                                    <div className="space-y-3">
+                                                                                        <label className="text-xs font-bold text-muted-foreground">Pages to extract:</label>
+                                                                                        <input type="text" placeholder="e.g. 1-3,6" value={extractPagesInput} onChange={(e) => { setExtractPagesInput(e.target.value); const pages = new Set<number>(); e.target.value.split(',').forEach(part => { const t = part.trim(); if (t.includes('-')) { const [a, b] = t.split('-').map(Number); if (!isNaN(a) && !isNaN(b)) for (let i = a; i <= b; i++) pages.add(i); } else { const n = parseInt(t); if (!isNaN(n)) pages.add(n); } }); setSelectedPages(pages); }} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-border rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-primary/30 transition-all" />
+                                                                                        <label className="flex items-center gap-3 cursor-pointer group">
+                                                                                            <div className={`relative w-6 h-6 rounded-md border-2 transition-colors flex items-center justify-center ${splitMergeRanges ? 'bg-primary border-primary' : 'border-slate-300 dark:border-slate-600 group-hover:border-primary/50'}`} onClick={() => setSplitMergeRanges(!splitMergeRanges)}>
+                                                                                                {splitMergeRanges && <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
+                                                                                            </div>
+                                                                                            <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Merge extracted pages into one PDF</span>
+                                                                                        </label>
+                                                                                        {selectedPages.size > 0 && (
+                                                                                            <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800 text-xs text-blue-700 dark:text-blue-300">
+                                                                                                <b>{selectedPages.size}</b> page{selectedPages.size > 1 ? 's' : ''} selected. {splitMergeRanges ? '1 merged PDF' : `${selectedPages.size} PDF${selectedPages.size > 1 ? 's' : ''}`} will be created.
+                                                                                            </div>
+                                                                                        )}
                                                                                     </div>
                                                                                 )}
                                                                             </div>
                                                                         )}
+                                                                        {splitMode === 'size' && (
+                                                                            <div className="space-y-4">
+                                                                                <label className="text-sm font-bold text-foreground">Maximum size per file:</label>
+                                                                                <div className="flex items-center gap-3">
+                                                                                    <input type="number" min="1" value={sizeLimit} onChange={(e) => setSizeLimit(parseInt(e.target.value) || 1)} className="w-24 px-4 py-2.5 border-2 border-border rounded-xl text-lg font-bold bg-card text-center outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all" />
+                                                                                    <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                                                                                        <button onClick={() => setSizeUnit('KB')} className={`px-4 py-1.5 text-sm font-bold rounded-lg transition-all ${sizeUnit === 'KB' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground'}`}>KB</button>
+                                                                                        <button onClick={() => setSizeUnit('MB')} className={`px-4 py-1.5 text-sm font-bold rounded-lg transition-all ${sizeUnit === 'MB' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground'}`}>MB</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800 text-xs text-blue-700 dark:text-blue-300">
+                                                                                    ℹ️ This PDF will be split into files no larger than <b>{sizeLimit} {sizeUnit}</b> each.
+                                                                                </div>
+                                                                                <label className="flex items-center gap-3 cursor-pointer group">
+                                                                                    <div className={`relative w-6 h-6 rounded-md border-2 transition-colors flex items-center justify-center ${allowCompression ? 'bg-primary border-primary' : 'border-slate-300 dark:border-slate-600 group-hover:border-primary/50'}`} onClick={() => setAllowCompression(!allowCompression)}>
+                                                                                        {allowCompression && <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
+                                                                                    </div>
+                                                                                    <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Allow compression</span>
+                                                                                </label>
+                                                                            </div>
+                                                                        )}
                                                                     </div>
                                                                 )}
-                                                                {splitMode === 'size' && (
+
+                                                                {tool.id === "compress-pdf" && (
                                                                     <div className="space-y-4">
-                                                                        <label className="text-sm font-bold text-foreground">Maximum size per file:</label>
-                                                                        <div className="flex items-center gap-3">
-                                                                            <input type="number" min="1" value={sizeLimit} onChange={(e) => setSizeLimit(parseInt(e.target.value) || 1)} className="w-24 px-4 py-2.5 border-2 border-border rounded-xl text-lg font-bold bg-card text-center outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all" />
-                                                                            <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
-                                                                                <button onClick={() => setSizeUnit('KB')} className={`px-4 py-1.5 text-sm font-bold rounded-lg transition-all ${sizeUnit === 'KB' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground'}`}>KB</button>
-                                                                                <button onClick={() => setSizeUnit('MB')} className={`px-4 py-1.5 text-sm font-bold rounded-lg transition-all ${sizeUnit === 'MB' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground'}`}>MB</button>
+                                                                        <div className="flex items-center justify-between flex-wrap gap-2">
+                                                                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Compression Mode</label>
+                                                                            <div className="flex items-center gap-1 bg-primary/10 p-1 rounded-lg">
+                                                                                <button
+                                                                                    onClick={() => setPdfCompressionMode('easy')}
+                                                                                    className={`text-xs font-bold px-3 py-1.5 rounded-md transition-colors ${pdfCompressionMode === 'easy' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-primary hover:bg-primary/20'}`}
+                                                                                >
+                                                                                    Easy
+                                                                                </button>
+                                                                                <button
+                                                                                    onClick={() => setPdfCompressionMode('manual')}
+                                                                                    className={`text-xs font-bold px-3 py-1.5 rounded-md transition-colors ${pdfCompressionMode === 'manual' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-primary hover:bg-primary/20'}`}
+                                                                                >
+                                                                                    Manual
+                                                                                </button>
+                                                                                <button
+                                                                                    onClick={() => setPdfCompressionMode('target')}
+                                                                                    className={`text-xs font-bold px-3 py-1.5 rounded-md transition-colors ${pdfCompressionMode === 'target' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-primary hover:bg-primary/20'}`}
+                                                                                >
+                                                                                    Target Size
+                                                                                </button>
                                                                             </div>
                                                                         </div>
-                                                                        <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800 text-xs text-blue-700 dark:text-blue-300">
-                                                                            ℹ️ This PDF will be split into files no larger than <b>{sizeLimit} {sizeUnit}</b> each.
-                                                                        </div>
-                                                                        <label className="flex items-center gap-3 cursor-pointer group">
-                                                                            <div className={`relative w-6 h-6 rounded-md border-2 transition-colors flex items-center justify-center ${allowCompression ? 'bg-primary border-primary' : 'border-slate-300 dark:border-slate-600 group-hover:border-primary/50'}`} onClick={() => setAllowCompression(!allowCompression)}>
-                                                                                {allowCompression && <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
+
+                                                                        {pdfCompressionMode === 'easy' && (
+                                                                            <div className="grid grid-cols-1 gap-3">
+                                                                                {[
+                                                                                    { id: 'extreme', label: 'Extreme', desc: 'Low quality, high compression', mult: 0.15 },
+                                                                                    { id: 'recommended', label: 'Recommended', desc: 'Good quality, good compression', mult: 0.45 },
+                                                                                    { id: 'basic', label: 'Basic', desc: 'High quality, text focused', mult: 0.85 }
+                                                                                ].map((mode) => {
+                                                                                    const totalSize = files.reduce((acc, f) => acc + f.size, 0);
+                                                                                    let estSizeStr = null;
+                                                                                    if (totalSize > 0) {
+                                                                                        const estBytes = totalSize * mode.mult;
+                                                                                        estSizeStr = estBytes > 1024 * 1024
+                                                                                            ? `~${(estBytes / 1024 / 1024).toFixed(1)} MB`
+                                                                                            : `~${(estBytes / 1024).toFixed(0)} KB`;
+                                                                                    }
+                                                                                    return (
+                                                                                        <button
+                                                                                            key={mode.id}
+                                                                                            onClick={() => setCompressionLevel(mode.id)}
+                                                                                            className={`relative text-left p-4 rounded-xl border transition-all ${compressionLevel === mode.id
+                                                                                                ? 'border-primary bg-primary/5 ring-1 ring-primary shadow-sm'
+                                                                                                : 'border-border hover:border-primary/50 hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm'
+                                                                                                }`}
+                                                                                        >
+                                                                                            <div className={`font-bold text-sm mb-1 ${compressionLevel === mode.id ? 'text-primary' : 'text-foreground'}`}>{mode.label}</div>
+                                                                                            {estSizeStr && <div className="text-[10px] font-mono font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded w-fit mb-1.5">{estSizeStr}</div>}
+                                                                                            <div className="text-xs text-muted-foreground leading-snug">{mode.desc}</div>
+                                                                                        </button>
+                                                                                    );
+                                                                                })}
                                                                             </div>
-                                                                            <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Allow compression</span>
-                                                                        </label>
+                                                                        )}
+
+                                                                        {pdfCompressionMode === 'manual' && (
+                                                                            <div className="space-y-6 p-5 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-border">
+                                                                                <div>
+                                                                                    <div className="flex justify-between mb-3">
+                                                                                        <label className="text-sm font-bold text-foreground">Image Quality</label>
+                                                                                        <span className="text-sm font-mono text-primary font-bold bg-primary/10 px-2 py-0.5 rounded-md">{pdfQuality}%</span>
+                                                                                    </div>
+                                                                                    <RangeSlider
+                                                                                        value={pdfQuality}
+                                                                                        min={10}
+                                                                                        max={100}
+                                                                                        step={5}
+                                                                                        onChange={setPdfQuality}
+                                                                                    />
+                                                                                </div>
+                                                                                <div>
+                                                                                    <div className="flex justify-between mb-3">
+                                                                                        <label className="text-sm font-bold text-foreground">Maximum DPI</label>
+                                                                                        <span className="text-sm font-mono text-primary font-bold bg-primary/10 px-2 py-0.5 rounded-md">{pdfDpi} DPI</span>
+                                                                                    </div>
+                                                                                    <RangeSlider
+                                                                                        value={pdfDpi}
+                                                                                        min={72}
+                                                                                        max={600}
+                                                                                        step={20}
+                                                                                        onChange={setPdfDpi}
+                                                                                    />
+                                                                                </div>
+                                                                            </div>
+                                                                        )}
+
+                                                                        {pdfCompressionMode === 'target' && (
+                                                                            <div className="space-y-6 p-5 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-border">
+                                                                                <div>
+                                                                                    <label className="block text-sm font-bold text-foreground mb-3">Target Size (KB)</label>
+                                                                                    <input
+                                                                                        type="number"
+                                                                                        min={1}
+                                                                                        value={pdfTargetSizeKB || ""}
+                                                                                        onChange={(e) => setPdfTargetSizeKB(parseInt(e.target.value) || 0)}
+                                                                                        placeholder="e.g. 100"
+                                                                                        className="w-full rounded-xl border border-border bg-white dark:bg-black p-3 focus:ring-2 focus:ring-primary outline-none text-foreground font-semibold"
+                                                                                    />
+                                                                                    <p className="text-xs text-muted-foreground mt-3 leading-relaxed">We will aggressively iterate down image quality and DPI inside the PDF to meet this target size.</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                )}
+
+                                                                {showFormatSelector && (
+                                                                    <div className="space-y-3">
+                                                                        <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Target Format</label>
+                                                                        <div className="relative">
+                                                                            <FormatSelector
+                                                                                value={targetFormat}
+                                                                                onChange={setTargetFormat}
+                                                                                options={tool.id === "convert-audio" ? AUDIO_CONVERTER_FORMATS : IMAGE_CONVERTER_FORMATS}
+                                                                                theme="light"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+
+                                                                {tool.id === "convert-image" && (
+                                                                    <div className="space-y-3">
+                                                                        <div className="flex justify-between items-center mb-1">
+                                                                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Quality</label>
+                                                                            <span className="text-sm font-mono text-primary font-bold bg-primary/10 px-2 py-0.5 rounded-md">{quality}%</span>
+                                                                        </div>
+                                                                        <RangeSlider
+                                                                            value={quality}
+                                                                            min={1}
+                                                                            max={100}
+                                                                            onChange={setQuality}
+                                                                        />
                                                                     </div>
                                                                 )}
                                                             </div>
-                                                        )}
+                                                            <AIAssistant
+                                                                tool={tool}
+                                                                files={files}
+                                                                currentFormat={targetFormat}
+                                                                compressionLevel={compressionLevel}
+                                                                quality={quality}
+                                                                onApply={handleAIRecommendation}
+                                                            />
+                                                        </div>
 
-                                                        {tool.id === "compress-pdf" && (
-                                                            <div className="space-y-4">
-                                                                <div className="flex items-center justify-between flex-wrap gap-2">
-                                                                    <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Compression Mode</label>
-                                                                    <div className="flex items-center gap-1 bg-primary/10 p-1 rounded-lg">
-                                                                        <button
-                                                                            onClick={() => setPdfCompressionMode('easy')}
-                                                                            className={`text-xs font-bold px-3 py-1.5 rounded-md transition-colors ${pdfCompressionMode === 'easy' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-primary hover:bg-primary/20'}`}
+                                                        {/* Sticky Bottom Done Button for Thumb Access */}
+                                                        <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-background via-background to-transparent pt-12 animate-in fade-in slide-in-from-bottom-8 duration-500 delay-150">
+                                                            <button
+                                                                onClick={() => setSettingsExpanded(false)}
+                                                                className="w-full py-4 rounded-2xl bg-primary text-white text-sm sm:text-base font-black uppercase tracking-wider transition-all border-[3px] border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:scale-95 active:shadow-none flex items-center justify-center gap-2"
+                                                            >
+                                                                Apply Settings
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+                                                    </m.div>
+                                                </>
+                                            )}
+                                        </AnimatePresence>
+                                        {/* End mobile settings overlay */}
+
+                                        {/* Desktop Two-Column Layout: Files LEFT, Options RIGHT */}
+                                        {files.length > 0 && (
+                                            <div className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-0 animate-in fade-in zoom-in-95 duration-300 bg-card dark:bg-[#1A1D24] rounded-[2rem] shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+
+                                                {/* LEFT COLUMN: Selected Files (80%) */}
+                                                <div className="space-y-3 min-w-0 p-4 sm:p-5 lg:p-6 flex flex-col min-h-[50vh]">
+                                                    {/* Mobile: Settings overlay trigger — above files */}
+                                                    <button
+                                                        onClick={() => setSettingsExpanded(true)}
+                                                        className="lg:hidden group/settings flex items-center justify-between w-full px-4 py-3 sm:px-5 sm:py-4 bg-white dark:bg-slate-800 border-[3px] border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none active:scale-95 rounded-[1.25rem] text-[13px] sm:text-[15px] font-black uppercase tracking-wider text-slate-800 dark:text-slate-200 transition-all duration-200 ease-out"
+                                                    >
+                                                        <span className="flex items-center gap-2.5 sm:gap-3 text-primary">
+                                                            <div className="bg-primary/10 p-1.5 sm:p-2 rounded-xl transition-transform duration-200 group-active/settings:scale-90 group-active/settings:rotate-45 border-2 border-primary/20">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                </svg>
+                                                            </div>
+                                                            Settings
+                                                        </span>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5 text-slate-900 dark:text-slate-300 mr-0.5 transition-transform duration-200 group-hover/settings:translate-x-1 group-active/settings:scale-95">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                                        </svg>
+                                                    </button>
+
+                                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-2">
+                                                        <span className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Selected Files</span>
+                                                        <div className="flex items-center gap-2 self-end sm:self-auto">
+                                                            <button
+                                                                onClick={() => setFiles([])}
+                                                                className="flex items-center justify-center gap-1.5 px-4 py-2 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border-[2px] border-slate-900 dark:border-slate-800 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none rounded-full text-xs font-black uppercase tracking-wider transition-all min-w-28 whitespace-nowrap"
+                                                                title="Delete all files"
+                                                            >
+                                                                <span>Delete All</span>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                                                </svg>
+                                                            </button>
+                                                            <button
+                                                                onClick={handleAddMoreClick}
+                                                                className="flex items-center justify-center gap-1.5 px-4 py-2 bg-primary text-white border-[2px] border-slate-900 dark:border-slate-800 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none rounded-full text-xs font-black uppercase tracking-wider transition-all min-w-28 whitespace-nowrap"
+                                                                title={tool.multiple ? "Add more files to the list" : "Replace current file"}
+                                                            >
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3.5 h-3.5 shrink-0">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                                                </svg>
+                                                                <span>Add More</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="flex-1 flex flex-col items-stretch pt-2">
+                                                        {tool.id === 'split-pdf' && splitMode === 'pages' && extractMode === 'select' && pdfPageCount > 0 ? (
+                                                            <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 lg:gap-4 flex-1 overflow-y-auto pr-2 custom-scrollbar p-2">
+                                                                {pdfThumbnails.map((thumbData, index) => {
+                                                                    const pageNum = index + 1;
+                                                                    const isSelected = selectedPages.has(pageNum);
+                                                                    return (
+                                                                        <div
+                                                                            key={`page-${pageNum}`}
+                                                                            onClick={() => {
+                                                                                const newPages = new Set(selectedPages);
+                                                                                if (isSelected) newPages.delete(pageNum);
+                                                                                else newPages.add(pageNum);
+                                                                                setSelectedPages(newPages);
+
+                                                                                // Also update the input text representation
+                                                                                const sorted = Array.from(newPages).sort((a, b) => a - b);
+                                                                                setExtractPagesInput(sorted.join(','));
+                                                                            }}
+                                                                            className={`group flex flex-col relative aspect-[1/1.3] rounded-lg overflow-hidden cursor-pointer transition-all duration-300 border-2 ${isSelected ? 'border-primary ring-2 ring-primary/20 shadow-lg -translate-y-0.5' : 'border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 bg-white dark:bg-[#1A1D24]'}`}
                                                                         >
-                                                                            Easy
-                                                                        </button>
-                                                                        <button
-                                                                            onClick={() => setPdfCompressionMode('manual')}
-                                                                            className={`text-xs font-bold px-3 py-1.5 rounded-md transition-colors ${pdfCompressionMode === 'manual' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-primary hover:bg-primary/20'}`}
-                                                                        >
-                                                                            Manual
-                                                                        </button>
-                                                                        <button
-                                                                            onClick={() => setPdfCompressionMode('target')}
-                                                                            className={`text-xs font-bold px-3 py-1.5 rounded-md transition-colors ${pdfCompressionMode === 'target' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-primary hover:bg-primary/20'}`}
-                                                                        >
-                                                                            Target Size
-                                                                        </button>
+                                                                            {/* Page Number Badge */}
+                                                                            <div className={`absolute top-2 left-2 z-10 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-extrabold shadow-md ring-2 ring-white/30 ${isSelected ? 'bg-primary text-white' : 'bg-slate-900/80 text-white'}`}>
+                                                                                {pageNum}
+                                                                            </div>
+                                                                            <div className="flex-1 w-full p-1 sm:p-2 flex items-center justify-center bg-slate-50 dark:bg-slate-800/40">
+                                                                                {thumbData ? (
+                                                                                    <img src={thumbData} alt={`Page ${pageNum}`} className="w-[95%] h-[95%] object-contain shadow-sm bg-white" />
+                                                                                ) : (
+                                                                                    <span className="text-xs text-muted-foreground animate-pulse font-medium">Loading...</span>
+                                                                                )}
+                                                                            </div>
+
+                                                                            {/* Selection Checkmark */}
+                                                                            <div className={`absolute top-3 right-3 w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 flex items-center justify-center transition-all shadow-sm ${isSelected ? 'bg-primary border-primary text-white scale-110' : 'bg-white/90 dark:bg-black/50 border-slate-300 dark:border-slate-500 text-transparent group-hover:border-primary/40 group-hover:text-primary/20'}`}>
+                                                                                <svg viewBox="0 0 24 24" fill="none" className="w-3.5 h-3.5 sm:w-4 sm:h-4" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+                                                                                    <polyline points="20 6 9 17 4 12" />
+                                                                                </svg>
+                                                                            </div>
+
+                                                                            <div className={`w-full py-2.5 transition-colors border-t border-slate-100 dark:border-slate-800 ${isSelected ? 'bg-primary border-primary text-primary-foreground' : 'bg-white dark:bg-[#1A1D24] text-foreground group-hover:bg-slate-50 dark:group-hover:bg-slate-800/80'} text-center`}>
+                                                                                <span className="text-sm font-bold tracking-tight">Page {pageNum}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    );
+                                                                })}
+                                                            </div>
+                                                        ) : (
+                                                            <DndContext
+                                                                sensors={sensors}
+                                                                collisionDetection={closestCenter}
+                                                                onDragStart={handleDragStartDnd}
+                                                                onDragEnd={handleDragEndDnd}
+                                                            >
+                                                                <SortableContext
+                                                                    items={files.map(f => `${f.name}-${f.size}-${f.lastModified}`)}
+                                                                    strategy={rectSortingStrategy}
+                                                                >
+                                                                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 p-1">
+                                                                        <AnimatePresence>
+                                                                            {files.map((f, i) => (
+                                                                                <SortableFileItem key={`${f.name}-${f.size}-${f.lastModified}`} id={`${f.name}-${f.size}-${f.lastModified}`}>
+                                                                                    <m.div
+                                                                                        layoutId={`${f.name}-${f.size}-${f.lastModified}`}
+                                                                                        initial={{ opacity: 0, scale: 0.8 }}
+                                                                                        animate={{ opacity: 1, scale: 1 }}
+                                                                                        exit={{ opacity: 0, scale: 0.8 }}
+                                                                                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                                                                                        data-file-card
+                                                                                        className={`w-full h-full group relative aspect-square bg-[#1A1D24] dark:bg-[#1A1D24] rounded-lg border shadow-sm hover:shadow-md transition-colors duration-200 overflow-hidden select-none ${dragIndex === i ? 'opacity-40 border-primary z-40' : 'border-slate-800 hover:border-slate-600 z-10'}`}
+                                                                                    >
+                                                                                        {/* File Number Badge */}
+                                                                                        <div className="absolute top-2 left-2 z-10 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-900/80 ring-2 ring-white/30 flex items-center justify-center text-xs sm:text-sm font-extrabold text-white shadow-md">
+                                                                                            {i + 1}
+                                                                                        </div>
+
+                                                                                        <div
+                                                                                            onClick={() => { setPreviewFile(f); }}
+                                                                                            className="absolute inset-0 z-0 cursor-grab active:cursor-grabbing"
+                                                                                        />
+
+                                                                                        <div className="w-full h-full flex items-center justify-center p-2 sm:p-3 pb-7 sm:pb-3 pointer-events-none">
+                                                                                            {f.type.startsWith("image/") ? (
+                                                                                                <img draggable={false} src={URL.createObjectURL(f)} alt="" className="w-full h-full object-contain drop-shadow-sm rounded-lg transition-transform duration-300 select-none" style={{ transform: `rotate(${fileRotations[i] || 0}deg)` }} onLoad={(e) => URL.revokeObjectURL((e.target as HTMLImageElement).src)} />
+                                                                                            ) : fileThumbnails[`${f.name}-${f.size}-${f.lastModified}`] ? (
+                                                                                                <img draggable={false} src={fileThumbnails[`${f.name}-${f.size}-${f.lastModified}`]} alt={f.name} className="w-full h-full object-contain drop-shadow-sm rounded-lg bg-white select-none" />
+                                                                                            ) : (
+                                                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-14 h-14 text-slate-400">
+                                                                                                    <path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A9 9 0 0011.25 3.75H10.5V7.125A2.625 2.625 0 0113.125 9.75h3.375v.375a.375.375 0 01-.375.375H13.5a4.125 4.125 0 01-4.125-4.125V1.5H5.625z" />
+                                                                                                    <path d="M12.971 1.816A5.23 5.23 0 0114.25 3.75c2.232 0 4.058 1.651 4.367 3.795a.75.75 0 01-.065.404A9.006 9.006 0 0020.25 12.75v7.875A3.375 3.375 0 0116.875 24H5.625A3.375 3.375 0 012.25 20.625V3.375A3.375 3.375 0 015.625 0h4.846c.95 0 1.864.377 2.5 1.066l.001-.001z" fillOpacity="0" />
+                                                                                                </svg>
+                                                                                            )}
+                                                                                        </div>
+                                                                                        {/* Always-visible action buttons — z-30 to sit above drag overlay */}
+                                                                                        <div className="absolute top-1.5 right-1.5 z-30 flex flex-col gap-1">
+                                                                                            <button onClick={(e) => { e.stopPropagation(); setFileRotations(prev => ({ ...prev, [i]: ((prev[i] || 0) + 90) % 360 })); }} className="p-1.5 bg-slate-800 hover:bg-white hover:text-slate-900 border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] text-white rounded-full transition-all hover:-translate-y-0.5 active:translate-y-0 active:shadow-none active:scale-95" title="Rotate 90°">
+                                                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3.5 h-3.5"><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" /></svg>
+                                                                                            </button>
+                                                                                            <button onClick={(e) => { e.stopPropagation(); const newFiles = [...files]; newFiles.splice(i, 1); setFiles(newFiles); setFileRotations(prev => { const newRots = { ...prev }; delete newRots[i]; return newRots; }); }} className="p-1.5 bg-slate-800 hover:bg-red-500 border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] text-white rounded-full transition-all hover:-translate-y-0.5 active:translate-y-0 active:shadow-none active:scale-95" title="Remove File">
+                                                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3.5 h-3.5"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                                                                                            </button>
+                                                                                        </div>
+                                                                                        <div data-file-card-label className="absolute bottom-0 left-0 right-0 px-2 py-1.5 bg-black/80 backdrop-blur-md text-slate-300 text-[10px] sm:text-xs font-bold truncate text-center pointer-events-none border-t border-slate-700/50">
+                                                                                            {f.name}
+                                                                                        </div>
+                                                                                    </m.div>
+                                                                                </SortableFileItem>
+                                                                            ))}
+                                                                        </AnimatePresence>
+                                                                    </div>
+                                                                </SortableContext>
+                                                            </DndContext>
+                                                        )}
+                                                    </div>
+                                                </div>
+
+
+                                                {/* RIGHT COLUMN: Desktop-only Options Sidebar (20%) */}
+                                                <div className="hidden lg:flex flex-col gap-8 self-stretch overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-700 border-l border-slate-200 dark:border-slate-700 p-6 xl:p-8 bg-slate-50/50 dark:bg-[#111318]">
+                                                    <div className="space-y-8">
+                                                        <div className="flex flex-col gap-6 w-full">
+                                                            {tool.id.includes("rotate") && (
+                                                                <div className="space-y-3">
+                                                                    <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Rotation Angle</label>
+                                                                    <div className="flex gap-2">
+                                                                        {[90, 180, 270].map(angle => (
+                                                                            <button
+                                                                                key={angle}
+                                                                                onClick={() => setRotateAngle(angle)}
+                                                                                className={`flex-1 py-3.5 rounded-xl text-base font-black uppercase tracking-wider border-[2px] transition-all duration-200 ${rotateAngle === angle
+                                                                                    ? `${tool.theme.bgLight} border-slate-900 ${tool.theme.text} shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] -translate-y-0.5`
+                                                                                    : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 text-muted-foreground hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'
+                                                                                    }`}
+                                                                            >
+                                                                                {angle}°
+                                                                            </button>
+                                                                        ))}
                                                                     </div>
                                                                 </div>
+                                                            )}
 
-                                                                {pdfCompressionMode === 'easy' && (
-                                                                    <div className="grid grid-cols-1 gap-3">
-                                                                        {[
-                                                                            { id: 'extreme', label: 'Extreme', desc: 'Low quality, high compression', mult: 0.15 },
-                                                                            { id: 'recommended', label: 'Recommended', desc: 'Good quality, good compression', mult: 0.45 },
-                                                                            { id: 'basic', label: 'Basic', desc: 'High quality, text focused', mult: 0.85 }
-                                                                        ].map((mode) => {
-                                                                            const totalSize = files.reduce((acc, f) => acc + f.size, 0);
-                                                                            let estSizeStr = null;
-                                                                            if (totalSize > 0) {
-                                                                                const estBytes = totalSize * mode.mult;
-                                                                                estSizeStr = estBytes > 1024 * 1024
-                                                                                    ? `~${(estBytes / 1024 / 1024).toFixed(1)} MB`
-                                                                                    : `~${(estBytes / 1024).toFixed(0)} KB`;
-                                                                            }
-                                                                            return (
+                                                            {(tool.id === 'image-to-pdf' || tool.id === 'jpg-to-pdf') && (
+                                                                <div className="space-y-6">
+                                                                    {/* Page Orientation */}
+                                                                    <div className="space-y-3">
+                                                                        <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Page orientation</label>
+                                                                        <div className="flex gap-3">
+                                                                            {[
+                                                                                { id: 'portrait' as const, label: 'Portrait', icon: (<svg viewBox="0 0 24 32" className="w-5 h-7" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="2" width="18" height="28" rx="2" /></svg>) },
+                                                                                { id: 'landscape' as const, label: 'Landscape', icon: (<svg viewBox="0 0 32 24" className="w-7 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="3" width="28" height="18" rx="2" /></svg>) },
+                                                                            ].map(opt => (
                                                                                 <button
-                                                                                    key={mode.id}
-                                                                                    onClick={() => setCompressionLevel(mode.id)}
-                                                                                    className={`relative text-left p-4 rounded-xl border transition-all ${compressionLevel === mode.id
-                                                                                        ? 'border-primary bg-primary/5 ring-1 ring-primary shadow-sm'
-                                                                                        : 'border-border hover:border-primary/50 hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm'
+                                                                                    key={opt.id}
+                                                                                    onClick={() => setPdfOrientation(opt.id)}
+                                                                                    className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-xl text-sm font-black uppercase tracking-wider border-[2px] transition-all duration-200 ${pdfOrientation === opt.id
+                                                                                        ? `${tool.theme.bgLight} border-slate-900 ${tool.theme.text} shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] -translate-y-0.5`
+                                                                                        : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 text-muted-foreground hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'
                                                                                         }`}
                                                                                 >
-                                                                                    <div className={`font-bold text-sm mb-1 ${compressionLevel === mode.id ? 'text-primary' : 'text-foreground'}`}>{mode.label}</div>
-                                                                                    {estSizeStr && <div className="text-[10px] font-mono font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded w-fit mb-1.5">{estSizeStr}</div>}
-                                                                                    <div className="text-xs text-muted-foreground leading-snug">{mode.desc}</div>
+                                                                                    {opt.icon}
+                                                                                    {opt.label}
                                                                                 </button>
-                                                                            );
-                                                                        })}
-                                                                    </div>
-                                                                )}
-
-                                                                {pdfCompressionMode === 'manual' && (
-                                                                    <div className="space-y-6 p-5 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-border">
-                                                                        <div>
-                                                                            <div className="flex justify-between mb-3">
-                                                                                <label className="text-sm font-bold text-foreground">Image Quality</label>
-                                                                                <span className="text-sm font-mono text-primary font-bold bg-primary/10 px-2 py-0.5 rounded-md">{pdfQuality}%</span>
-                                                                            </div>
-                                                                            <RangeSlider
-                                                                                value={pdfQuality}
-                                                                                min={10}
-                                                                                max={100}
-                                                                                step={5}
-                                                                                onChange={setPdfQuality}
-                                                                            />
-                                                                        </div>
-                                                                        <div>
-                                                                            <div className="flex justify-between mb-3">
-                                                                                <label className="text-sm font-bold text-foreground">Maximum DPI</label>
-                                                                                <span className="text-sm font-mono text-primary font-bold bg-primary/10 px-2 py-0.5 rounded-md">{pdfDpi} DPI</span>
-                                                                            </div>
-                                                                            <RangeSlider
-                                                                                value={pdfDpi}
-                                                                                min={72}
-                                                                                max={600}
-                                                                                step={20}
-                                                                                onChange={setPdfDpi}
-                                                                            />
+                                                                            ))}
                                                                         </div>
                                                                     </div>
-                                                                )}
 
-                                                                {pdfCompressionMode === 'target' && (
-                                                                    <div className="space-y-6 p-5 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-border">
-                                                                        <div>
-                                                                            <label className="block text-sm font-bold text-foreground mb-3">Target Size (KB)</label>
+                                                                    {/* Page Size */}
+                                                                    <div className="space-y-3">
+                                                                        <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Page size</label>
+                                                                        <select
+                                                                            value={pdfPageSize}
+                                                                            onChange={(e) => setPdfPageSize(e.target.value as 'fit' | 'a4' | 'letter')}
+                                                                            className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-foreground font-semibold text-base focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all appearance-none cursor-pointer"
+                                                                            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E")`, backgroundPosition: 'right 0.75rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.25rem' }}
+                                                                        >
+                                                                            <option value="fit">Fit (Same as image)</option>
+                                                                            <option value="a4">A4 (297×210 mm)</option>
+                                                                            <option value="letter">US Letter</option>
+                                                                        </select>
+                                                                    </div>
+
+                                                                    {/* Margin */}
+                                                                    <div className="space-y-3">
+                                                                        <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Margin</label>
+                                                                        <div className="flex gap-2">
+                                                                            {[
+                                                                                { id: 'none' as const, label: 'None' },
+                                                                                { id: 'small' as const, label: 'Small' },
+                                                                                { id: 'big' as const, label: 'Big' },
+                                                                            ].map(opt => (
+                                                                                <button
+                                                                                    key={opt.id}
+                                                                                    onClick={() => setPdfMargin(opt.id)}
+                                                                                    className={`flex-1 py-3 rounded-xl text-center text-sm font-black uppercase tracking-wider border-[2px] transition-all duration-200 ${pdfMargin === opt.id
+                                                                                        ? `${tool.theme.bgLight} border-slate-900 ${tool.theme.text} shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] -translate-y-0.5`
+                                                                                        : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 text-muted-foreground hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'
+                                                                                        }`}
+                                                                                >
+                                                                                    {opt.label}
+                                                                                </button>
+                                                                            ))}
+                                                                        </div>
+                                                                    </div>
+
+                                                                    {/* Merge all */}
+                                                                    <label className="flex items-center gap-3 cursor-pointer group mt-1">
+                                                                        <div className={`relative w-10 h-[22px] rounded-full transition-colors ${mergeAll ? 'bg-primary' : 'bg-slate-300 dark:bg-slate-600'}`} onClick={() => setMergeAll(!mergeAll)}>
+                                                                            <div className={`absolute top-0.5 left-0.5 w-[18px] h-[18px] bg-white rounded-full shadow-md transition-transform ${mergeAll ? 'translate-x-[18px]' : ''}`} />
+                                                                        </div>
+                                                                        <span className="text-sm font-bold text-foreground leading-tight">Merge all in one PDF</span>
+                                                                    </label>
+                                                                </div>
+                                                            )}
+
+                                                            {tool.id === "split-pdf" && (
+                                                                <div className="space-y-5">
+                                                                    {pdfPageCount > 0 && (
+                                                                        <div className="text-sm text-muted-foreground space-y-1">
+                                                                            <p>Original file size: <b>{pdfFileSize > 1024 * 1024 ? (pdfFileSize / 1024 / 1024).toFixed(2) + ' MB' : (pdfFileSize / 1024).toFixed(0) + ' KB'}</b></p>
+                                                                            <p>Total pages: <b>{pdfPageCount}</b></p>
+                                                                        </div>
+                                                                    )}
+                                                                    <div className="space-y-2">
+                                                                        <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">SPLIT MODE</label>
+                                                                        <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                                                                            {(['range', 'pages', 'size'] as const).map(mode => (
+                                                                                <button key={mode} onClick={() => setSplitMode(mode)} className={`flex-1 py-3 text-sm font-bold rounded-lg transition-all flex flex-col items-center justify-center gap-1 ${splitMode === mode ? 'bg-white dark:bg-slate-700 text-primary shadow-sm border border-primary/20' : 'text-muted-foreground hover:text-foreground'}`}>
+                                                                                    {mode === 'range' && <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></svg>}
+                                                                                    {mode === 'pages' && <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="8" height="10" rx="1" /><rect x="13" y="3" width="8" height="10" rx="1" /><rect x="3" y="15" width="8" height="6" rx="1" /><rect x="13" y="15" width="8" height="6" rx="1" /></svg>}
+                                                                                    {mode === 'size' && <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="4" width="9" height="12" rx="1" /><rect x="13" y="4" width="9" height="12" rx="1" /><path d="M6.5 20h11" strokeLinecap="round" /></svg>}
+                                                                                    <span className="capitalize">{mode === 'pages' ? 'Extract' : mode}</span>
+                                                                                </button>
+                                                                            ))}
+                                                                        </div>
+                                                                    </div>
+                                                                    {splitMode === 'range' && (
+                                                                        <div className="space-y-3">
+                                                                            <div className="space-y-2 max-h-[50vh] overflow-y-auto pr-1">
+                                                                                {customRanges.map((range, idx) => (
+                                                                                    <div key={idx} className="flex flex-col gap-1 p-2.5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-border">
+                                                                                        <div className="flex items-center justify-between">
+                                                                                            <span className="text-[11px] font-bold text-foreground">Range {idx + 1}</span>
+                                                                                            {customRanges.length > 1 && (<button onClick={() => setCustomRanges(customRanges.filter((_, i) => i !== idx))} className="text-muted-foreground hover:text-red-500 transition-colors p-0.5"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3.5 h-3.5"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>)}
+                                                                                        </div>
+                                                                                        <div className="flex items-center gap-1.5">
+                                                                                            <div className="flex-1 flex items-center border border-border rounded-lg bg-card overflow-hidden focus-within:ring-2 focus-within:ring-primary/30">
+                                                                                                <span className="px-2 py-1.5 text-[10px] text-muted-foreground bg-muted/50 border-r border-border font-medium">from</span>
+                                                                                                <input type="number" min="1" max={pdfPageCount || undefined} value={range.from} onChange={(e) => { const nr = [...customRanges]; nr[idx].from = Math.min(parseInt(e.target.value) || 1, pdfPageCount || Infinity).toString(); setCustomRanges(nr); }} className="w-full px-2 py-1.5 text-xs font-bold bg-transparent outline-none text-center" />
+                                                                                            </div>
+                                                                                            <div className="flex-1 flex items-center border border-border rounded-lg bg-card overflow-hidden focus-within:ring-2 focus-within:ring-primary/30">
+                                                                                                <span className="px-2 py-1.5 text-[10px] text-muted-foreground bg-muted/50 border-r border-border font-medium">to</span>
+                                                                                                <input type="number" min="1" max={pdfPageCount || undefined} value={range.to} onChange={(e) => { const nr = [...customRanges]; nr[idx].to = Math.min(parseInt(e.target.value) || 1, pdfPageCount || Infinity).toString(); setCustomRanges(nr); }} className="w-full px-2 py-1.5 text-xs font-bold bg-transparent outline-none text-center" />
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                ))}
+                                                                            </div>
+                                                                            <button onClick={() => { const lastTo = Math.min(parseInt(customRanges[customRanges.length - 1]?.to) || 0, (pdfPageCount || Infinity) - 1); const next = Math.min(lastTo + 1, pdfPageCount || Infinity); setCustomRanges([...customRanges, { from: next.toString(), to: next.toString() }]); }} className="w-full py-1.5 bg-white dark:bg-slate-800 border-2 border-primary text-primary rounded-xl text-xs font-bold hover:bg-primary/5 transition-colors flex items-center justify-center gap-1.5">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3.5 h-3.5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                                                                                Add Range
+                                                                            </button>
+                                                                            <label className="flex items-center gap-2 cursor-pointer group">
+                                                                                <div className={`relative w-5 h-5 rounded-md border-2 transition-colors flex items-center justify-center ${splitMergeRanges ? 'bg-primary border-primary' : 'border-slate-300 dark:border-slate-600 group-hover:border-primary/50'}`} onClick={() => setSplitMergeRanges(!splitMergeRanges)}>
+                                                                                    {splitMergeRanges && <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
+                                                                                </div>
+                                                                                <span className="text-xs font-bold text-foreground group-hover:text-primary transition-colors">Merge all ranges</span>
+                                                                            </label>
+                                                                        </div>
+                                                                    )}
+                                                                    {splitMode === 'pages' && (
+                                                                        <div className="space-y-3">
+                                                                            <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                                                                                <button onClick={() => setExtractMode('all')} className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${extractMode === 'all' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>All pages</button>
+                                                                                <button onClick={() => setExtractMode('select')} className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${extractMode === 'select' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Select pages</button>
+                                                                            </div>
+                                                                            {extractMode === 'select' && (
+                                                                                <div className="space-y-2">
+                                                                                    <label className="text-sm font-bold text-muted-foreground">Pages to extract:</label>
+                                                                                    <input type="text" placeholder="e.g. 1-3,6" value={extractPagesInput} onChange={(e) => { setExtractPagesInput(e.target.value); const pages = new Set<number>(); e.target.value.split(',').forEach(part => { const t = part.trim(); if (t.includes('-')) { const [a, b] = t.split('-').map(Number); if (!isNaN(a) && !isNaN(b)) for (let i = a; i <= b; i++) pages.add(i); } else { const n = parseInt(t); if (!isNaN(n)) pages.add(n); } }); setSelectedPages(pages); }} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-border rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-primary/30 transition-all" />
+                                                                                    <label className="flex items-center gap-2 cursor-pointer group">
+                                                                                        <div className={`relative w-5 h-5 rounded-md border-2 transition-colors flex items-center justify-center ${splitMergeRanges ? 'bg-primary border-primary' : 'border-slate-300 dark:border-slate-600 group-hover:border-primary/50'}`} onClick={() => setSplitMergeRanges(!splitMergeRanges)}>
+                                                                                            {splitMergeRanges && <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
+                                                                                        </div>
+                                                                                        <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Merge into one PDF</span>
+                                                                                    </label>
+                                                                                    {selectedPages.size > 0 && (
+                                                                                        <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 text-xs text-blue-700 dark:text-blue-300">
+                                                                                            <b>{selectedPages.size}</b> page{selectedPages.size > 1 ? 's' : ''} → {splitMergeRanges ? '1 merged PDF' : `${selectedPages.size} PDF${selectedPages.size > 1 ? 's' : ''}`}
+                                                                                        </div>
+                                                                                    )}
+                                                                                </div>
+                                                                            )}
+                                                                        </div>
+                                                                    )}
+                                                                    {splitMode === 'size' && (
+                                                                        <div className="space-y-3">
+                                                                            <label className="text-sm font-bold text-foreground">Max size per file:</label>
+                                                                            <div className="flex items-center gap-2">
+                                                                                <input type="number" min="1" value={sizeLimit} onChange={(e) => setSizeLimit(parseInt(e.target.value) || 1)} className="w-16 px-3 py-1.5 border-2 border-border rounded-xl text-sm font-bold bg-card text-center outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all" />
+                                                                                <div className="flex p-0.5 bg-slate-100 dark:bg-slate-800 rounded-lg">
+                                                                                    <button onClick={() => setSizeUnit('KB')} className={`px-3 py-1 text-[11px] font-bold rounded-md transition-all ${sizeUnit === 'KB' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground'}`}>KB</button>
+                                                                                    <button onClick={() => setSizeUnit('MB')} className={`px-3 py-1 text-[11px] font-bold rounded-md transition-all ${sizeUnit === 'MB' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground'}`}>MB</button>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 text-[10px] text-blue-700 dark:text-blue-300">
+                                                                                ℹ️ Split into files ≤ <b>{sizeLimit} {sizeUnit}</b> each.
+                                                                            </div>
+                                                                            <label className="flex items-center gap-2 cursor-pointer group">
+                                                                                <div className={`relative w-5 h-5 rounded-md border-2 transition-colors flex items-center justify-center ${allowCompression ? 'bg-primary border-primary' : 'border-slate-300 dark:border-slate-600 group-hover:border-primary/50'}`} onClick={() => setAllowCompression(!allowCompression)}>
+                                                                                    {allowCompression && <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
+                                                                                </div>
+                                                                                <span className="text-xs font-bold text-foreground group-hover:text-primary transition-colors">Allow compression</span>
+                                                                            </label>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            )}
+
+                                                            {tool.id === "compress-pdf" && (
+                                                                <div className="space-y-6">
+                                                                    <div className="space-y-3">
+                                                                        <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Compression Mode</label>
+                                                                        <div className="flex gap-2">
+                                                                            <button
+                                                                                onClick={() => setPdfCompressionMode('easy')}
+                                                                                className={`flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-wider border-[2px] transition-all duration-200 ${pdfCompressionMode === 'easy' ? `${tool.theme.bgLight} border-slate-900 ${tool.theme.text} shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] -translate-y-0.5` : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 text-muted-foreground hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'}`}
+                                                                            >
+                                                                                Easy
+                                                                            </button>
+                                                                            <button
+                                                                                onClick={() => setPdfCompressionMode('manual')}
+                                                                                className={`flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-wider border-[2px] transition-all duration-200 ${pdfCompressionMode === 'manual' ? `${tool.theme.bgLight} border-slate-900 ${tool.theme.text} shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] -translate-y-0.5` : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 text-muted-foreground hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'}`}
+                                                                            >
+                                                                                Advanced
+                                                                            </button>
+                                                                            <button
+                                                                                onClick={() => setPdfCompressionMode('target')}
+                                                                                className={`flex-1 py-3 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider border-[2px] transition-all duration-200 ${pdfCompressionMode === 'target' ? `${tool.theme.bgLight} border-slate-900 ${tool.theme.text} shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] -translate-y-0.5` : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 text-muted-foreground hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'}`}
+                                                                            >
+                                                                                Target Size
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    {pdfCompressionMode === 'easy' && (
+                                                                        <div className="space-y-3">
+                                                                            {[
+                                                                                { id: 'extreme', label: 'Extreme', desc: 'Low quality, high compression', mult: 0.15 },
+                                                                                { id: 'recommended', label: 'Recommended', desc: 'Good quality, good compression', mult: 0.45 },
+                                                                                { id: 'basic', label: 'Basic', desc: 'High quality, text focused', mult: 0.85 }
+                                                                            ].map((mode) => {
+                                                                                const totalSize = files.reduce((acc, f) => acc + f.size, 0);
+                                                                                let estSizeStr = null;
+                                                                                if (totalSize > 0) {
+                                                                                    const estBytes = totalSize * mode.mult;
+                                                                                    estSizeStr = estBytes > 1024 * 1024
+                                                                                        ? `~${(estBytes / 1024 / 1024).toFixed(1)} MB`
+                                                                                        : `~${(estBytes / 1024).toFixed(0)} KB`;
+                                                                                }
+                                                                                return (
+                                                                                    <button
+                                                                                        key={mode.id}
+                                                                                        onClick={() => setCompressionLevel(mode.id)}
+                                                                                        className={`w-full text-left py-4 px-4 rounded-xl border-[2px] transition-all duration-200 flex flex-col gap-1 ${compressionLevel === mode.id
+                                                                                            ? `${tool.theme.bgLight} border-slate-900 ${tool.theme.text} shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] -translate-y-0.5`
+                                                                                            : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'
+                                                                                            }`}
+                                                                                    >
+                                                                                        <div className="flex items-center justify-between w-full">
+                                                                                            <span className="font-black uppercase tracking-wider text-sm">{mode.label}</span>
+                                                                                            {estSizeStr && <span className="font-mono font-bold text-[10px] bg-white/50 dark:bg-black/20 px-2 py-0.5 rounded-md border border-slate-900/10 dark:border-white/10">{estSizeStr}</span>}
+                                                                                        </div>
+                                                                                        <span className="text-xs font-semibold opacity-80">{mode.desc}</span>
+                                                                                    </button>
+                                                                                );
+                                                                            })}
+                                                                        </div>
+                                                                    )}
+
+                                                                    {pdfCompressionMode === 'manual' && (
+                                                                        <div className="space-y-6">
+                                                                            <div className="space-y-3">
+                                                                                <div className="flex justify-between items-center">
+                                                                                    <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Image Quality</label>
+                                                                                    <span className="text-sm font-mono font-black">{pdfQuality}%</span>
+                                                                                </div>
+                                                                                <RangeSlider
+                                                                                    value={pdfQuality}
+                                                                                    min={10}
+                                                                                    max={100}
+                                                                                    step={5}
+                                                                                    onChange={setPdfQuality}
+                                                                                />
+                                                                            </div>
+                                                                            <div className="space-y-3">
+                                                                                <div className="flex justify-between items-center">
+                                                                                    <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Maximum DPI</label>
+                                                                                    <span className="text-sm font-mono font-black">{pdfDpi} DPI</span>
+                                                                                </div>
+                                                                                <RangeSlider
+                                                                                    value={pdfDpi}
+                                                                                    min={72}
+                                                                                    max={600}
+                                                                                    step={20}
+                                                                                    onChange={setPdfDpi}
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                    )}
+
+                                                                    {pdfCompressionMode === 'target' && (
+                                                                        <div className="space-y-4">
+                                                                            <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wider mb-2">Target Size (KB)</label>
                                                                             <input
                                                                                 type="number"
                                                                                 min={1}
                                                                                 value={pdfTargetSizeKB || ""}
                                                                                 onChange={(e) => setPdfTargetSizeKB(parseInt(e.target.value) || 0)}
                                                                                 placeholder="e.g. 100"
-                                                                                className="w-full rounded-xl border border-border bg-white dark:bg-black p-3 focus:ring-2 focus:ring-primary outline-none text-foreground font-semibold"
+                                                                                className="w-full px-4 py-3 rounded-xl border-[2px] border-slate-900 dark:border-slate-700 bg-white dark:bg-slate-800 text-foreground font-black text-lg focus:outline-none shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] transition-all placeholder:font-semibold placeholder:text-slate-400"
                                                                             />
-                                                                            <p className="text-xs text-muted-foreground mt-3 leading-relaxed">We will aggressively iterate down image quality and DPI inside the PDF to meet this target size.</p>
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        )}
-
-                                                        {showFormatSelector && (
-                                                            <div className="space-y-3">
-                                                                <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Target Format</label>
-                                                                <div className="relative">
-                                                                    <FormatSelector
-                                                                        value={targetFormat}
-                                                                        onChange={setTargetFormat}
-                                                                        options={tool.id === "convert-audio" ? AUDIO_CONVERTER_FORMATS : IMAGE_CONVERTER_FORMATS}
-                                                                        theme="light"
-                                                                    />
-                                                                </div>
-                                                            </div>
-                                                        )}
-
-                                                        {tool.id === "convert-image" && (
-                                                            <div className="space-y-3">
-                                                                <div className="flex justify-between items-center mb-1">
-                                                                    <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Quality</label>
-                                                                    <span className="text-sm font-mono text-primary font-bold bg-primary/10 px-2 py-0.5 rounded-md">{quality}%</span>
-                                                                </div>
-                                                                <RangeSlider
-                                                                    value={quality}
-                                                                    min={1}
-                                                                    max={100}
-                                                                    onChange={setQuality}
-                                                                />
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                    <AIAssistant
-                                                        tool={tool}
-                                                        files={files}
-                                                        currentFormat={targetFormat}
-                                                        compressionLevel={compressionLevel}
-                                                        quality={quality}
-                                                        onApply={handleAIRecommendation}
-                                                    />
-                                                </div>
-
-                                                {/* Sticky Bottom Done Button for Thumb Access */}
-                                                <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-background via-background to-transparent pt-12 animate-in fade-in slide-in-from-bottom-8 duration-500 delay-150">
-                                                    <button
-                                                        onClick={() => setSettingsExpanded(false)}
-                                                        className="w-full py-4 rounded-2xl bg-primary text-white text-sm sm:text-base font-black uppercase tracking-wider transition-all border-[3px] border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:scale-95 active:shadow-none flex items-center justify-center gap-2"
-                                                    >
-                                                        Apply Settings
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                            </m.div>
-                                        </>
-                                    )}
-                                </AnimatePresence>
-                                {/* End mobile settings overlay */}
-
-                                {/* Desktop Two-Column Layout: Files LEFT, Options RIGHT */}
-                                {files.length > 0 && (
-                                    <div className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-0 animate-in fade-in zoom-in-95 duration-300 bg-card dark:bg-[#1A1D24] rounded-[2rem] shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
-
-                                        {/* LEFT COLUMN: Selected Files (80%) */}
-                                        <div className="space-y-3 min-w-0 p-4 sm:p-5 lg:p-6 flex flex-col min-h-[50vh]">
-                                            {/* Mobile: Settings overlay trigger — above files */}
-                                            <button
-                                                onClick={() => setSettingsExpanded(true)}
-                                                className="lg:hidden group/settings flex items-center justify-between w-full px-4 py-3 sm:px-5 sm:py-4 bg-white dark:bg-slate-800 border-[3px] border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none active:scale-95 rounded-[1.25rem] text-[13px] sm:text-[15px] font-black uppercase tracking-wider text-slate-800 dark:text-slate-200 transition-all duration-200 ease-out"
-                                            >
-                                                <span className="flex items-center gap-2.5 sm:gap-3 text-primary">
-                                                    <div className="bg-primary/10 p-1.5 sm:p-2 rounded-xl transition-transform duration-200 group-active/settings:scale-90 group-active/settings:rotate-45 border-2 border-primary/20">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                        </svg>
-                                                    </div>
-                                                    Settings
-                                                </span>
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5 text-slate-900 dark:text-slate-300 mr-0.5 transition-transform duration-200 group-hover/settings:translate-x-1 group-active/settings:scale-95">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                                                </svg>
-                                            </button>
-
-                                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-2">
-                                                <span className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Selected Files</span>
-                                                <div className="flex items-center gap-2 self-end sm:self-auto">
-                                                    <button
-                                                        onClick={() => setFiles([])}
-                                                        className="flex items-center justify-center gap-1.5 px-4 py-2 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border-[2px] border-slate-900 dark:border-slate-800 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none rounded-full text-xs font-black uppercase tracking-wider transition-all min-w-28 whitespace-nowrap"
-                                                        title="Delete all files"
-                                                    >
-                                                        <span>Delete All</span>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                                        </svg>
-                                                    </button>
-                                                    <button
-                                                        onClick={handleAddMoreClick}
-                                                        className="flex items-center justify-center gap-1.5 px-4 py-2 bg-primary text-white border-[2px] border-slate-900 dark:border-slate-800 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none rounded-full text-xs font-black uppercase tracking-wider transition-all min-w-28 whitespace-nowrap"
-                                                        title={tool.multiple ? "Add more files to the list" : "Replace current file"}
-                                                    >
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3.5 h-3.5 shrink-0">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                                                        </svg>
-                                                        <span>Add More</span>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex-1 flex flex-col items-stretch pt-2">
-                                                {tool.id === 'split-pdf' && splitMode === 'pages' && extractMode === 'select' && pdfPageCount > 0 ? (
-                                                    <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 lg:gap-4 flex-1 overflow-y-auto pr-2 custom-scrollbar p-2">
-                                                        {pdfThumbnails.map((thumbData, index) => {
-                                                            const pageNum = index + 1;
-                                                            const isSelected = selectedPages.has(pageNum);
-                                                            return (
-                                                                <div
-                                                                    key={`page-${pageNum}`}
-                                                                    onClick={() => {
-                                                                        const newPages = new Set(selectedPages);
-                                                                        if (isSelected) newPages.delete(pageNum);
-                                                                        else newPages.add(pageNum);
-                                                                        setSelectedPages(newPages);
-
-                                                                        // Also update the input text representation
-                                                                        const sorted = Array.from(newPages).sort((a, b) => a - b);
-                                                                        setExtractPagesInput(sorted.join(','));
-                                                                    }}
-                                                                    className={`group flex flex-col relative aspect-[1/1.3] rounded-lg overflow-hidden cursor-pointer transition-all duration-300 border-2 ${isSelected ? 'border-primary ring-2 ring-primary/20 shadow-lg -translate-y-0.5' : 'border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 bg-white dark:bg-[#1A1D24]'}`}
-                                                                >
-                                                                    {/* Page Number Badge */}
-                                                                    <div className={`absolute top-2 left-2 z-10 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-extrabold shadow-md ring-2 ring-white/30 ${isSelected ? 'bg-primary text-white' : 'bg-slate-900/80 text-white'}`}>
-                                                                        {pageNum}
-                                                                    </div>
-                                                                    <div className="flex-1 w-full p-1 sm:p-2 flex items-center justify-center bg-slate-50 dark:bg-slate-800/40">
-                                                                        {thumbData ? (
-                                                                            <img src={thumbData} alt={`Page ${pageNum}`} className="w-[95%] h-[95%] object-contain shadow-sm bg-white" />
-                                                                        ) : (
-                                                                            <span className="text-xs text-muted-foreground animate-pulse font-medium">Loading...</span>
-                                                                        )}
-                                                                    </div>
-
-                                                                    {/* Selection Checkmark */}
-                                                                    <div className={`absolute top-3 right-3 w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 flex items-center justify-center transition-all shadow-sm ${isSelected ? 'bg-primary border-primary text-white scale-110' : 'bg-white/90 dark:bg-black/50 border-slate-300 dark:border-slate-500 text-transparent group-hover:border-primary/40 group-hover:text-primary/20'}`}>
-                                                                        <svg viewBox="0 0 24 24" fill="none" className="w-3.5 h-3.5 sm:w-4 sm:h-4" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
-                                                                            <polyline points="20 6 9 17 4 12" />
-                                                                        </svg>
-                                                                    </div>
-
-                                                                    <div className={`w-full py-2.5 transition-colors border-t border-slate-100 dark:border-slate-800 ${isSelected ? 'bg-primary border-primary text-primary-foreground' : 'bg-white dark:bg-[#1A1D24] text-foreground group-hover:bg-slate-50 dark:group-hover:bg-slate-800/80'} text-center`}>
-                                                                        <span className="text-sm font-bold tracking-tight">Page {pageNum}</span>
-                                                                    </div>
-                                                                </div>
-                                                            );
-                                                        })}
-                                                    </div>
-                                                ) : (
-                                                    <DndContext
-                                                        sensors={sensors}
-                                                        collisionDetection={closestCenter}
-                                                        onDragStart={handleDragStartDnd}
-                                                        onDragEnd={handleDragEndDnd}
-                                                    >
-                                                        <SortableContext
-                                                            items={files.map(f => `${f.name}-${f.size}-${f.lastModified}`)}
-                                                            strategy={rectSortingStrategy}
-                                                        >
-                                                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 p-1">
-                                                                <AnimatePresence>
-                                                                    {files.map((f, i) => (
-                                                                        <SortableFileItem key={`${f.name}-${f.size}-${f.lastModified}`} id={`${f.name}-${f.size}-${f.lastModified}`}>
-                                                                            <m.div
-                                                                                layoutId={`${f.name}-${f.size}-${f.lastModified}`}
-                                                                                initial={{ opacity: 0, scale: 0.8 }}
-                                                                                animate={{ opacity: 1, scale: 1 }}
-                                                                                exit={{ opacity: 0, scale: 0.8 }}
-                                                                                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                                                                                data-file-card
-                                                                                className={`w-full h-full group relative aspect-square bg-[#1A1D24] dark:bg-[#1A1D24] rounded-lg border shadow-sm hover:shadow-md transition-colors duration-200 overflow-hidden select-none ${dragIndex === i ? 'opacity-40 border-primary z-40' : 'border-slate-800 hover:border-slate-600 z-10'}`}
-                                                                            >
-                                                                                {/* File Number Badge */}
-                                                                                <div className="absolute top-2 left-2 z-10 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-900/80 ring-2 ring-white/30 flex items-center justify-center text-xs sm:text-sm font-extrabold text-white shadow-md">
-                                                                                    {i + 1}
-                                                                                </div>
-
-                                                                                <div
-                                                                                    onClick={() => { setPreviewFile(f); }}
-                                                                                    className="absolute inset-0 z-0 cursor-grab active:cursor-grabbing"
-                                                                                />
-
-                                                                                <div className="w-full h-full flex items-center justify-center p-2 sm:p-3 pb-7 sm:pb-3 pointer-events-none">
-                                                                                    {f.type.startsWith("image/") ? (
-                                                                                        <img draggable={false} src={URL.createObjectURL(f)} alt="" className="w-full h-full object-contain drop-shadow-sm rounded-lg transition-transform duration-300 select-none" style={{ transform: `rotate(${fileRotations[i] || 0}deg)` }} onLoad={(e) => URL.revokeObjectURL((e.target as HTMLImageElement).src)} />
-                                                                                    ) : fileThumbnails[`${f.name}-${f.size}-${f.lastModified}`] ? (
-                                                                                        <img draggable={false} src={fileThumbnails[`${f.name}-${f.size}-${f.lastModified}`]} alt={f.name} className="w-full h-full object-contain drop-shadow-sm rounded-lg bg-white select-none" />
-                                                                                    ) : (
-                                                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-14 h-14 text-slate-400">
-                                                                                            <path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A9 9 0 0011.25 3.75H10.5V7.125A2.625 2.625 0 0113.125 9.75h3.375v.375a.375.375 0 01-.375.375H13.5a4.125 4.125 0 01-4.125-4.125V1.5H5.625z" />
-                                                                                            <path d="M12.971 1.816A5.23 5.23 0 0114.25 3.75c2.232 0 4.058 1.651 4.367 3.795a.75.75 0 01-.065.404A9.006 9.006 0 0020.25 12.75v7.875A3.375 3.375 0 0116.875 24H5.625A3.375 3.375 0 012.25 20.625V3.375A3.375 3.375 0 015.625 0h4.846c.95 0 1.864.377 2.5 1.066l.001-.001z" fillOpacity="0" />
-                                                                                        </svg>
-                                                                                    )}
-                                                                                </div>
-                                                                                {/* Always-visible action buttons — z-30 to sit above drag overlay */}
-                                                                                <div className="absolute top-1.5 right-1.5 z-30 flex flex-col gap-1">
-                                                                                    <button onClick={(e) => { e.stopPropagation(); setFileRotations(prev => ({ ...prev, [i]: ((prev[i] || 0) + 90) % 360 })); }} className="p-1.5 bg-slate-800 hover:bg-white hover:text-slate-900 border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] text-white rounded-full transition-all hover:-translate-y-0.5 active:translate-y-0 active:shadow-none active:scale-95" title="Rotate 90°">
-                                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3.5 h-3.5"><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" /></svg>
-                                                                                    </button>
-                                                                                    <button onClick={(e) => { e.stopPropagation(); const newFiles = [...files]; newFiles.splice(i, 1); setFiles(newFiles); setFileRotations(prev => { const newRots = { ...prev }; delete newRots[i]; return newRots; }); }} className="p-1.5 bg-slate-800 hover:bg-red-500 border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] text-white rounded-full transition-all hover:-translate-y-0.5 active:translate-y-0 active:shadow-none active:scale-95" title="Remove File">
-                                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3.5 h-3.5"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-                                                                                    </button>
-                                                                                </div>
-                                                                                <div data-file-card-label className="absolute bottom-0 left-0 right-0 px-2 py-1.5 bg-black/80 backdrop-blur-md text-slate-300 text-[10px] sm:text-xs font-bold truncate text-center pointer-events-none border-t border-slate-700/50">
-                                                                                    {f.name}
-                                                                                </div>
-                                                                            </m.div>
-                                                                        </SortableFileItem>
-                                                                    ))}
-                                                                </AnimatePresence>
-                                                            </div>
-                                                        </SortableContext>
-                                                    </DndContext>
-                                                )}
-                                            </div>
-                                        </div>
-
-
-                                        {/* RIGHT COLUMN: Desktop-only Options Sidebar (20%) */}
-                                        <div className="hidden lg:flex flex-col gap-8 self-stretch overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-700 border-l border-slate-200 dark:border-slate-700 p-6 xl:p-8 bg-slate-50/50 dark:bg-[#111318]">
-                                            <div className="space-y-8">
-                                                <div className="flex flex-col gap-6 w-full">
-                                                    {tool.id.includes("rotate") && (
-                                                        <div className="space-y-3">
-                                                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Rotation Angle</label>
-                                                            <div className="flex gap-2">
-                                                                {[90, 180, 270].map(angle => (
-                                                                    <button
-                                                                        key={angle}
-                                                                        onClick={() => setRotateAngle(angle)}
-                                                                        className={`flex-1 py-3.5 rounded-xl text-base font-black uppercase tracking-wider border-[2px] transition-all duration-200 ${rotateAngle === angle
-                                                                            ? `${tool.theme.bgLight} border-slate-900 ${tool.theme.text} shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] -translate-y-0.5`
-                                                                            : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 text-muted-foreground hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'
-                                                                            }`}
-                                                                    >
-                                                                        {angle}°
-                                                                    </button>
-                                                                ))}
-                                                            </div>
-                                                        </div>
-                                                    )}
-
-                                                    {(tool.id === 'image-to-pdf' || tool.id === 'jpg-to-pdf') && (
-                                                        <div className="space-y-6">
-                                                            {/* Page Orientation */}
-                                                            <div className="space-y-3">
-                                                                <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Page orientation</label>
-                                                                <div className="flex gap-3">
-                                                                    {[
-                                                                        { id: 'portrait' as const, label: 'Portrait', icon: (<svg viewBox="0 0 24 32" className="w-5 h-7" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="2" width="18" height="28" rx="2" /></svg>) },
-                                                                        { id: 'landscape' as const, label: 'Landscape', icon: (<svg viewBox="0 0 32 24" className="w-7 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="3" width="28" height="18" rx="2" /></svg>) },
-                                                                    ].map(opt => (
-                                                                        <button
-                                                                            key={opt.id}
-                                                                            onClick={() => setPdfOrientation(opt.id)}
-                                                                            className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-xl text-sm font-black uppercase tracking-wider border-[2px] transition-all duration-200 ${pdfOrientation === opt.id
-                                                                                ? `${tool.theme.bgLight} border-slate-900 ${tool.theme.text} shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] -translate-y-0.5`
-                                                                                : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 text-muted-foreground hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'
-                                                                                }`}
-                                                                        >
-                                                                            {opt.icon}
-                                                                            {opt.label}
-                                                                        </button>
-                                                                    ))}
-                                                                </div>
-                                                            </div>
-
-                                                            {/* Page Size */}
-                                                            <div className="space-y-3">
-                                                                <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Page size</label>
-                                                                <select
-                                                                    value={pdfPageSize}
-                                                                    onChange={(e) => setPdfPageSize(e.target.value as 'fit' | 'a4' | 'letter')}
-                                                                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-foreground font-semibold text-base focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all appearance-none cursor-pointer"
-                                                                    style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E")`, backgroundPosition: 'right 0.75rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.25rem' }}
-                                                                >
-                                                                    <option value="fit">Fit (Same as image)</option>
-                                                                    <option value="a4">A4 (297×210 mm)</option>
-                                                                    <option value="letter">US Letter</option>
-                                                                </select>
-                                                            </div>
-
-                                                            {/* Margin */}
-                                                            <div className="space-y-3">
-                                                                <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Margin</label>
-                                                                <div className="flex gap-2">
-                                                                    {[
-                                                                        { id: 'none' as const, label: 'None' },
-                                                                        { id: 'small' as const, label: 'Small' },
-                                                                        { id: 'big' as const, label: 'Big' },
-                                                                    ].map(opt => (
-                                                                        <button
-                                                                            key={opt.id}
-                                                                            onClick={() => setPdfMargin(opt.id)}
-                                                                            className={`flex-1 py-3 rounded-xl text-center text-sm font-black uppercase tracking-wider border-[2px] transition-all duration-200 ${pdfMargin === opt.id
-                                                                                ? `${tool.theme.bgLight} border-slate-900 ${tool.theme.text} shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] -translate-y-0.5`
-                                                                                : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 text-muted-foreground hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'
-                                                                                }`}
-                                                                        >
-                                                                            {opt.label}
-                                                                        </button>
-                                                                    ))}
-                                                                </div>
-                                                            </div>
-
-                                                            {/* Merge all */}
-                                                            <label className="flex items-center gap-3 cursor-pointer group mt-1">
-                                                                <div className={`relative w-10 h-[22px] rounded-full transition-colors ${mergeAll ? 'bg-primary' : 'bg-slate-300 dark:bg-slate-600'}`} onClick={() => setMergeAll(!mergeAll)}>
-                                                                    <div className={`absolute top-0.5 left-0.5 w-[18px] h-[18px] bg-white rounded-full shadow-md transition-transform ${mergeAll ? 'translate-x-[18px]' : ''}`} />
-                                                                </div>
-                                                                <span className="text-sm font-bold text-foreground leading-tight">Merge all in one PDF</span>
-                                                            </label>
-                                                        </div>
-                                                    )}
-
-                                                    {tool.id === "split-pdf" && (
-                                                        <div className="space-y-5">
-                                                            {pdfPageCount > 0 && (
-                                                                <div className="text-sm text-muted-foreground space-y-1">
-                                                                    <p>Original file size: <b>{pdfFileSize > 1024 * 1024 ? (pdfFileSize / 1024 / 1024).toFixed(2) + ' MB' : (pdfFileSize / 1024).toFixed(0) + ' KB'}</b></p>
-                                                                    <p>Total pages: <b>{pdfPageCount}</b></p>
-                                                                </div>
-                                                            )}
-                                                            <div className="space-y-2">
-                                                                <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">SPLIT MODE</label>
-                                                                <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
-                                                                    {(['range', 'pages', 'size'] as const).map(mode => (
-                                                                        <button key={mode} onClick={() => setSplitMode(mode)} className={`flex-1 py-3 text-sm font-bold rounded-lg transition-all flex flex-col items-center justify-center gap-1 ${splitMode === mode ? 'bg-white dark:bg-slate-700 text-primary shadow-sm border border-primary/20' : 'text-muted-foreground hover:text-foreground'}`}>
-                                                                            {mode === 'range' && <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></svg>}
-                                                                            {mode === 'pages' && <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="8" height="10" rx="1" /><rect x="13" y="3" width="8" height="10" rx="1" /><rect x="3" y="15" width="8" height="6" rx="1" /><rect x="13" y="15" width="8" height="6" rx="1" /></svg>}
-                                                                            {mode === 'size' && <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="4" width="9" height="12" rx="1" /><rect x="13" y="4" width="9" height="12" rx="1" /><path d="M6.5 20h11" strokeLinecap="round" /></svg>}
-                                                                            <span className="capitalize">{mode === 'pages' ? 'Extract' : mode}</span>
-                                                                        </button>
-                                                                    ))}
-                                                                </div>
-                                                            </div>
-                                                            {splitMode === 'range' && (
-                                                                <div className="space-y-3">
-                                                                    <div className="space-y-2 max-h-[50vh] overflow-y-auto pr-1">
-                                                                        {customRanges.map((range, idx) => (
-                                                                            <div key={idx} className="flex flex-col gap-1 p-2.5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-border">
-                                                                                <div className="flex items-center justify-between">
-                                                                                    <span className="text-[11px] font-bold text-foreground">Range {idx + 1}</span>
-                                                                                    {customRanges.length > 1 && (<button onClick={() => setCustomRanges(customRanges.filter((_, i) => i !== idx))} className="text-muted-foreground hover:text-red-500 transition-colors p-0.5"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3.5 h-3.5"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>)}
-                                                                                </div>
-                                                                                <div className="flex items-center gap-1.5">
-                                                                                    <div className="flex-1 flex items-center border border-border rounded-lg bg-card overflow-hidden focus-within:ring-2 focus-within:ring-primary/30">
-                                                                                        <span className="px-2 py-1.5 text-[10px] text-muted-foreground bg-muted/50 border-r border-border font-medium">from</span>
-                                                                                        <input type="number" min="1" max={pdfPageCount || undefined} value={range.from} onChange={(e) => { const nr = [...customRanges]; nr[idx].from = Math.min(parseInt(e.target.value) || 1, pdfPageCount || Infinity).toString(); setCustomRanges(nr); }} className="w-full px-2 py-1.5 text-xs font-bold bg-transparent outline-none text-center" />
-                                                                                    </div>
-                                                                                    <div className="flex-1 flex items-center border border-border rounded-lg bg-card overflow-hidden focus-within:ring-2 focus-within:ring-primary/30">
-                                                                                        <span className="px-2 py-1.5 text-[10px] text-muted-foreground bg-muted/50 border-r border-border font-medium">to</span>
-                                                                                        <input type="number" min="1" max={pdfPageCount || undefined} value={range.to} onChange={(e) => { const nr = [...customRanges]; nr[idx].to = Math.min(parseInt(e.target.value) || 1, pdfPageCount || Infinity).toString(); setCustomRanges(nr); }} className="w-full px-2 py-1.5 text-xs font-bold bg-transparent outline-none text-center" />
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        ))}
-                                                                    </div>
-                                                                    <button onClick={() => { const lastTo = Math.min(parseInt(customRanges[customRanges.length - 1]?.to) || 0, (pdfPageCount || Infinity) - 1); const next = Math.min(lastTo + 1, pdfPageCount || Infinity); setCustomRanges([...customRanges, { from: next.toString(), to: next.toString() }]); }} className="w-full py-1.5 bg-white dark:bg-slate-800 border-2 border-primary text-primary rounded-xl text-xs font-bold hover:bg-primary/5 transition-colors flex items-center justify-center gap-1.5">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3.5 h-3.5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                                                                        Add Range
-                                                                    </button>
-                                                                    <label className="flex items-center gap-2 cursor-pointer group">
-                                                                        <div className={`relative w-5 h-5 rounded-md border-2 transition-colors flex items-center justify-center ${splitMergeRanges ? 'bg-primary border-primary' : 'border-slate-300 dark:border-slate-600 group-hover:border-primary/50'}`} onClick={() => setSplitMergeRanges(!splitMergeRanges)}>
-                                                                            {splitMergeRanges && <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
-                                                                        </div>
-                                                                        <span className="text-xs font-bold text-foreground group-hover:text-primary transition-colors">Merge all ranges</span>
-                                                                    </label>
-                                                                </div>
-                                                            )}
-                                                            {splitMode === 'pages' && (
-                                                                <div className="space-y-3">
-                                                                    <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
-                                                                        <button onClick={() => setExtractMode('all')} className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${extractMode === 'all' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>All pages</button>
-                                                                        <button onClick={() => setExtractMode('select')} className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${extractMode === 'select' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Select pages</button>
-                                                                    </div>
-                                                                    {extractMode === 'select' && (
-                                                                        <div className="space-y-2">
-                                                                            <label className="text-sm font-bold text-muted-foreground">Pages to extract:</label>
-                                                                            <input type="text" placeholder="e.g. 1-3,6" value={extractPagesInput} onChange={(e) => { setExtractPagesInput(e.target.value); const pages = new Set<number>(); e.target.value.split(',').forEach(part => { const t = part.trim(); if (t.includes('-')) { const [a, b] = t.split('-').map(Number); if (!isNaN(a) && !isNaN(b)) for (let i = a; i <= b; i++) pages.add(i); } else { const n = parseInt(t); if (!isNaN(n)) pages.add(n); } }); setSelectedPages(pages); }} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-border rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-primary/30 transition-all" />
-                                                                            <label className="flex items-center gap-2 cursor-pointer group">
-                                                                                <div className={`relative w-5 h-5 rounded-md border-2 transition-colors flex items-center justify-center ${splitMergeRanges ? 'bg-primary border-primary' : 'border-slate-300 dark:border-slate-600 group-hover:border-primary/50'}`} onClick={() => setSplitMergeRanges(!splitMergeRanges)}>
-                                                                                    {splitMergeRanges && <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
-                                                                                </div>
-                                                                                <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Merge into one PDF</span>
-                                                                            </label>
-                                                                            {selectedPages.size > 0 && (
-                                                                                <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 text-xs text-blue-700 dark:text-blue-300">
-                                                                                    <b>{selectedPages.size}</b> page{selectedPages.size > 1 ? 's' : ''} → {splitMergeRanges ? '1 merged PDF' : `${selectedPages.size} PDF${selectedPages.size > 1 ? 's' : ''}`}
-                                                                                </div>
-                                                                            )}
+                                                                            <p className="text-xs font-medium text-muted-foreground leading-relaxed">Aggressively iterate down image quality and DPI inside the PDF to meet this target size.</p>
                                                                         </div>
                                                                     )}
                                                                 </div>
                                                             )}
-                                                            {splitMode === 'size' && (
+
+                                                            {showFormatSelector && (
                                                                 <div className="space-y-3">
-                                                                    <label className="text-sm font-bold text-foreground">Max size per file:</label>
-                                                                    <div className="flex items-center gap-2">
-                                                                        <input type="number" min="1" value={sizeLimit} onChange={(e) => setSizeLimit(parseInt(e.target.value) || 1)} className="w-16 px-3 py-1.5 border-2 border-border rounded-xl text-sm font-bold bg-card text-center outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all" />
-                                                                        <div className="flex p-0.5 bg-slate-100 dark:bg-slate-800 rounded-lg">
-                                                                            <button onClick={() => setSizeUnit('KB')} className={`px-3 py-1 text-[11px] font-bold rounded-md transition-all ${sizeUnit === 'KB' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground'}`}>KB</button>
-                                                                            <button onClick={() => setSizeUnit('MB')} className={`px-3 py-1 text-[11px] font-bold rounded-md transition-all ${sizeUnit === 'MB' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground'}`}>MB</button>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 text-[10px] text-blue-700 dark:text-blue-300">
-                                                                        ℹ️ Split into files ≤ <b>{sizeLimit} {sizeUnit}</b> each.
-                                                                    </div>
-                                                                    <label className="flex items-center gap-2 cursor-pointer group">
-                                                                        <div className={`relative w-5 h-5 rounded-md border-2 transition-colors flex items-center justify-center ${allowCompression ? 'bg-primary border-primary' : 'border-slate-300 dark:border-slate-600 group-hover:border-primary/50'}`} onClick={() => setAllowCompression(!allowCompression)}>
-                                                                            {allowCompression && <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
-                                                                        </div>
-                                                                        <span className="text-xs font-bold text-foreground group-hover:text-primary transition-colors">Allow compression</span>
-                                                                    </label>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    )}
-
-                                                    {tool.id === "compress-pdf" && (
-                                                        <div className="space-y-6">
-                                                            <div className="space-y-3">
-                                                                <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Compression Mode</label>
-                                                                <div className="flex gap-2">
-                                                                    <button
-                                                                        onClick={() => setPdfCompressionMode('easy')}
-                                                                        className={`flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-wider border-[2px] transition-all duration-200 ${pdfCompressionMode === 'easy' ? `${tool.theme.bgLight} border-slate-900 ${tool.theme.text} shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] -translate-y-0.5` : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 text-muted-foreground hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'}`}
-                                                                    >
-                                                                        Easy
-                                                                    </button>
-                                                                    <button
-                                                                        onClick={() => setPdfCompressionMode('manual')}
-                                                                        className={`flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-wider border-[2px] transition-all duration-200 ${pdfCompressionMode === 'manual' ? `${tool.theme.bgLight} border-slate-900 ${tool.theme.text} shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] -translate-y-0.5` : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 text-muted-foreground hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'}`}
-                                                                    >
-                                                                        Advanced
-                                                                    </button>
-                                                                    <button
-                                                                        onClick={() => setPdfCompressionMode('target')}
-                                                                        className={`flex-1 py-3 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider border-[2px] transition-all duration-200 ${pdfCompressionMode === 'target' ? `${tool.theme.bgLight} border-slate-900 ${tool.theme.text} shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] -translate-y-0.5` : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 text-muted-foreground hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'}`}
-                                                                    >
-                                                                        Target Size
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-
-                                                            {pdfCompressionMode === 'easy' && (
-                                                                <div className="space-y-3">
-                                                                    {[
-                                                                        { id: 'extreme', label: 'Extreme', desc: 'Low quality, high compression', mult: 0.15 },
-                                                                        { id: 'recommended', label: 'Recommended', desc: 'Good quality, good compression', mult: 0.45 },
-                                                                        { id: 'basic', label: 'Basic', desc: 'High quality, text focused', mult: 0.85 }
-                                                                    ].map((mode) => {
-                                                                        const totalSize = files.reduce((acc, f) => acc + f.size, 0);
-                                                                        let estSizeStr = null;
-                                                                        if (totalSize > 0) {
-                                                                            const estBytes = totalSize * mode.mult;
-                                                                            estSizeStr = estBytes > 1024 * 1024
-                                                                                ? `~${(estBytes / 1024 / 1024).toFixed(1)} MB`
-                                                                                : `~${(estBytes / 1024).toFixed(0)} KB`;
-                                                                        }
-                                                                        return (
-                                                                            <button
-                                                                                key={mode.id}
-                                                                                onClick={() => setCompressionLevel(mode.id)}
-                                                                                className={`w-full text-left py-4 px-4 rounded-xl border-[2px] transition-all duration-200 flex flex-col gap-1 ${compressionLevel === mode.id
-                                                                                    ? `${tool.theme.bgLight} border-slate-900 ${tool.theme.text} shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] -translate-y-0.5`
-                                                                                    : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'
-                                                                                    }`}
-                                                                            >
-                                                                                <div className="flex items-center justify-between w-full">
-                                                                                    <span className="font-black uppercase tracking-wider text-sm">{mode.label}</span>
-                                                                                    {estSizeStr && <span className="font-mono font-bold text-[10px] bg-white/50 dark:bg-black/20 px-2 py-0.5 rounded-md border border-slate-900/10 dark:border-white/10">{estSizeStr}</span>}
-                                                                                </div>
-                                                                                <span className="text-xs font-semibold opacity-80">{mode.desc}</span>
-                                                                            </button>
-                                                                        );
-                                                                    })}
-                                                                </div>
-                                                            )}
-
-                                                            {pdfCompressionMode === 'manual' && (
-                                                                <div className="space-y-6">
-                                                                    <div className="space-y-3">
-                                                                        <div className="flex justify-between items-center">
-                                                                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Image Quality</label>
-                                                                            <span className="text-sm font-mono font-black">{pdfQuality}%</span>
-                                                                        </div>
-                                                                        <RangeSlider
-                                                                            value={pdfQuality}
-                                                                            min={10}
-                                                                            max={100}
-                                                                            step={5}
-                                                                            onChange={setPdfQuality}
-                                                                        />
-                                                                    </div>
-                                                                    <div className="space-y-3">
-                                                                        <div className="flex justify-between items-center">
-                                                                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Maximum DPI</label>
-                                                                            <span className="text-sm font-mono font-black">{pdfDpi} DPI</span>
-                                                                        </div>
-                                                                        <RangeSlider
-                                                                            value={pdfDpi}
-                                                                            min={72}
-                                                                            max={600}
-                                                                            step={20}
-                                                                            onChange={setPdfDpi}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                            )}
-
-                                                            {pdfCompressionMode === 'target' && (
-                                                                <div className="space-y-4">
-                                                                    <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wider mb-2">Target Size (KB)</label>
-                                                                    <input
-                                                                        type="number"
-                                                                        min={1}
-                                                                        value={pdfTargetSizeKB || ""}
-                                                                        onChange={(e) => setPdfTargetSizeKB(parseInt(e.target.value) || 0)}
-                                                                        placeholder="e.g. 100"
-                                                                        className="w-full px-4 py-3 rounded-xl border-[2px] border-slate-900 dark:border-slate-700 bg-white dark:bg-slate-800 text-foreground font-black text-lg focus:outline-none shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] transition-all placeholder:font-semibold placeholder:text-slate-400"
+                                                                    <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Format</label>
+                                                                    <FormatSelector
+                                                                        value={targetFormat}
+                                                                        onChange={setTargetFormat}
+                                                                        options={tool.id === "convert-audio" ? AUDIO_CONVERTER_FORMATS : IMAGE_CONVERTER_FORMATS}
+                                                                        theme="dark"
                                                                     />
-                                                                    <p className="text-xs font-medium text-muted-foreground leading-relaxed">Aggressively iterate down image quality and DPI inside the PDF to meet this target size.</p>
+                                                                </div>
+                                                            )}
+
+                                                            {tool.id === "convert-image" && (
+                                                                <div className="space-y-3">
+                                                                    <div className="flex justify-between items-center">
+                                                                        <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Quality</label>
+                                                                        <span className="text-xs font-mono text-primary font-bold">{quality}%</span>
+                                                                    </div>
+                                                                    <RangeSlider value={quality} min={1} max={100} onChange={setQuality} />
                                                                 </div>
                                                             )}
                                                         </div>
-                                                    )}
 
-                                                    {showFormatSelector && (
-                                                        <div className="space-y-3">
-                                                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Format</label>
-                                                            <FormatSelector
-                                                                value={targetFormat}
-                                                                onChange={setTargetFormat}
-                                                                options={tool.id === "convert-audio" ? AUDIO_CONVERTER_FORMATS : IMAGE_CONVERTER_FORMATS}
-                                                                theme="dark"
-                                                            />
-                                                        </div>
-                                                    )}
-
-                                                    {tool.id === "convert-image" && (
-                                                        <div className="space-y-3">
-                                                            <div className="flex justify-between items-center">
-                                                                <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Quality</label>
-                                                                <span className="text-xs font-mono text-primary font-bold">{quality}%</span>
-                                                            </div>
-                                                            <RangeSlider value={quality} min={1} max={100} onChange={setQuality} />
-                                                        </div>
-                                                    )}
+                                                    </div>
                                                 </div>
+                                            </div>
+                                        )}
 
+                                    </div>
+
+                                    {/* State 1 and 2: "Under Tool" Ad - Shown when idle (both before and during file configuration) */}
+                                    {status === "idle" && (
+                                        <div className="hidden md:flex w-full justify-center pt-8 pb-4">
+                                            <AdSlot adSlotId="UNDER_TOOL_BANNER" format="leaderboard" isTest={true} />
+                                        </div>
+                                    )}
+
+                                    <ToolInfoSection tool={tool} />
+                                </div>
+                            </div>
+                        )
+                        } {/* End Selection Subpage */}
+
+                        {/* 2. PROCESSING SUBPAGE */}
+                        {
+                            (status === "uploading" || status === "converting" || status === "processing") && (
+                                <div className="w-full flex flex-col items-center justify-center min-h-[500px] animate-in zoom-in-95 fade-in duration-500 pb-32">
+                                    <div className="bg-card dark:bg-[#1A1D24] w-full p-8 md:p-12 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-xl text-center relative overflow-hidden">
+                                        <div className="relative z-10 flex flex-col items-center justify-between mb-8">
+                                            <h2 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tight flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+                                                {status === "uploading" && <><span className="text-blue-500 animate-pulse">Uploading</span> files...</>}
+                                                {(status === "converting" || status === "processing") && (
+                                                    isGhostMode
+                                                        ? <><span className="text-indigo-500 animate-pulse">Processing files</span> locally...</>
+                                                        : <><span className="text-indigo-500 animate-pulse">Converting</span> files...</>
+                                                )}
+                                            </h2>
+                                            <p className="text-sm font-medium text-muted-foreground mt-3 md:mt-2 px-4">
+                                                {isGhostMode ? "Your data never leaves your device." : "Hang tight, we are crunching the numbers..."}
+                                            </p>
+                                        </div>
+                                        <div className="relative z-10">
+                                            <NeuroProgressBar
+                                                progress={simulatedProgress}
+                                                className={`h-4 md:h-6 rounded-full w-full max-w-lg mx-auto bg-blue-600 overflow-hidden shadow-inner ring-1 ring-border`}
+                                                color="blue"
+                                                segments={isGhostMode ? ["Read", "Process", "Save"] : ["Upload", "Process", "Download"]}
+                                                isGhostMode={isGhostMode}
+                                            />
+                                            <div className="mt-8 flex justify-center">
+                                                <button
+                                                    onClick={handleCancel}
+                                                    className="group flex items-center justify-center gap-2 px-8 py-3.5 bg-red-500 hover:bg-red-400 active:bg-red-600 text-white font-black text-sm uppercase tracking-wider rounded-full border-[3px] border-slate-900 dark:border-slate-800 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] dark:shadow-[4px_4px_0px_0px_rgba(30,41,59,1)] transition-all duration-[200ms] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none active:scale-95"
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-5 h-5 transition-transform group-hover:rotate-90 group-active:scale-75"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                                                    Cancel Operation
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
-                                )}
-
-                            </div>
-
-                            {/* State 1 and 2: "Under Tool" Ad - Shown when idle (both before and during file configuration) */}
-                            {status === "idle" && (
-                                <div className="hidden md:flex w-full justify-center pt-8 pb-4">
-                                    <AdSlot adSlotId="UNDER_TOOL_BANNER" format="leaderboard" isTest={true} />
                                 </div>
-                            )}
+                            )
+                        } {/* End Processing Subpage */}
 
-                            <ToolInfoSection tool={tool} />
-                        </div>
-                    </div>
-                )
-                } {/* End Selection Subpage */}
+                        {/* 3. DOWNLOAD SUBPAGE (Success Status) */}
+                        {
+                            status === "success" && result && (
+                                <div className="flex flex-col xl:flex-row gap-6 w-full items-stretch">
+                                    <div className="flex-1 w-full animate-in slide-in-from-bottom-4 fade-in duration-500 min-h-[500px] bg-card dark:bg-[#1A1D24] rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-xl p-6 md:p-8">
+                                        <ConversionSuccessModal
+                                            result={result}
+                                            tool={tool}
+                                            isGhostMode={isGhostMode}
+                                            onReset={reset}
+                                        />
+                                    </div>
 
-                {/* 2. PROCESSING SUBPAGE */}
-                {
-                    (status === "uploading" || status === "converting" || status === "processing") && (
-                        <div className="w-full flex flex-col items-center justify-center min-h-[500px] animate-in zoom-in-95 fade-in duration-500 pb-32">
-                            <div className="bg-card dark:bg-[#1A1D24] w-full p-8 md:p-12 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-xl text-center relative overflow-hidden">
-                                <div className="relative z-10 flex flex-col items-center justify-between mb-8">
-                                    <h2 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tight flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
-                                        {status === "uploading" && <><span className="text-blue-500 animate-pulse">Uploading</span> files...</>}
-                                        {(status === "converting" || status === "processing") && (
-                                            isGhostMode
-                                                ? <><span className="text-indigo-500 animate-pulse">Processing files</span> locally...</>
-                                                : <><span className="text-indigo-500 animate-pulse">Converting</span> files...</>
-                                        )}
-                                    </h2>
-                                    <p className="text-sm font-medium text-muted-foreground mt-3 md:mt-2 px-4">
-                                        {isGhostMode ? "Your data never leaves your device." : "Hang tight, we are crunching the numbers..."}
-                                    </p>
-                                </div>
-                                <div className="relative z-10">
-                                    <NeuroProgressBar
-                                        progress={simulatedProgress}
-                                        className={`h-4 md:h-6 rounded-full w-full max-w-lg mx-auto bg-blue-600 overflow-hidden shadow-inner ring-1 ring-border`}
-                                        color="blue"
-                                        segments={isGhostMode ? ["Read", "Process", "Save"] : ["Upload", "Process", "Download"]}
-                                        isGhostMode={isGhostMode}
-                                    />
-                                    <div className="mt-8 flex justify-center">
-                                        <button
-                                            onClick={handleCancel}
-                                            className="group flex items-center justify-center gap-2 px-8 py-3.5 bg-red-500 hover:bg-red-400 active:bg-red-600 text-white font-black text-sm uppercase tracking-wider rounded-full border-[3px] border-slate-900 dark:border-slate-800 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] dark:shadow-[4px_4px_0px_0px_rgba(30,41,59,1)] transition-all duration-[200ms] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none active:scale-95"
-                                        >
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-5 h-5 transition-transform group-hover:rotate-90 group-active:scale-75"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-                                            Cancel Operation
-                                        </button>
+                                    {/* State 3: Success "High Conversion" Ad Card (Mobile & Desktop) */}
+                                    <div className="flex flex-col md:flex-row xl:flex-col justify-center items-center gap-6 w-full xl:w-[332px] shrink-0 animate-in fade-in duration-500 delay-300 bg-card dark:bg-[#1A1D24] rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-xl p-6 xl:p-4">
+                                        {/* Ad 1 */}
+                                        <div className="w-full flex-1 flex items-center justify-center">
+                                            <AdSlot adSlotId="SUCCESS_SIDEBAR_AD_1" format="rectangle" isTest={true} className="!w-full !max-w-[300px] !h-full" />
+                                        </div>
+                                        {/* Separator */}
+                                        <div className="hidden xl:block w-full h-px bg-slate-200 dark:bg-slate-800"></div>
+                                        <div className="md:hidden xl:hidden w-full h-px bg-slate-200 dark:bg-slate-800"></div>
+                                        {/* Ad 2 */}
+                                        <div className="w-full flex-1 flex items-center justify-center">
+                                            <AdSlot adSlotId="SUCCESS_SIDEBAR_AD_2" format="rectangle" isTest={true} className="!w-full !max-w-[300px] !h-full" />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    )
-                } {/* End Processing Subpage */}
+                            )
+                        } {/* End Download Subpage */}
 
-                {/* 3. DOWNLOAD SUBPAGE (Success Status) */}
-                {
-                    status === "success" && result && (
-                        <div className="flex flex-col xl:flex-row gap-6 w-full items-stretch">
-                            <div className="flex-1 w-full animate-in slide-in-from-bottom-4 fade-in duration-500 min-h-[500px] bg-card dark:bg-[#1A1D24] rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-xl p-6 md:p-8">
-                                <ConversionSuccessModal
-                                    result={result}
-                                    tool={tool}
-                                    isGhostMode={isGhostMode}
-                                    onReset={reset}
-                                />
-                            </div>
-
-                            {/* State 3: Success "High Conversion" Ad Card (Mobile & Desktop) */}
-                            <div className="flex flex-col md:flex-row xl:flex-col justify-center items-center gap-6 w-full xl:w-[332px] shrink-0 animate-in fade-in duration-500 delay-300 bg-card dark:bg-[#1A1D24] rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-xl p-6 xl:p-4">
-                                {/* Ad 1 */}
-                                <div className="w-full flex-1 flex items-center justify-center">
-                                    <AdSlot adSlotId="SUCCESS_SIDEBAR_AD_1" format="rectangle" isTest={true} className="!w-full !max-w-[300px] !h-full" />
+                        {/* Error Banner fallback in case processing wasn't caught by the progress screen */}
+                        {
+                            status === "error" && errorMsg && (
+                                <div className="bg-[#ff4d4f] text-white p-6 md:p-8 rounded-2xl text-center max-w-2xl mx-auto border-[3px] border-slate-900 dark:border-slate-800 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] dark:shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] flex flex-col items-center gap-5 animate-in fade-in slide-in-from-top-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-12 h-12 flex-shrink-0 text-white"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
+                                    <div className="text-xl font-black break-words tracking-tight uppercase leading-snug">{errorMsg}</div>
+                                    <button onClick={reset} className="mt-4 px-8 py-3 bg-white text-slate-900 rounded-xl font-black uppercase tracking-wider border-[3px] border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none active:scale-95 transition-all duration-200">
+                                        Try Again
+                                    </button>
                                 </div>
-                                {/* Separator */}
-                                <div className="hidden xl:block w-full h-px bg-slate-200 dark:bg-slate-800"></div>
-                                <div className="md:hidden xl:hidden w-full h-px bg-slate-200 dark:bg-slate-800"></div>
-                                {/* Ad 2 */}
-                                <div className="w-full flex-1 flex items-center justify-center">
-                                    <AdSlot adSlotId="SUCCESS_SIDEBAR_AD_2" format="rectangle" isTest={true} className="!w-full !max-w-[300px] !h-full" />
+                            )
+                        }
+
+                        {/* UNIVERSAL STICKY PROCESS BUTTON */}
+                        {
+                            files.length > 0 && status === "idle" && (
+                                <div className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 bg-background/80 md:bg-transparent backdrop-blur-md md:backdrop-blur-none border-t border-border md:border-t-0 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] md:shadow-none flex justify-center animate-in slide-in-from-bottom-8">
+                                    <button
+                                        onClick={() => handleProcess()}
+                                        className={`w-full md:w-auto md:min-w-[400px] h-14 md:h-16 rounded-full font-black uppercase tracking-wider text-xl transition-all duration-200 transform group relative overflow-hidden active:translate-y-0 active:scale-95 active:shadow-none hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] border-[3px] border-slate-900 dark:border-slate-800 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] dark:shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] ${tool.theme.gradient} text-white`}
+                                    >
+                                        <div className="absolute inset-0 -translate-x-[150%] skew-x-12 bg-white/30 group-hover:animate-[shine_1.5s_ease-out_infinite]" />
+                                        <span className="relative flex items-center justify-center gap-3">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-6 h-6 animate-bounce-horizontal"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                                            Process {files.length} File{files.length !== 1 ? 's' : ''}
+                                        </span>
+                                    </button>
                                 </div>
-                            </div>
-                        </div>
-                    )
-                } {/* End Download Subpage */}
+                            )
+                        }
 
-                {/* Error Banner fallback in case processing wasn't caught by the progress screen */}
-                {
-                    status === "error" && errorMsg && (
-                        <div className="bg-[#ff4d4f] text-white p-6 md:p-8 rounded-2xl text-center max-w-2xl mx-auto border-[3px] border-slate-900 dark:border-slate-800 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] dark:shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] flex flex-col items-center gap-5 animate-in fade-in slide-in-from-top-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-12 h-12 flex-shrink-0 text-white"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
-                            <div className="text-xl font-black break-words tracking-tight uppercase leading-snug">{errorMsg}</div>
-                            <button onClick={reset} className="mt-4 px-8 py-3 bg-white text-slate-900 rounded-xl font-black uppercase tracking-wider border-[3px] border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none active:scale-95 transition-all duration-200">
-                                Try Again
-                            </button>
-                        </div>
-                    )
-                }
-
-                {/* UNIVERSAL STICKY PROCESS BUTTON */}
-                {
-                    files.length > 0 && status === "idle" && (
-                        <div className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 bg-background/80 md:bg-transparent backdrop-blur-md md:backdrop-blur-none border-t border-border md:border-t-0 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] md:shadow-none flex justify-center animate-in slide-in-from-bottom-8">
-                            <button
-                                onClick={() => handleProcess()}
-                                className={`w-full md:w-auto md:min-w-[400px] h-14 md:h-16 rounded-full font-black uppercase tracking-wider text-xl transition-all duration-200 transform group relative overflow-hidden active:translate-y-0 active:scale-95 active:shadow-none hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] border-[3px] border-slate-900 dark:border-slate-800 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] dark:shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] ${tool.theme.gradient} text-white`}
-                            >
-                                <div className="absolute inset-0 -translate-x-[150%] skew-x-12 bg-white/30 group-hover:animate-[shine_1.5s_ease-out_infinite]" />
-                                <span className="relative flex items-center justify-center gap-3">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-6 h-6 animate-bounce-horizontal"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
-                                    Process {files.length} File{files.length !== 1 ? 's' : ''}
-                                </span>
-                            </button>
-                        </div>
-                    )
-                }
-
-                {/* Modals outside main view container */}
-                {previewFile && <FilePreviewModal file={previewFile} onClose={() => setPreviewFile(null)} />}
-                {showGhostExplainer && <GhostModeExplainerModal onClose={() => setShowGhostExplainer(false)} />}
-            </div >
-        </div >
+                        {/* Modals outside main view container */}
+                        {previewFile && <FilePreviewModal file={previewFile} onClose={() => setPreviewFile(null)} />}
+                        {showGhostExplainer && <GhostModeExplainerModal onClose={() => setShowGhostExplainer(false)} />}
+                    </>
+                )}
+            </div>
+        </div>
     );
 }
 

@@ -41,7 +41,6 @@ export default function TimeConverter() {
 
     return (
         <div className="bg-card rounded-3xl shadow-xl border border-border p-8 max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-center text-foreground mb-4">Time Zone Converter</h2>
             <p className="text-center text-muted-foreground mb-10 max-w-xl mx-auto">
                 Convert between Central Standard Time (CST) and Eastern Standard Time (EST). Click on the time field to change time.
             </p>

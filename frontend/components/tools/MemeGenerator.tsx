@@ -71,8 +71,6 @@ export default function MemeGenerator() {
 
     return (
         <div className="bg-card rounded-3xl shadow-xl border border-border p-8 max-w-5xl mx-auto">
-            <h2 className="text-2xl font-bold text-foreground mb-6">Meme Generator</h2>
-
             {!imageSrc ? (
                 <Dropzone
                     onFilesSelected={handleFiles}

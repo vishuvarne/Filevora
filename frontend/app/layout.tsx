@@ -16,8 +16,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://convertlocally.web.app"),
-  title: "ConvertLocally – Free Online File Converter for PDF, Images, Video & Audio",
+  metadataBase: new URL("https://convertlocally.com"),
+  title: "ConvertLocally – Free Online File Converter (PDF, Image, Video)",
   description: "ConvertLocally is a free online file converter for PDF, images, video, audio, and documents. Fast, secure, and no signup required.",
   keywords: [
     // Core converter keywords
@@ -75,7 +75,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://convertlocally.web.app",
+    url: "https://convertlocally.com",
     siteName: "ConvertLocally",
     title: "ConvertLocally – Free Online File Converter",
     description: "Convert, Edit, and Compress files online for free.",
@@ -142,18 +142,18 @@ export default function RootLayout({
                 "@context": "https://schema.org",
                 "@type": "Organization",
                 "name": "ConvertLocally",
-                "url": "https://convertlocally.web.app",
-                "logo": "https://convertlocally.web.app/logo.png",
+                "url": "https://convertlocally.com",
+                "logo": "https://convertlocally.com/logo.png",
                 "sameAs": []
               },
               {
                 "@context": "https://schema.org",
                 "@type": "WebSite",
                 "name": "ConvertLocally",
-                "url": "https://convertlocally.web.app",
+                "url": "https://convertlocally.com",
                 "potentialAction": {
                   "@type": "SearchAction",
-                  "target": "https://convertlocally.web.app/?q={search_term_string}",
+                  "target": "https://convertlocally.com/?q={search_term_string}",
                   "query-input": "required name=search_term_string"
                 }
               }
