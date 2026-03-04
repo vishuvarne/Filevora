@@ -712,16 +712,21 @@ html {
 }
 
 /* ================================================
-   NEUBRUTALIST — Compression Mode Cards
+   NEUBRUTALIST — Compression / Settings Cards
    ================================================ */
-/* All compression cards base */
+/* All settings & compression cards base */
 [data-design="neubrutalist"] .space-y-4 button.rounded-xl,
-[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl {
+[data-design="neubrutalist"] .space-y-6 button.rounded-xl,
+[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl,
+[data-design="neubrutalist"] .flex.gap-3 button.rounded-xl,
+[data-design="neubrutalist"] .flex.gap-2 button.rounded-xl {
   border: var(--nb-border-thin) !important;
   border-radius: var(--nb-r-lg) !important;
   background: var(--nb-card) !important;
-  box-shadow: none !important;
+  color: var(--nb-text) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
   --tw-ring-shadow: none !important;
+  font-weight: 700 !important;
   transition: transform 200ms var(--nb-ease),
     box-shadow 200ms var(--nb-ease),
     border-color 200ms ease,
@@ -731,23 +736,34 @@ html {
 
 /* Unselected card hover */
 [data-design="neubrutalist"] .space-y-4 button.rounded-xl:hover,
-[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl:hover {
-  transform: translateY(-1px) scale(1.01) !important;
-  box-shadow: var(--nb-shadow-sm) !important;
+[data-design="neubrutalist"] .space-y-6 button.rounded-xl:hover,
+[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl:hover,
+[data-design="neubrutalist"] .flex.gap-3 button.rounded-xl:hover,
+[data-design="neubrutalist"] .flex.gap-2 button.rounded-xl:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: var(--nb-shadow) !important;
   border-color: var(--nb-pink) !important;
 }
 
 /* Unselected card active/click */
 [data-design="neubrutalist"] .space-y-4 button.rounded-xl:active,
-[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl:active {
+[data-design="neubrutalist"] .space-y-6 button.rounded-xl:active,
+[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl:active,
+[data-design="neubrutalist"] .flex.gap-3 button.rounded-xl:active,
+[data-design="neubrutalist"] .flex.gap-2 button.rounded-xl:active {
   transform: translateY(1px) scale(0.97) !important;
-  box-shadow: none !important;
+  box-shadow: var(--nb-shadow-active) !important;
   transition: transform 100ms ease-out, box-shadow 100ms ease-out !important;
 }
 
-/* Selected card — yellow highlight (has ring-1 and border-primary) */
+/* Selected card — yellow highlight (has ring-1 or border-primary) */
 [data-design="neubrutalist"] .space-y-4 button.rounded-xl.ring-1,
-[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl.ring-1 {
+[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl.ring-1,
+[data-design="neubrutalist"] .space-y-4 button.rounded-xl.border-primary,
+[data-design="neubrutalist"] .space-y-6 button.rounded-xl.border-primary,
+[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl.border-primary,
+[data-design="neubrutalist"] .flex.gap-3 button.rounded-xl.border-primary,
+[data-design="neubrutalist"] .flex.gap-2 button.rounded-xl.border-primary {
   background: var(--nb-yellow) !important;
   border: var(--nb-border-thick) !important;
   border-radius: var(--nb-r-lg) !important;
@@ -758,23 +774,32 @@ html {
 }
 
 [data-design="neubrutalist"] .space-y-4 button.rounded-xl.ring-1 .text-primary,
-[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl.ring-1 .text-primary {
+[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl.ring-1 .text-primary,
+[data-design="neubrutalist"] button.rounded-xl.border-primary .text-primary {
   color: #1A1A1A !important;
 }
 
 /* Selected card hover — slight lift */
 [data-design="neubrutalist"] .space-y-4 button.rounded-xl.ring-1:hover,
-[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl.ring-1:hover {
-  transform: translateY(-1px) scale(1.01) !important;
+[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl.ring-1:hover,
+[data-design="neubrutalist"] button.rounded-xl.border-primary:hover {
+  transform: translateY(-2px) scale(1.02) !important;
   box-shadow: var(--nb-shadow-hover) !important;
 }
 
 /* Selected card active/click */
 [data-design="neubrutalist"] .space-y-4 button.rounded-xl.ring-1:active,
-[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl.ring-1:active {
+[data-design="neubrutalist"] .flex.flex-col.gap-2 button.rounded-xl.ring-1:active,
+[data-design="neubrutalist"] button.rounded-xl.border-primary:active {
   transform: translateY(1px) scale(0.97) !important;
   box-shadow: var(--nb-shadow-active) !important;
   transition: transform 100ms ease-out, box-shadow 100ms ease-out !important;
+}
+
+/* Section labels in settings (PAGE ORIENTATION, MARGIN, etc.) */
+.dark[data-design="neubrutalist"] label.text-sm.uppercase,
+[data-design="neubrutalist"].dark label.text-sm.uppercase {
+  color: var(--nb-text2) !important;
 }
 
 /* "Manual" / toggle pill button  */

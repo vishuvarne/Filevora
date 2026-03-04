@@ -1149,15 +1149,15 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                             <div className="flex flex-col gap-6 w-full">
                                                                 {tool.id.includes("rotate") && (
                                                                     <div className="space-y-3">
-                                                                        <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Rotation Angle</label>
+                                                                        <label className="text-sm font-bold text-muted-foreground dark:!text-slate-400 uppercase tracking-wider">Rotation Angle</label>
                                                                         <div className="flex gap-2">
                                                                             {[90, 180, 270].map(angle => (
                                                                                 <button
                                                                                     key={angle}
                                                                                     onClick={() => setRotateAngle(angle)}
-                                                                                    className={`flex-1 py-3 rounded-xl text-sm font-bold border transition-all ${rotateAngle === angle
-                                                                                        ? `${tool.theme.bgLight} ${tool.theme.border} ${tool.theme.text} shadow-sm scale-[1.02]`
-                                                                                        : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-muted-foreground hover:scale-[1.02]'
+                                                                                    className={`flex-1 py-3 rounded-xl text-sm font-bold border-2 transition-all ${rotateAngle === angle
+                                                                                        ? 'bg-primary/10 dark:bg-primary/20 border-primary text-primary shadow-sm scale-[1.02]'
+                                                                                        : 'border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 hover:scale-[1.02]'
                                                                                         }`}
                                                                                 >
                                                                                     {angle}°
@@ -1171,7 +1171,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                                     <div className="space-y-6">
                                                                         {/* Page Orientation */}
                                                                         <div className="space-y-3">
-                                                                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Page orientation</label>
+                                                                            <label className="text-sm font-bold text-muted-foreground dark:!text-slate-400 uppercase tracking-wider">Page orientation</label>
                                                                             <div className="flex gap-3">
                                                                                 {[
                                                                                     { id: 'portrait' as const, label: 'Portrait', icon: (<svg viewBox="0 0 24 32" className="w-5 h-7" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="2" width="18" height="28" rx="2" /></svg>) },
@@ -1180,9 +1180,9 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                                                     <button
                                                                                         key={opt.id}
                                                                                         onClick={() => setPdfOrientation(opt.id)}
-                                                                                        className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-xl text-sm font-bold border transition-all ${pdfOrientation === opt.id
-                                                                                            ? `${tool.theme.bgLight} ${tool.theme.border} ${tool.theme.text} shadow-sm scale-[1.02]`
-                                                                                            : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-muted-foreground hover:scale-[1.02]'
+                                                                                        className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-xl text-sm font-bold border-2 transition-all ${pdfOrientation === opt.id
+                                                                                            ? 'bg-primary/10 dark:bg-primary/20 border-primary text-primary shadow-sm scale-[1.02]'
+                                                                                            : 'border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 hover:scale-[1.02]'
                                                                                             }`}
                                                                                     >
                                                                                         {opt.icon}
@@ -1194,7 +1194,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
 
                                                                         {/* Page Size */}
                                                                         <div className="space-y-3">
-                                                                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Page size</label>
+                                                                            <label className="text-sm font-bold text-muted-foreground dark:!text-slate-400 uppercase tracking-wider">Page size</label>
                                                                             <select
                                                                                 value={pdfPageSize}
                                                                                 onChange={(e) => setPdfPageSize(e.target.value as 'fit' | 'a4' | 'letter')}
@@ -1209,7 +1209,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
 
                                                                         {/* Margin */}
                                                                         <div className="space-y-3">
-                                                                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Margin</label>
+                                                                            <label className="text-sm font-bold text-muted-foreground dark:!text-slate-400 uppercase tracking-wider">Margin</label>
                                                                             <div className="flex gap-3">
                                                                                 {[
                                                                                     { id: 'none' as const, label: 'No margin', icon: (<svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="2" width="20" height="20" rx="2" /><rect x="4" y="4" width="16" height="16" rx="1" fill="currentColor" opacity="0.15" /></svg>) },
@@ -1219,9 +1219,9 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                                                     <button
                                                                                         key={opt.id}
                                                                                         onClick={() => setPdfMargin(opt.id)}
-                                                                                        className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-xl text-sm font-bold border transition-all ${pdfMargin === opt.id
-                                                                                            ? `${tool.theme.bgLight} ${tool.theme.border} ${tool.theme.text} shadow-sm scale-[1.02]`
-                                                                                            : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-muted-foreground hover:scale-[1.02]'
+                                                                                        className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-xl text-sm font-bold border-2 transition-all ${pdfMargin === opt.id
+                                                                                            ? 'bg-primary/10 dark:bg-primary/20 border-primary text-primary shadow-sm scale-[1.02]'
+                                                                                            : 'border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 hover:scale-[1.02]'
                                                                                             }`}
                                                                                     >
                                                                                         {opt.icon}
@@ -1250,10 +1250,10 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                                             </div>
                                                                         )}
                                                                         <div className="space-y-3">
-                                                                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Split mode</label>
+                                                                            <label className="text-sm font-bold text-muted-foreground dark:!text-slate-400 uppercase tracking-wider">Split mode</label>
                                                                             <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
                                                                                 {(['range', 'pages', 'size'] as const).map(mode => (
-                                                                                    <button key={mode} onClick={() => setSplitMode(mode)} className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all flex flex-col items-center justify-center gap-1 ${splitMode === mode ? 'bg-white dark:bg-slate-700 text-primary shadow-sm border border-primary/20' : 'text-muted-foreground hover:text-foreground'}`}>
+                                                                                    <button key={mode} onClick={() => setSplitMode(mode)} className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all flex flex-col items-center justify-center gap-1 ${splitMode === mode ? 'bg-white dark:bg-slate-700 text-primary shadow-sm border border-primary/20' : 'text-muted-foreground dark:!text-slate-200 hover:text-foreground dark:hover:text-slate-200'}`}>
                                                                                         {mode === 'range' && <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></svg>}
                                                                                         {mode === 'pages' && <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="8" height="10" rx="1" /><rect x="13" y="3" width="8" height="10" rx="1" /><rect x="3" y="15" width="8" height="6" rx="1" /><rect x="13" y="15" width="8" height="6" rx="1" /></svg>}
                                                                                         {mode === 'size' && <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="4" width="9" height="12" rx="1" /><rect x="13" y="4" width="9" height="12" rx="1" /><path d="M6.5 20h11" strokeLinecap="round" /></svg>}
@@ -1299,8 +1299,8 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                                         {splitMode === 'pages' && (
                                                                             <div className="space-y-4">
                                                                                 <div className="flex gap-2 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
-                                                                                    <button onClick={() => setExtractMode('all')} className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${extractMode === 'all' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Extract all pages</button>
-                                                                                    <button onClick={() => setExtractMode('select')} className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${extractMode === 'select' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Select pages</button>
+                                                                                    <button onClick={() => setExtractMode('all')} className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${extractMode === 'all' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground dark:!text-slate-200 hover:text-foreground'}`}>Extract all pages</button>
+                                                                                    <button onClick={() => setExtractMode('select')} className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${extractMode === 'select' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground dark:!text-slate-200 hover:text-foreground'}`}>Select pages</button>
                                                                                 </div>
                                                                                 {extractMode === 'select' && (
                                                                                     <div className="space-y-3">
@@ -1348,7 +1348,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                                 {tool.id === "compress-pdf" && (
                                                                     <div className="space-y-4">
                                                                         <div className="flex items-center justify-between flex-wrap gap-2">
-                                                                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Compression Mode</label>
+                                                                            <label className="text-sm font-bold text-muted-foreground dark:text-slate-400 uppercase tracking-wider">Compression Mode</label>
                                                                             <div className="flex items-center gap-1 bg-primary/10 p-1 rounded-lg">
                                                                                 <button
                                                                                     onClick={() => setPdfCompressionMode('easy')}
@@ -1456,7 +1456,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
 
                                                                 {showFormatSelector && (
                                                                     <div className="space-y-3">
-                                                                        <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Target Format</label>
+                                                                        <label className="text-sm font-bold text-muted-foreground dark:!text-slate-400 uppercase tracking-wider">Target Format</label>
                                                                         <div className="relative">
                                                                             <FormatSelector
                                                                                 value={targetFormat}
@@ -1471,7 +1471,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                                 {tool.id === "convert-image" && (
                                                                     <div className="space-y-3">
                                                                         <div className="flex justify-between items-center mb-1">
-                                                                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Quality</label>
+                                                                            <label className="text-sm font-bold text-muted-foreground dark:!text-slate-400 uppercase tracking-wider">Quality</label>
                                                                             <span className="text-sm font-mono text-primary font-bold bg-primary/10 px-2 py-0.5 rounded-md">{quality}%</span>
                                                                         </div>
                                                                         <RangeSlider
@@ -1685,7 +1685,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                         <div className="flex flex-col gap-6 w-full">
                                                             {tool.id.includes("rotate") && (
                                                                 <div className="space-y-3">
-                                                                    <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Rotation Angle</label>
+                                                                    <label className="text-sm font-bold text-muted-foreground dark:!text-slate-400 uppercase tracking-wider">Rotation Angle</label>
                                                                     <div className="flex gap-2">
                                                                         {[90, 180, 270].map(angle => (
                                                                             <button
@@ -1693,7 +1693,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                                                 onClick={() => setRotateAngle(angle)}
                                                                                 className={`flex-1 py-3.5 rounded-xl text-base font-black uppercase tracking-wider border-[2px] transition-all duration-200 ${rotateAngle === angle
                                                                                     ? `${tool.theme.bgLight} border-slate-900 ${tool.theme.text} shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] -translate-y-0.5`
-                                                                                    : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 text-muted-foreground hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'
+                                                                                    : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 text-muted-foreground dark:!text-slate-200 hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'
                                                                                     }`}
                                                                             >
                                                                                 {angle}°
@@ -1707,7 +1707,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                                 <div className="space-y-6">
                                                                     {/* Page Orientation */}
                                                                     <div className="space-y-3">
-                                                                        <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Page orientation</label>
+                                                                        <label className="text-sm font-bold text-muted-foreground dark:!text-slate-400 uppercase tracking-wider">Page orientation</label>
                                                                         <div className="flex gap-3">
                                                                             {[
                                                                                 { id: 'portrait' as const, label: 'Portrait', icon: (<svg viewBox="0 0 24 32" className="w-5 h-7" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="2" width="18" height="28" rx="2" /></svg>) },
@@ -1718,7 +1718,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                                                     onClick={() => setPdfOrientation(opt.id)}
                                                                                     className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-xl text-sm font-black uppercase tracking-wider border-[2px] transition-all duration-200 ${pdfOrientation === opt.id
                                                                                         ? `${tool.theme.bgLight} border-slate-900 ${tool.theme.text} shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] -translate-y-0.5`
-                                                                                        : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 text-muted-foreground hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'
+                                                                                        : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 text-muted-foreground dark:!text-slate-200 hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'
                                                                                         }`}
                                                                                 >
                                                                                     {opt.icon}
@@ -1730,7 +1730,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
 
                                                                     {/* Page Size */}
                                                                     <div className="space-y-3">
-                                                                        <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Page size</label>
+                                                                        <label className="text-sm font-bold text-muted-foreground dark:!text-slate-400 uppercase tracking-wider">Page size</label>
                                                                         <select
                                                                             value={pdfPageSize}
                                                                             onChange={(e) => setPdfPageSize(e.target.value as 'fit' | 'a4' | 'letter')}
@@ -1745,7 +1745,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
 
                                                                     {/* Margin */}
                                                                     <div className="space-y-3">
-                                                                        <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Margin</label>
+                                                                        <label className="text-sm font-bold text-muted-foreground dark:!text-slate-400 uppercase tracking-wider">Margin</label>
                                                                         <div className="flex gap-2">
                                                                             {[
                                                                                 { id: 'none' as const, label: 'None' },
@@ -1757,7 +1757,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                                                     onClick={() => setPdfMargin(opt.id)}
                                                                                     className={`flex-1 py-3 rounded-xl text-center text-sm font-black uppercase tracking-wider border-[2px] transition-all duration-200 ${pdfMargin === opt.id
                                                                                         ? `${tool.theme.bgLight} border-slate-900 ${tool.theme.text} shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] -translate-y-0.5`
-                                                                                        : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 text-muted-foreground hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'
+                                                                                        : 'border-slate-900/20 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 hover:bg-[#f4f4f5] dark:hover:bg-slate-800 text-muted-foreground dark:!text-slate-200 hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(15,23,42,0.2)] dark:hover:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)]'
                                                                                         }`}
                                                                                 >
                                                                                     {opt.label}
@@ -1785,10 +1785,10 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                                         </div>
                                                                     )}
                                                                     <div className="space-y-2">
-                                                                        <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">SPLIT MODE</label>
+                                                                        <label className="text-sm font-bold text-muted-foreground dark:!text-slate-400 uppercase tracking-wider">SPLIT MODE</label>
                                                                         <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
                                                                             {(['range', 'pages', 'size'] as const).map(mode => (
-                                                                                <button key={mode} onClick={() => setSplitMode(mode)} className={`flex-1 py-3 text-sm font-bold rounded-lg transition-all flex flex-col items-center justify-center gap-1 ${splitMode === mode ? 'bg-white dark:bg-slate-700 text-primary shadow-sm border border-primary/20' : 'text-muted-foreground hover:text-foreground'}`}>
+                                                                                <button key={mode} onClick={() => setSplitMode(mode)} className={`flex-1 py-3 text-sm font-bold rounded-lg transition-all flex flex-col items-center justify-center gap-1 ${splitMode === mode ? 'bg-white dark:bg-slate-700 text-primary shadow-sm border border-primary/20' : 'text-muted-foreground dark:!text-slate-200 hover:text-foreground dark:hover:text-slate-200'}`}>
                                                                                     {mode === 'range' && <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></svg>}
                                                                                     {mode === 'pages' && <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="8" height="10" rx="1" /><rect x="13" y="3" width="8" height="10" rx="1" /><rect x="3" y="15" width="8" height="6" rx="1" /><rect x="13" y="15" width="8" height="6" rx="1" /></svg>}
                                                                                     {mode === 'size' && <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="4" width="9" height="12" rx="1" /><rect x="13" y="4" width="9" height="12" rx="1" /><path d="M6.5 20h11" strokeLinecap="round" /></svg>}
@@ -1834,12 +1834,12 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                                     {splitMode === 'pages' && (
                                                                         <div className="space-y-3">
                                                                             <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
-                                                                                <button onClick={() => setExtractMode('all')} className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${extractMode === 'all' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>All pages</button>
-                                                                                <button onClick={() => setExtractMode('select')} className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${extractMode === 'select' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Select pages</button>
+                                                                                <button onClick={() => setExtractMode('all')} className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${extractMode === 'all' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground dark:!text-slate-200 hover:text-foreground'}`}>All pages</button>
+                                                                                <button onClick={() => setExtractMode('select')} className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${extractMode === 'select' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-muted-foreground dark:!text-slate-200 hover:text-foreground'}`}>Select pages</button>
                                                                             </div>
                                                                             {extractMode === 'select' && (
                                                                                 <div className="space-y-2">
-                                                                                    <label className="text-sm font-bold text-muted-foreground">Pages to extract:</label>
+                                                                                    <label className="text-sm font-bold text-muted-foreground dark:!text-slate-400">Pages to extract:</label>
                                                                                     <input type="text" placeholder="e.g. 1-3,6" value={extractPagesInput} onChange={(e) => { setExtractPagesInput(e.target.value); const pages = new Set<number>(); e.target.value.split(',').forEach(part => { const t = part.trim(); if (t.includes('-')) { const [a, b] = t.split('-').map(Number); if (!isNaN(a) && !isNaN(b)) for (let i = a; i <= b; i++) pages.add(i); } else { const n = parseInt(t); if (!isNaN(n)) pages.add(n); } }); setSelectedPages(pages); }} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-border rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-primary/30 transition-all" />
                                                                                     <label className="flex items-center gap-2 cursor-pointer group">
                                                                                         <div className={`relative w-5 h-5 rounded-md border-2 transition-colors flex items-center justify-center ${splitMergeRanges ? 'bg-primary border-primary' : 'border-slate-300 dark:border-slate-600 group-hover:border-primary/50'}`} onClick={() => setSplitMergeRanges(!splitMergeRanges)}>
