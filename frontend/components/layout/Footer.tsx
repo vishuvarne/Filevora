@@ -169,9 +169,10 @@ export default function Footer() {
                             <li><Link href="/tools/merge-pdf/" prefetch={false} className="hover:text-primary transition-colors">Merge PDF</Link></li>
                             <li><Link href="/tools/split-pdf/" prefetch={false} className="hover:text-primary transition-colors">Split PDF</Link></li>
                             <li><Link href="/tools/compress-pdf/" prefetch={false} className="hover:text-primary transition-colors">Compress PDF</Link></li>
-                            <li><Link href="/tools/pdf-to-word/" prefetch={false} className="hover:text-primary transition-colors">PDF to Word</Link></li>
-                            <li><Link href="/tools/pdf-to-excel/" prefetch={false} className="hover:text-primary transition-colors">PDF to Excel</Link></li>
-                            <li><Link href="/tools/word-to-pdf/" prefetch={false} className="hover:text-primary transition-colors">Word to PDF</Link></li>
+                            {/* Disabled Office Tools */}
+                            {/* <li><Link href="/tools/pdf-to-word/" prefetch={false} className="hover:text-primary transition-colors">PDF to Word</Link></li>
+                            <li><Link href="/tools/pdf-to-powerpoint/" prefetch={false} className="hover:text-primary transition-colors">PDF to PowerPoint</Link></li>
+                            <li><Link href="/tools/powerpoint-to-pdf/" prefetch={false} className="hover:text-primary transition-colors">PowerPoint to PDF</Link></li> */}
                             <li><Link href="/tools/pdf-to-image/" prefetch={false} className="hover:text-primary transition-colors">PDF to JPG</Link></li>
                             <li><Link href="/tools/image-to-pdf/" prefetch={false} className="hover:text-primary transition-colors">JPG to PDF</Link></li>
                         </ul>

@@ -209,6 +209,7 @@ export const TOOLS: ToolDef[] = [
         seoTitle: "Private PDF Converter – Client-Side Processing | ConvertLocally",
         seoDescription: "Convert PDFs locally in your browser without data uploads. Experience offline-level security online for free."
     },
+    /* Temporarily disabled: Office tools
     {
         id: "pdf-to-word",
         name: "PDF to Word",
@@ -274,6 +275,7 @@ export const TOOLS: ToolDef[] = [
         seoTitle: "PPT to PDF Converter – Free & Fast | ConvertLocally",
         seoDescription: "Convert PowerPoint presentations to PDF online for free. Fast, secure, and high-quality conversion with ConvertLocally."
     },
+    */
     {
         id: "pdf-to-jpg",
         name: "PDF to JPG",
