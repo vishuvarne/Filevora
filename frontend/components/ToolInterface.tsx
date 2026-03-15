@@ -40,7 +40,6 @@ import { processJob, getDownloadUrl, ProcessResponse, sendEmail } from "@/lib/ap
 import { SortableFileList } from "@/components/SortableFileList";
 import { authAPI } from "@/lib/auth-api";
 import { FirestoreService } from "@/lib/firestore-service";
-import AdUnit from "@/components/AdUnit";
 import AdSlot from "@/components/ads/AdSlot";
 import { useFileHistory } from "@/hooks/useFileHistory";
 import { canProcessLocally, processLocally } from "@/lib/client-processor";
@@ -1071,7 +1070,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                             <>
                                                 {/* Mobile Ad (Above Dropzone) */}
                                                 <div className="block md:hidden w-full max-w-[320px] mx-auto mb-2">
-                                                    <AdSlot adSlotId="mobile-top-dropzone" format="mobile-banner" isTest={true} />
+                                                    <AdSlot adSlotId="mobile-top-dropzone" format="mobile-banner" isTest={false} />
                                                 </div>
 
                                                 <Dropzone
@@ -1083,7 +1082,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
 
                                                 {/* Mobile Ad (Below Dropzone) */}
                                                 <div className="block md:hidden w-full max-w-[320px] mx-auto mt-2">
-                                                    <AdSlot adSlotId="mobile-bottom-dropzone" format="mobile-banner" isTest={true} />
+                                                    <AdSlot adSlotId="mobile-bottom-dropzone" format="mobile-banner" isTest={false} />
                                                 </div>
 
                                                 <div className="flex items-center justify-center gap-2 text-[10px] sm:text-[11px] font-bold text-slate-800 dark:text-slate-200 bg-[#f4f4f5] dark:bg-slate-800 rounded-full px-4 py-2 w-fit mx-auto border-2 border-slate-900 dark:border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] dark:shadow-[2px_2px_0px_0px_rgba(30,41,59,1)]">
@@ -2022,7 +2021,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                     {/* State 1 and 2: "Under Tool" Ad - Shown when idle (both before and during file configuration) */}
                                     {status === "idle" && (
                                         <div className="hidden md:flex w-full justify-center pt-8 pb-4">
-                                            <AdSlot adSlotId="UNDER_TOOL_BANNER" format="leaderboard" isTest={true} />
+                                            <AdSlot adSlotId="UNDER_TOOL_BANNER" format="leaderboard" isTest={false} />
                                         </div>
                                     )}
 
@@ -2090,14 +2089,14 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                     <div className="flex flex-col md:flex-row xl:flex-col justify-center items-center gap-6 w-full xl:w-[332px] shrink-0 animate-in fade-in duration-500 delay-300 bg-card dark:bg-[#1A1D24] rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-xl p-6 xl:p-4">
                                         {/* Ad 1 */}
                                         <div className="w-full flex-1 flex items-center justify-center">
-                                            <AdSlot adSlotId="SUCCESS_SIDEBAR_AD_1" format="rectangle" isTest={true} className="!w-full !max-w-[300px] !h-full" />
+                                            <AdSlot adSlotId="SUCCESS_SIDEBAR_AD_1" format="rectangle" isTest={false} className="!w-full !max-w-[300px] !h-full" />
                                         </div>
                                         {/* Separator */}
                                         <div className="hidden xl:block w-full h-px bg-slate-200 dark:bg-slate-800"></div>
                                         <div className="md:hidden xl:hidden w-full h-px bg-slate-200 dark:bg-slate-800"></div>
                                         {/* Ad 2 */}
                                         <div className="w-full flex-1 flex items-center justify-center">
-                                            <AdSlot adSlotId="SUCCESS_SIDEBAR_AD_2" format="rectangle" isTest={true} className="!w-full !max-w-[300px] !h-full" />
+                                            <AdSlot adSlotId="SUCCESS_SIDEBAR_AD_2" format="rectangle" isTest={false} className="!w-full !max-w-[300px] !h-full" />
                                         </div>
                                     </div>
                                 </div>

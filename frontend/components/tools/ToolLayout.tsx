@@ -156,7 +156,7 @@ export default function ToolLayout({
                                                 {/* Mobile Ad (Above Dropzone) */}
                                                 {!files.length && (
                                                     <div className="block md:hidden w-full max-w-[320px] mx-auto mb-2 mt-4">
-                                                        <AdSlot adSlotId="mobile-top-layout" format="mobile-banner" isTest={true} />
+                                                        <AdSlot adSlotId="mobile-top-layout" format="mobile-banner" isTest={false} />
                                                     </div>
                                                 )}
 
@@ -171,7 +171,7 @@ export default function ToolLayout({
                                                 {/* Mobile Ad (Below Dropzone) */}
                                                 {!files.length && (
                                                     <div className="block md:hidden w-full max-w-[320px] mx-auto mt-2 mb-4">
-                                                        <AdSlot adSlotId="mobile-bottom-layout" format="mobile-banner" isTest={true} />
+                                                        <AdSlot adSlotId="mobile-bottom-layout" format="mobile-banner" isTest={false} />
                                                     </div>
                                                 )}
                                             </>
