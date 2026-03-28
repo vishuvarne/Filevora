@@ -1,16 +1,15 @@
 import { MetadataRoute } from "next";
 import { TOOLS } from "@/config/tools";
+import { getAllPostSlugs } from "@/lib/blog";
 
 export const dynamic = 'force-static';
 
+const locales = ['en', 'es', 'de', 'fr', 'hi'];
+
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = "https://convertlocally.com";
+    const lastModified = new Date();
 
-    // Use a stable last-modified date (update when you actually change content)
-    // Google penalizes constantly-changing lastModified as manipulation
-    const lastModified = new Date("2026-03-28");
-
-    // High-priority tools
     const highPriorityTools = new Set([
         'image-to-pdf', 'jpg-to-pdf', 'merge-pdf', 'compress-pdf',
         'pdf-to-word', 'word-to-pdf', 'pdf-to-jpg', 'heic-to-jpg',
@@ -22,64 +21,68 @@ export default function sitemap(): MetadataRoute.Sitemap {
         'video-to-mp4', 'video-to-mp3', 'convert-audio', 'compress-audio'
     ]);
 
-    // Tool pages with tiered priority
-    // IMPORTANT: trailing slash MUST match next.config.js trailingSlash: true
-    const toolUrls = TOOLS.map((tool) => {
-        const isHigh = highPriorityTools.has(tool.id);
-        const isMed = medPriorityTools.has(tool.id);
-        return {
-            url: `${baseUrl}/tools/${tool.id}/`,
-            lastModified,
-            changeFrequency: (isHigh ? "daily" : "weekly") as "daily" | "weekly",
-            priority: isHigh ? 1.0 : isMed ? 0.9 : 0.8,
-        };
-    });
+    const entries: MetadataRoute.Sitemap = [];
+    
+    // Dynamically insert blog slugs at build time
+    const blogPosts = getAllPostSlugs();
 
-    // Static pages
-    const staticUrls = [
-        {
-            url: `${baseUrl}/`,
-            lastModified,
-            changeFrequency: "daily" as const,
-            priority: 1,
-        },
-        {
-            url: `${baseUrl}/about/`,
-            lastModified,
-            changeFrequency: "monthly" as const,
-            priority: 0.5,
-        },
-        {
-            url: `${baseUrl}/help/`,
-            lastModified,
-            changeFrequency: "monthly" as const,
-            priority: 0.4,
-        },
-        {
-            url: `${baseUrl}/privacy/`,
-            lastModified,
-            changeFrequency: "monthly" as const,
-            priority: 0.2,
-        },
-        {
-            url: `${baseUrl}/terms/`,
-            lastModified,
-            changeFrequency: "monthly" as const,
-            priority: 0.2,
-        },
-        {
-            url: `${baseUrl}/contact/`,
-            lastModified,
-            changeFrequency: "monthly" as const,
-            priority: 0.3,
-        },
-        {
-            url: `${baseUrl}/donate/`,
-            lastModified,
-            changeFrequency: "monthly" as const,
-            priority: 0.3,
-        },
-    ];
+    // Generate URLs for each locale
+    for (const locale of locales) {
+        // Since we explicitly route all users to /[lang]/, we index the /[lang]/ paths, not root to avoid duplicate/redirect content
+        const prefix = `/${locale}`;
+        const localePriority = locale === 'en' ? 1.0 : 0.7;
 
-    return [...staticUrls, ...toolUrls];
+        // Homepage
+        entries.push({
+            url: `${baseUrl}${prefix}/`,
+            lastModified,
+            changeFrequency: "daily",
+            priority: localePriority,
+        });
+
+        // Tool pages
+        for (const tool of TOOLS) {
+            const isHigh = highPriorityTools.has(tool.id);
+            const isMed = medPriorityTools.has(tool.id);
+            const basePriority = isHigh ? 1.0 : isMed ? 0.9 : 0.8;
+            entries.push({
+                url: `${baseUrl}${prefix}/tools/${tool.id}/`,
+                lastModified,
+                changeFrequency: isHigh ? "daily" : "weekly",
+                priority: locale === 'en' ? basePriority : basePriority * 0.7,
+            });
+        }
+
+        // Static pages
+        const staticPages = [
+            { path: '/about/', freq: 'monthly' as const, pri: 0.5 },
+            { path: '/help/', freq: 'monthly' as const, pri: 0.4 },
+            { path: '/privacy/', freq: 'monthly' as const, pri: 0.2 },
+            { path: '/terms/', freq: 'monthly' as const, pri: 0.2 },
+            { path: '/contact/', freq: 'monthly' as const, pri: 0.3 },
+            { path: '/donate/', freq: 'monthly' as const, pri: 0.3 },
+            { path: '/blog/', freq: 'weekly' as const, pri: 0.6 },
+        ];
+
+        for (const page of staticPages) {
+            entries.push({
+                url: `${baseUrl}${prefix}${page.path}`,
+                lastModified,
+                changeFrequency: page.freq,
+                priority: locale === 'en' ? page.pri : page.pri * 0.7,
+            });
+        }
+        
+        // Blog Posts
+        for (const post of blogPosts) {
+            entries.push({
+                url: `${baseUrl}${prefix}/blog/${post.slug}/`,
+                lastModified,
+                changeFrequency: "monthly",
+                priority: locale === 'en' ? 0.7 : 0.5,
+            });
+        }
+    }
+
+    return entries;
 }

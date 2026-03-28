@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "tools": "Werkzeuge",
+    "pdf_tools": "PDF-Werkzeuge",
+    "image_tools": "Bild-Werkzeuge",
+    "video_tools": "Video-Werkzeuge",
+    "audio_tools": "Audio-Werkzeuge",
+    "other_tools": "Andere Werkzeuge",
+    "search_placeholder": "Werkzeuge suchen...",
+    "login": "Anmelden",
+    "signup": "Registrieren",
+    "dashboard": "Dashboard"
+  },
+  "hero": {
+    "badge_secure": "100% Sicher & Privat",
+    "title_main": "Dateikonverter",
+    "title_highlight": "Kostenlos online",
+    "subtitle": "Formatieren, zusammenfügen und optimieren Sie Ihre Dateien sofort direkt in Ihrem Browser. Völlig kostenlos, unglaublich schnell und ohne Installation.",
+    "cta_primary": "Werkzeuge entdecken",
+    "cta_secondary": "Alle Funktionen ansehen",
+    "no_signup": "Keine Anmeldung erforderlich",
+    "watermark_free": "Wasserzeichenfrei",
+    "unlimited": "Unbegrenzte Dateien"
+  },
+  "stats": {
+    "files_converted": "Konvertierte Dateien",
+    "supported_formats": "Unterstützte Formate",
+    "active_users": "Aktive Benutzer",
+    "avg_speed": "Durchschnittsgeschw.",
+    "avg_speed_val": "< 2 Sekunden",
+    "server_uptime": "Betriebszeit",
+    "uptime_val": "99.9%"
+  },
+  "how_it_works": {
+    "title": "Wie es funktioniert",
+    "subtitle": "Konvertieren Sie Ihre Dateien in drei einfachen Schritten",
+    "step_1_title": "1. Datei hochladen",
+    "step_1_desc": "Ziehen Sie Ihre Datei per Drag & Drop oder klicken Sie zur Auswahl. Ihre Dateien werden sofort verschlüsselt.",
+    "step_2_title": "2. Format wählen",
+    "step_2_desc": "Wählen Sie das gewünschte Ausgabeformat aus über 60+ unterstützten Konvertierungstools aus.",
+    "step_3_title": "3. Herunterladen",
+    "step_3_desc": "Klicken Sie auf Konvertieren und laden Sie Ihre bearbeitete Datei sofort herunter. Wir speichern niemals Ihre Daten."
+  },
+  "footer": {
+    "description": "Der datenschutzorientierte Dateikonverter. Verarbeiten Sie PDFs, Bilder und Videos vollständig in Ihrem Browser ohne Datenerfassung.",
+    "company": "Unternehmen", "support": "Support", "product": "Produkt",
+    "features": "Funktionen",
+    "pricing": "Preise",
+    "api": "API",
+    "resources": "Ressourcen",
+    "blog": "Blog",
+    "help_center": "Hilfezentrum",
+    "contact": "Kontakt",
+    "legal": "Rechtliches",
+    "privacy": "Datenschutzrichtlinie",
+    "terms": "Nutzungsbedingungen",
+    "copyright": "© 2026 ConvertLocally. Alle Rechte vorbehalten."
+  }
+}
+

@@ -1,7 +1,7 @@
 "use client";
 
 import { ToolDef, TOOLS } from "@/config/tools";
-import Link from "next/link";
+import Link from '@/components/LocalizedLink';
 import { getToolSEOContent } from "@/config/seo-content";
 
 export default function ToolInfoSection({ tool }: { tool: ToolDef }) {

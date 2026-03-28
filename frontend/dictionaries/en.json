@@ -1,0 +1,61 @@
+{
+  "nav": {
+    "tools": "Tools",
+    "pdf_tools": "PDF Tools",
+    "image_tools": "Image Tools",
+    "video_tools": "Video Tools",
+    "audio_tools": "Audio Tools",
+    "other_tools": "Other Tools",
+    "search_placeholder": "Search tools...",
+    "login": "Login",
+    "signup": "Sign Up",
+    "dashboard": "Dashboard"
+  },
+  "hero": {
+    "badge_secure": "100% Secure & Private",
+    "title_main": "Free Online",
+    "title_highlight": "File Converter",
+    "subtitle": "Format, merge, and optimize your files instantly right in your browser. Totally free, incredibly fast, and zero installation.",
+    "cta_primary": "Explore Tools",
+    "cta_secondary": "View All Features",
+    "no_signup": "No signup required",
+    "watermark_free": "Watermark free",
+    "unlimited": "Unlimited files"
+  },
+  "stats": {
+    "title": "Trusted by millions worldwide", "subtitle": "Processed securely and efficiently. Join our growing community of happy users.", "files_converted": "Files converted",
+    "supported_formats": "Supported Formats",
+    "active_users": "Active Users",
+    "avg_speed": "Average Speed",
+    "avg_speed_val": "< 2 seconds",
+    "server_uptime": "Uptime",
+    "uptime_val": "99.9%"
+  },
+  "how_it_works": {
+    "title": "How it works",
+    "subtitle": "Convert your files in three simple steps",
+    "step_1_title": "1. Upload File",
+    "step_1_desc": "Drag & drop your file or click to select from your device. Your files are encrypted instantly.",
+    "step_2_title": "2. Choose Format",
+    "step_2_desc": "Select your desired output format from over 60+ supported file types and conversion tools.",
+    "step_3_title": "3. Download",
+    "step_3_desc": "Click convert and download your processed file instantly. We never store your data."
+  },
+  "footer": {
+    "description": "The ultimate privacy-first file converter. Process PDFs, images, and videos entirely in your browser with zero data collection.",
+    "company": "Company", "support": "Support", "product": "Product",
+    "features": "Features",
+    "pricing": "Pricing",
+    "api": "API",
+    "resources": "Resources",
+    "blog": "Blog",
+    "help_center": "Help Center",
+    "contact": "Contact",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "copyright": "© 2026 ConvertLocally. All rights reserved."
+  }
+}
+
+

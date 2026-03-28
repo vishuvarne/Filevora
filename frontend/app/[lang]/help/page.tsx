@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
+import Link from '@/components/LocalizedLink';
 
 export const metadata: Metadata = {
     title: 'Help Center | ConvertLocally',

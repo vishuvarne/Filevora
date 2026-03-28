@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "tools": "Herramientas",
+    "pdf_tools": "Herramientas PDF",
+    "image_tools": "Herramientas de Imagen",
+    "video_tools": "Herramientas de Video",
+    "audio_tools": "Herramientas de Audio",
+    "other_tools": "Otras Herramientas",
+    "search_placeholder": "Buscar herramientas...",
+    "login": "Iniciar sesión",
+    "signup": "Regístrate",
+    "dashboard": "Panel de control"
+  },
+  "hero": {
+    "badge_secure": "100% Seguro y Privado",
+    "title_main": "Convertidor de Archivos",
+    "title_highlight": "Gratuito online",
+    "subtitle": "Formatea, fusiona y optimiza tus archivos al instante, directamente en tu navegador. Totalmente gratuito, increíblemente rápido y sin instalaciones.",
+    "cta_primary": "Explorar herramientas",
+    "cta_secondary": "Ver todas las funciones",
+    "no_signup": "Sin registro",
+    "watermark_free": "Sin marcas de agua",
+    "unlimited": "Archivos ilimitados"
+  },
+  "stats": {
+    "files_converted": "Archivos convertidos",
+    "supported_formats": "Formatos soportados",
+    "active_users": "Usuarios Activos",
+    "avg_speed": "Velocidad media",
+    "avg_speed_val": "< 2 segundos",
+    "server_uptime": "Tiempo de actividad",
+    "uptime_val": "99.9%"
+  },
+  "how_it_works": {
+    "title": "Cómo funciona",
+    "subtitle": "Convierte tus archivos en tres sencillos pasos",
+    "step_1_title": "1. Subir archivo",
+    "step_1_desc": "Arrastra y suelta tu archivo, o haz clic para seleccionar. Tus archivos se cifran al instante.",
+    "step_2_title": "2. Elegir formato",
+    "step_2_desc": "Selecciona el formato de salida deseado de entre más de 60 herramientas de conversión.",
+    "step_3_title": "3. Descargar",
+    "step_3_desc": "Haz clic en convertir y descarga tu archivo al instante. Nunca almacenamos tus datos."
+  },
+  "footer": {
+    "description": "El convertidor de archivos más privado. Procesa PDFs, imágenes y vídeos íntegramente en tu navegador sin recolectar datos.",
+    "company": "Empresa", "support": "Soporte", "product": "Producto",
+    "features": "Funciones",
+    "pricing": "Precios",
+    "api": "API",
+    "resources": "Recursos",
+    "blog": "Blog",
+    "help_center": "Centro de ayuda",
+    "contact": "Contacto",
+    "legal": "Legal",
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Servicio",
+    "copyright": "© 2026 ConvertLocally. Todos los derechos reservados."
+  }
+}
+

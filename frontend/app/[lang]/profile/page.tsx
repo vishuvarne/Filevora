@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useSharedRouter } from "@/lib/navigation";
+import Link from '@/components/LocalizedLink';
 import { authAPI } from "@/lib/auth-api";
 import { FirestoreService } from "@/lib/firestore-service";
 
@@ -14,7 +14,7 @@ interface User {
 }
 
 export default function ProfilePage() {
-    const router = useRouter();
+    const router = useSharedRouter();
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<"overview" | "history" | "settings">("overview");

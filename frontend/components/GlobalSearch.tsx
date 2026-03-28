@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { TOOLS, type ToolDef } from "@/config/tools";
-import Link from "next/link";
+import Link from '@/components/LocalizedLink';
+import { useSharedRouter } from "@/lib/navigation";
 
 interface GlobalSearchProps {
     className?: string;
@@ -15,6 +16,7 @@ export default function GlobalSearch({ className = "" }: GlobalSearchProps) {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const searchRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const router = useSharedRouter();
 
     // Debounced search
     useEffect(() => {
@@ -64,7 +66,7 @@ export default function GlobalSearch({ className = "" }: GlobalSearchProps) {
             case "Enter":
                 e.preventDefault();
                 if (results[selectedIndex]) {
-                    window.location.href = `/tools/${results[selectedIndex].id}/`;
+                    router.push(`/tools/${results[selectedIndex].id}/`);
                 }
                 break;
             case "Escape":

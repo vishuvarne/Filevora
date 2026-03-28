@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from '@/components/LocalizedLink';
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
 export const metadata = {

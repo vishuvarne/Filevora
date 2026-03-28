@@ -1,16 +1,18 @@
 "use client";
 
 import { useDesignStyle } from "@/context/ThemeStyleContext";
-
-const STATS = [
-    { label: "Files Processed", value: "15M+", color: "var(--nb-pink)" },
-    { label: "Happy Users", value: "2M+", color: "var(--nb-mint)" },
-    { label: "Daily Conversions", value: "50k+", color: "var(--nb-blue)" },
-    { label: "Tools Available", value: "60+", color: "var(--nb-yellow)" },
-];
+import { useDictionary } from "@/context/DictionaryProvider";
 
 export default function StatsSection() {
     const { isNeu } = useDesignStyle();
+    const { stats } = useDictionary();
+
+    const STATS = [
+        { label: stats?.files_converted || "Files Processed", value: "15M+", color: "var(--nb-pink)" },
+        { label: stats?.active_users || "Happy Users", value: "2M+", color: "var(--nb-mint)" },
+        { label: "Daily Conversions", value: "50k+", color: "var(--nb-blue)" },
+        { label: stats?.supported_formats || "Tools Available", value: "60+", color: "var(--nb-yellow)" },
+    ];
 
     if (isNeu) {
         return (
@@ -23,10 +25,10 @@ export default function StatsSection() {
                                 className="text-3xl tracking-tight sm:text-4xl font-spaceGrotesk"
                                 style={{ fontWeight: 800, color: "var(--nb-text)" }}
                             >
-                                Trusted by millions worldwide
+                                {stats?.title || "Trusted by millions worldwide"}
                             </h2>
                             <p className="mt-4 text-lg leading-8" style={{ color: "var(--nb-text2)" }}>
-                                Processed securely and efficiently. Join our growing community of happy users.
+                                {stats?.subtitle || "Processed securely and efficiently. Join our growing community of happy users."}
                             </p>
                         </div>
                         <dl className="grid grid-cols-2 gap-6 sm:gap-8 lg:grid-cols-4 nb-stagger">
@@ -65,9 +67,9 @@ export default function StatsSection() {
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
                 <div className="mx-auto max-w-2xl lg:max-w-none">
                     <div className="text-center">
-                        <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl text-shadow-sm">Trusted by millions worldwide</h2>
+                        <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl text-shadow-sm">{stats?.title || "Trusted by millions worldwide"}</h2>
                         <p className="mt-4 text-lg leading-8 text-gray-300">
-                            Processed securely and efficiently. Join our growing community of happy users.
+                            {stats?.subtitle || "Processed securely and efficiently. Join our growing community of happy users."}
                         </p>
                     </div>
                     <dl className="mt-16 grid grid-cols-2 gap-8 overflow-hidden rounded-2xl text-center sm:grid-cols-2 lg:grid-cols-4">

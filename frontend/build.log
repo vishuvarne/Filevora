@@ -1,0 +1,111 @@
+﻿
+> frontend@0.1.0 build
+> node scripts/generate-wasm-hash.js && next build && node scripts/patch_soffice_memory.cjs && node scripts/patch_wasm_memory.cjs
+
+Generating WASM hashes...
+Calculated Hash: v=b87381bb_5143e535
+Updated zetaHelper.js with new CACHE_BUSTER: v=b87381bb_5143e535
+Γû▓ Next.js 16.1.3 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 11.2s
+  Running TypeScript ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/362) ...
+  Generating static pages using 7 workers (90/362) 
+  Generating static pages using 7 workers (180/362) 
+  Generating static pages using 7 workers (271/362) 
+Γ£ô Generating static pages using 7 workers (362/362) in 5.9s
+  Finalizing page optimization ...
+
+Route (app)
+Γöî Γùï /
+Γö£ Γùï /_not-found
+Γö£ ΓùÅ /[lang]
+Γöé Γö£ /en
+Γöé Γö£ /es
+Γöé Γö£ /de
+Γöé Γöö [+2 more paths]
+Γö£ ΓùÅ /[lang]/about
+Γöé Γö£ /en/about
+Γöé Γö£ /es/about
+Γöé Γö£ /de/about
+Γöé Γöö [+2 more paths]
+Γö£ ΓùÅ /[lang]/blog
+Γöé Γö£ /en/blog
+Γöé Γö£ /es/blog
+Γöé Γö£ /de/blog
+Γöé Γöö [+2 more paths]
+Γö£ ΓùÅ /[lang]/blog/[slug]
+Γöé Γö£ /en/blog/compress-pdf-for-email
+Γöé Γö£ /es/blog/compress-pdf-for-email
+Γöé Γö£ /de/blog/compress-pdf-for-email
+Γöé Γöö [+2 more paths]
+Γö£ ΓùÅ /[lang]/contact
+Γöé Γö£ /en/contact
+Γöé Γö£ /es/contact
+Γöé Γö£ /de/contact
+Γöé Γöö [+2 more paths]
+Γö£ ΓùÅ /[lang]/donate
+Γöé Γö£ /en/donate
+Γöé Γö£ /es/donate
+Γöé Γö£ /de/donate
+Γöé Γöö [+2 more paths]
+Γö£ ΓùÅ /[lang]/help
+Γöé Γö£ /en/help
+Γöé Γö£ /es/help
+Γöé Γö£ /de/help
+Γöé Γöö [+2 more paths]
+Γö£ ΓùÅ /[lang]/login
+Γöé Γö£ /en/login
+Γöé Γö£ /es/login
+Γöé Γö£ /de/login
+Γöé Γöö [+2 more paths]
+Γö£ ΓùÅ /[lang]/privacy
+Γöé Γö£ /en/privacy
+Γöé Γö£ /es/privacy
+Γöé Γö£ /de/privacy
+Γöé Γöö [+2 more paths]
+Γö£ ΓùÅ /[lang]/profile
+Γöé Γö£ /en/profile
+Γöé Γö£ /es/profile
+Γöé Γö£ /de/profile
+Γöé Γöö [+2 more paths]
+Γö£ ΓùÅ /[lang]/signup
+Γöé Γö£ /en/signup
+Γöé Γö£ /es/signup
+Γöé Γö£ /de/signup
+Γöé Γöö [+2 more paths]
+Γö£ ΓùÅ /[lang]/terms
+Γöé Γö£ /en/terms
+Γöé Γö£ /es/terms
+Γöé Γö£ /de/terms
+Γöé Γöö [+2 more paths]
+Γö£ ΓùÅ /[lang]/tools/[id]
+Γöé Γö£ /en/tools/image-to-pdf
+Γöé Γö£ /en/tools/jpg-to-pdf
+Γöé Γö£ /en/tools/merge-pdf
+Γöé Γöö [+292 more paths]
+Γö£ Γùï /coming-soon
+Γö£ Γùï /robots.txt
+Γöö Γùï /sitemap.xml
+
+
+Γùï  (Static)  prerendered as static content
+ΓùÅ  (SSG)     prerendered as static HTML (uses generateStaticParams)
+
+[patch-soffice] Replaced abortOnCannotGrowMemory with growMemory
+[patch-soffice] Explicitly set WebAssembly.Memory maximum to 2GB
+[patch-soffice] Done. Size: 858124 ΓåÆ 857931 bytes (-193)
+[patch-wasm] Reading C:\Users\dear_\OneDrive\Desktop\filevora\frontend\out\wasm\libreoffice\soffice.wasm
+[patch-wasm] Found memory import at offset 15369
+[patch-wasm] Initial memory already at 512MB
+[patch-wasm] Maximum memory already at 2GB
+[patch-wasm] Patched C:\Users\dear_\OneDrive\Desktop\filevora\frontend\out\wasm\libreoffice\soffice.wasm (154.2 MB)
+[patch-wasm] Reading C:\Users\dear_\OneDrive\Desktop\filevora\frontend\public\wasm\libreoffice\soffice.wasm
+[patch-wasm] Found memory import at offset 15369
+[patch-wasm] Initial memory already at 512MB
+[patch-wasm] Maximum memory already at 2GB
+[patch-wasm] Patched C:\Users\dear_\OneDrive\Desktop\filevora\frontend\public\wasm\libreoffice\soffice.wasm (154.2 MB)
+[patch-wasm] Done ΓÇö patched 2 file(s)

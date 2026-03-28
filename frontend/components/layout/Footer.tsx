@@ -1,11 +1,13 @@
 "use client";
 
-import Link from "next/link";
+import Link from '@/components/LocalizedLink';
 import { useState } from "react";
 import { FirestoreService } from "@/lib/firestore-service";
 import { useDesignStyle } from "@/context/ThemeStyleContext";
+import { useDictionary } from "@/context/DictionaryProvider";
 
 export default function Footer() {
+    const { footer } = useDictionary();
     const [email, setEmail] = useState("");
     const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
     const { isNeu } = useDesignStyle();
@@ -196,7 +198,7 @@ export default function Footer() {
 
                     {/* Col 5: Company */}
                     <div className="space-y-4">
-                        <h3 className="text-foreground font-bold mb-4 uppercase tracking-wider text-xs opacity-70">Company</h3>
+                        <h3 className="text-foreground font-bold mb-4 uppercase tracking-wider text-xs opacity-70">{footer?.company || "Company"}</h3>
                         <ul className="space-y-3 text-muted-foreground">
                             <li><Link href="/about" prefetch={false} className="hover:text-primary transition-colors">About Us</Link></li>
                             <li><Link href="/contact" prefetch={false} className="hover:text-primary transition-colors">Contact</Link></li>
@@ -208,7 +210,7 @@ export default function Footer() {
 
                     {/* Col 6: Support */}
                     <div className="space-y-4">
-                        <h3 className="text-foreground font-bold mb-4 uppercase tracking-wider text-xs opacity-70">Support</h3>
+                        <h3 className="text-foreground font-bold mb-4 uppercase tracking-wider text-xs opacity-70">{footer?.support || "Support"}</h3>
                         <ul className="space-y-3 text-muted-foreground">
                             <li><Link href="/help" prefetch={false} className="hover:text-primary transition-colors">Help Center</Link></li>
                             <li><Link href="/faq" prefetch={false} className="hover:text-primary transition-colors">FAQ</Link></li>
@@ -281,7 +283,7 @@ export default function Footer() {
                             <Link href="/privacy" prefetch={false} className="hover:text-primary transition-colors">Privacy Policy</Link>
                             <Link href="/terms" prefetch={false} className="hover:text-primary transition-colors">Terms of Service</Link>
                         </div>
-                        <span className="text-xs sm:text-sm opacity-60">© 2026 All rights reserved</span>
+                        <span className="text-xs sm:text-sm opacity-60">{footer?.copyright || "© 2026 All rights reserved"}</span>
                     </div>
                 </div>
 

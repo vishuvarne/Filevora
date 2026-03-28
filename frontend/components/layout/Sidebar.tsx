@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from '@/components/LocalizedLink';
 import { useSharedPathname } from "@/lib/navigation";
 import { useState } from "react";
 import { TOOLS } from "@/config/tools";

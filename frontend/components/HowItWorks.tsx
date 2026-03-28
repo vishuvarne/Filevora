@@ -1,12 +1,15 @@
 "use client";
 
 import { useDesignStyle } from "@/context/ThemeStyleContext";
+import { useDictionary } from "@/context/DictionaryProvider";
 
 const STEPS = [
     {
         step: "01",
-        title: "Upload File",
-        desc: "Drag & drop your file or tap to select. We support 100+ formats.",
+        titleKey: "step_1_title",
+        titleFallback: "Upload File",
+        descKey: "step_1_desc",
+        descFallback: "Drag & drop your file or tap to select. We support 100+ formats.",
         color: "var(--nb-mint)",
         icon: (
             <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -17,8 +20,10 @@ const STEPS = [
     },
     {
         step: "02",
-        title: "Process Instantly",
-        desc: "Our powerful cloud servers process your files in seconds.",
+        titleKey: "step_2_title",
+        titleFallback: "Choose Format",
+        descKey: "step_2_desc",
+        descFallback: "Select your desired output format from over 60+ supported file types and conversion tools.",
         color: "var(--nb-lilac)",
         icon: (
             <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -29,8 +34,10 @@ const STEPS = [
     },
     {
         step: "03",
-        title: "Download Securely",
-        desc: "Get your result immediately. Files are auto-deleted after 1 hour.",
+        titleKey: "step_3_title",
+        titleFallback: "Download Securely",
+        descKey: "step_3_desc",
+        descFallback: "Get your result immediately. Files are auto-deleted after 1 hour.",
         color: "var(--nb-blue)",
         icon: (
             <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -43,11 +50,12 @@ const STEPS = [
 
 export default function HowItWorks() {
     const { isNeu } = useDesignStyle();
+    const { how_it_works } = useDictionary();
 
     return (
         <section className="py-24 sm:py-32">
             <div className="mx-auto max-w-2xl text-center mb-16">
-                {isNeu && <p className="nb-label mb-3">How It Works</p>}
+                {isNeu && <p className="nb-label mb-3">{how_it_works?.title || "How It Works"}</p>}
                 <h2
                     className={isNeu
                         ? "text-3xl tracking-tight sm:text-4xl font-spaceGrotesk"
@@ -55,7 +63,7 @@ export default function HowItWorks() {
                     }
                     style={isNeu ? { fontWeight: 800, color: "var(--nb-text)" } : undefined}
                 >
-                    {isNeu ? "Simple & Fast" : "How it Works"}
+                    {isNeu ? (how_it_works?.title || "Simple & Fast") : (how_it_works?.title || "How it Works")}
                 </h2>
                 <p
                     className={isNeu
@@ -64,7 +72,7 @@ export default function HowItWorks() {
                     }
                     style={isNeu ? { color: "var(--nb-text2)" } : undefined}
                 >
-                    Simple, fast, and secure file processing in 3 easy steps.
+                    {how_it_works?.subtitle || "Simple, fast, and secure file processing in 3 easy steps."}
                 </p>
             </div>
 
@@ -114,13 +122,13 @@ export default function HowItWorks() {
                                 }
                                 style={isNeu ? { fontWeight: 800, color: "var(--nb-text)" } : undefined}
                             >
-                                {item.title}
+                                {how_it_works?.[item.titleKey] || item.titleFallback}
                             </h3>
                             <p
                                 className={isNeu ? "leading-relaxed" : "text-muted-foreground leading-relaxed"}
                                 style={isNeu ? { color: "var(--nb-text2)" } : undefined}
                             >
-                                {item.desc}
+                                {how_it_works?.[item.descKey] || item.descFallback}
                             </p>
                         </div>
                     ))}

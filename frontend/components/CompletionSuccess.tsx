@@ -2,7 +2,7 @@ import { ToolDef, TOOLS } from "@/config/tools"; // Import tools list
 import { getDownloadUrl, ProcessResponse, sendEmail } from "@/lib/api";
 import { useState, useEffect } from "react";
 import { getSuggestedTools } from "@/config/toolSuggestions"; // Import suggestions
-import Link from "next/link";
+import Link from '@/components/LocalizedLink';
 
 interface CompletionSuccessProps {
     tool: ToolDef;

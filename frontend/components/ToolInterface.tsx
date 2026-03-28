@@ -47,6 +47,8 @@ import GhostModeExplainerModal from "@/components/GhostModeExplainerModal";
 import RangeSlider from "@/components/ui/RangeSlider";
 import { useToolSession } from "@/hooks/useToolSession";
 import { MemoryTransferCache } from "@/lib/memory-transfer-cache";
+import { useSharedRouter } from "@/lib/navigation";
+import Link from '@/components/LocalizedLink';
 
 // Preview Modal Component
 function FilePreviewModal({ file, onClose }: { file: File; onClose: () => void }) {
@@ -1015,12 +1017,12 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                         <p className="text-muted-foreground max-w-md mx-auto mb-8 text-lg leading-relaxed">
                             We're currently perfecting our <b>Privacy-First</b> conversion for Office documents. This tool will be available very soon!
                         </p>
-                        <button
-                            onClick={() => window.location.href = '/'}
-                            className="px-8 py-3.5 bg-primary text-primary-foreground font-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all uppercase tracking-wider"
+                        <Link
+                            href="/"
+                            className="inline-block px-8 py-3.5 bg-primary text-primary-foreground font-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all uppercase tracking-wider"
                         >
                             Explore Other Tools
-                        </button>
+                        </Link>
                     </div>
                 ) : (
                     <>

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from '@/components/LocalizedLink';
 import {
     CloudArrowUpIcon,
     Cog6ToothIcon,
@@ -26,6 +26,7 @@ import GlobalSearch from "../GlobalSearch";
 import { useFavorites } from "../../hooks/useFavorites";
 import { useFileHistory } from "../../hooks/useFileHistory";
 import { useDesignStyle } from "@/context/ThemeStyleContext";
+import { useDictionary } from "@/context/DictionaryProvider";
 
 const CATEGORIES = [
     "Video & Audio",
@@ -49,6 +50,7 @@ function getToolsForCategory(cat: string) {
 }
 
 export default function Navbar() {
+    const { nav } = useDictionary();
     const pathname = useSharedPathname();
     const [activeCategory, setActiveCategory] = useState<string | null>(null);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -169,11 +171,11 @@ export default function Navbar() {
                     <div className="hidden lg:flex flex-1 items-center justify-center gap-1 min-w-0 px-2 lg:px-4">
                         {CATEGORIES.map((category) => {
                             const labelMap: Record<string, string> = {
-                                "Video & Audio": "Video",
-                                "Image": "Image",
-                                "PDF & Documents": "PDF",
+                                "Video & Audio": nav?.video_tools || "Video",
+                                "Image": nav?.image_tools || "Image",
+                                "PDF & Documents": nav?.pdf_tools || "PDF",
                                 "GIF": "GIF",
-                                "Others": "More",
+                                "Others": nav?.other_tools || "More",
                                 "Web Apps": "Apps"
                             };
                             return (

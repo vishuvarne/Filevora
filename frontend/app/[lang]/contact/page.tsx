@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from '@/components/LocalizedLink';
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { useState } from "react";
 import { db } from "@/lib/firebase";

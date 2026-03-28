@@ -1,0 +1,290 @@
+import type { Metadata, Viewport } from "next";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import FooterWrapper from "@/components/FooterWrapper";
+import GoogleAdsense from "@/components/GoogleAdsense";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
+import { AppNavigationProvider } from "@/context/AppNavigationProvider";
+import { Suspense } from "react";
+import { ThemeStyleProvider } from "@/context/ThemeStyleContext";
+import "../globals.css";
+
+export const viewport: Viewport = {
+  themeColor: "#2563eb",
+  width: "device-width",
+  initialScale: 1,
+};
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://convertlocally.com"),
+  title: "ConvertLocally – Free Online File Converter (PDF, Image, Video)",
+  description: "ConvertLocally is a free online file converter for PDF, images, video, audio, and documents. Fast, secure, and no signup required.",
+  keywords: [
+    // Core converter keywords
+    "online file converter",
+    "free file converter",
+    "convert files online free",
+    "file conversion tool",
+
+    // PDF keywords (competing with ilovepdf, smallpdf)
+    "pdf converter",
+    "pdf to word converter",
+    "merge pdf files",
+    "compress pdf online",
+    "pdf to jpg converter",
+    "pdf editor online free",
+    "split pdf online",
+    "pdf to excel converter",
+    "combine pdf files",
+    "pdf merger",
+
+    // Image keywords (competing with convertio, online-convert)
+    "image converter",
+    "jpg to png converter",
+    "webp to jpg",
+    "heic to jpg converter",
+    "image compressor",
+    "resize image online",
+    "convert image format",
+    "png to jpg converter",
+
+    // Video/GIF keywords
+    "video to gif converter",
+    "mp4 to gif",
+    "gif maker",
+    "video converter online",
+    "convert video format",
+
+    // Trust & quality keywords
+    "free online converter no signup",
+    "no watermark converter",
+    "unlimited file conversion",
+    "secure file converter",
+    "fast file converter",
+    "best free file converter",
+
+    // Long-tail keywords
+    "convert pdf to word online free without email",
+    "merge multiple pdf files into one",
+    "compress large pdf file",
+    "how to convert jpg to pdf",
+    "free online tools for pdf",
+    "all in one file converter"
+  ],
+  authors: [{ name: "ConvertLocally Team" }],
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://convertlocally.com",
+    siteName: "ConvertLocally",
+    title: "ConvertLocally – Free Online File Converter",
+    description: "Convert, Edit, and Compress files online for free.",
+    images: [
+      {
+        url: "https://convertlocally.com/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "ConvertLocally - Free Online File Converter Tools",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ConvertLocally - Free Online File Converter",
+    description: "60+ free tools to convert, merge, compress files. PDF, Image, Video converter with no signup required.",
+    images: ["https://convertlocally.com/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    languages: {
+      'en': '/',
+      'es': '/es/',
+      'de': '/de/',
+      'fr': '/fr/',
+      'hi': '/hi/',
+    },
+  },
+};
+
+import { inter, poppins, spaceGrotesk, jetbrainsMono } from "@/lib/fonts";
+import "../globals.css";
+import { SpeculationRules } from "@/components/SpeculationRules";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
+
+
+import { i18n, Locale } from "@/lib/i18n";
+
+import { getDictionary } from "@/lib/i18n";
+import { DictionaryProvider } from "@/context/DictionaryProvider";
+
+export async function generateStaticParams() {
+  return i18n.locales.map((locale) => ({ lang: locale }));
+}
+
+export default async function RootLayout({
+  children,
+  params
+}: Readonly<{
+  children: React.ReactNode;
+  params: Promise<{ lang: string }>;
+}>) {
+  const resolvedParams = await params;
+  const dict = await getDictionary(resolvedParams.lang as Locale);
+  
+  return (
+    <html lang={resolvedParams.lang || 'en'} suppressHydrationWarning>
+      <head>
+        {/* Critical CSS — inlined for instant LCP paint before external CSS loads */}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+              body{margin:0;background:#f8fafc;color:#020617}
+              .dark body,.dark{background:#030712;color:#f8fafc}
+              h1{font-size:clamp(1.875rem,5vw,4.5rem);font-weight:900;letter-spacing:-0.025em;line-height:1.1;color:inherit}
+              h1 .text-primary{color:hsl(221.2,83.2%,53.3%)}
+              .dark h1 .text-primary{color:hsl(217,91%,60%)}
+            `.replace(/\s+/g, ' ').trim()
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "name": "ConvertLocally",
+                "url": "https://convertlocally.com",
+                "logo": "https://convertlocally.com/og-image.png",
+                "sameAs": []
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                "name": "ConvertLocally",
+                "url": "https://convertlocally.com",
+                "potentialAction": {
+                  "@type": "SearchAction",
+                  "target": "https://convertlocally.com/?q={search_term_string}",
+                  "query-input": "required name=search_term_string"
+                }
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "ItemList",
+                "name": "Free Online File Converter Tools",
+                "description": "60+ free online tools to convert, merge, and compress files.",
+                "numberOfItems": 15,
+                "itemListElement": [
+                  { "@type": "ListItem", "position": 1, "name": "Merge PDF", "url": "https://convertlocally.com/tools/merge-pdf/" },
+                  { "@type": "ListItem", "position": 2, "name": "Image to PDF", "url": "https://convertlocally.com/tools/image-to-pdf/" },
+                  { "@type": "ListItem", "position": 3, "name": "Compress PDF", "url": "https://convertlocally.com/tools/compress-pdf/" },
+                  { "@type": "ListItem", "position": 4, "name": "JPG to PDF", "url": "https://convertlocally.com/tools/jpg-to-pdf/" },
+                  { "@type": "ListItem", "position": 5, "name": "PDF to JPG", "url": "https://convertlocally.com/tools/pdf-to-jpg/" },
+                  { "@type": "ListItem", "position": 6, "name": "HEIC to JPG", "url": "https://convertlocally.com/tools/heic-to-jpg/" },
+                  { "@type": "ListItem", "position": 7, "name": "PNG to JPG", "url": "https://convertlocally.com/tools/png-to-jpg/" },
+                  { "@type": "ListItem", "position": 8, "name": "JPG to PNG", "url": "https://convertlocally.com/tools/jpg-to-png/" },
+                  { "@type": "ListItem", "position": 9, "name": "WebP to JPG", "url": "https://convertlocally.com/tools/webp-to-jpg/" },
+                  { "@type": "ListItem", "position": 10, "name": "Image Compressor", "url": "https://convertlocally.com/tools/image-compressor/" },
+                  { "@type": "ListItem", "position": 11, "name": "Split PDF", "url": "https://convertlocally.com/tools/split-pdf/" },
+                  { "@type": "ListItem", "position": 12, "name": "Rotate PDF", "url": "https://convertlocally.com/tools/rotate-pdf/" },
+                  { "@type": "ListItem", "position": 13, "name": "Video to GIF", "url": "https://convertlocally.com/tools/video-to-gif/" },
+                  { "@type": "ListItem", "position": 14, "name": "MP4 to GIF", "url": "https://convertlocally.com/tools/mp4-to-gif/" },
+                  { "@type": "ListItem", "position": 15, "name": "Image Converter", "url": "https://convertlocally.com/tools/convert-image/" }
+                ]
+              }
+            ])
+          }}
+        />
+        {/* Anti-Blocker Safety Layer - Ensures analytics don't break JS execution if blocked */}
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){dataLayer.push(arguments);};gtag('js',new Date());`
+          }}
+        />
+        {/* Force-unregister broken next-pwa Service Workers that intercept Next.js RSC router requests */}
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `
+               if ('serviceWorker' in navigator) {
+                 navigator.serviceWorker.getRegistrations().then(function(regs) {
+                   for (var i = 0; i < regs.length; i++) {
+                     regs[i].unregister();
+                   }
+                 });
+               }
+             `
+          }}
+        />
+        {/* MUST be first script - prevents dark mode flash on ALL builds including static */}
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'){document.documentElement.classList.add('dark')}}catch(e){}})();`,
+          }}
+        />
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var s=localStorage.getItem('design-style');if(s==='neubrutalist'){document.documentElement.setAttribute('data-design','neubrutalist')}}catch(e){}})();`,
+          }}
+        />
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator && window.location.hostname !== 'localhost') {
+                window.addEventListener('load', () => {
+                  navigator.serviceWorker.register('/sw.js').then(reg => {
+                    console.log('[SW] Service Worker registered');
+                  }).catch(err => {
+                    console.error('[SW] Service Worker registration failed:', err);
+                  });
+                });
+              }
+            `
+          }}
+        />
+        <SpeculationRules />
+      </head>
+      <body
+        suppressHydrationWarning
+        className={`${inter.variable} ${poppins.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased bg-slate-50 dark:bg-slate-950 flex flex-col min-h-screen font-sans overflow-x-clip`}
+      >
+        <DictionaryProvider dictionary={dict}>
+          <AppNavigationProvider>
+            <ThemeStyleProvider>
+              <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ""} />
+              <Navbar />
+              {/* AdSense Script - Global */}
+              <GoogleAdsense pId="ca-pub-6748722729156165" />
+              <div className="flex-1 flex flex-col min-h-0">
+                <Suspense fallback={<div className="flex-1 flex items-center justify-center min-h-[50vh]"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>}>
+                  {children}
+                </Suspense>
+              </div>
+              <FooterWrapper>
+                <Footer />
+              </FooterWrapper>
+            </ThemeStyleProvider>
+          </AppNavigationProvider>
+        </DictionaryProvider>
+        <SpeedInsights />
+        <Analytics />
+      </body>
+    </html>
+  );
+}

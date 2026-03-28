@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "tools": "Outils",
+    "pdf_tools": "Outils PDF",
+    "image_tools": "Outils Image",
+    "video_tools": "Outils Vidéo",
+    "audio_tools": "Outils Audio",
+    "other_tools": "Autres Outils",
+    "search_placeholder": "Rechercher des outils...",
+    "login": "Connexion",
+    "signup": "S'inscrire",
+    "dashboard": "Tableau de bord"
+  },
+  "hero": {
+    "badge_secure": "100% Sécurisé et Privé",
+    "title_main": "Convertisseur de Fichiers",
+    "title_highlight": "Gratuit en Ligne",
+    "subtitle": "Formatez, fusionnez et optimisez vos fichiers instantanément directement dans votre navigateur. Totalement gratuit, incroyablement rapide et sans installation.",
+    "cta_primary": "Explorer les outils",
+    "cta_secondary": "Voir toutes les fonctionnalités",
+    "no_signup": "Aucune inscription",
+    "watermark_free": "Sans filigrane",
+    "unlimited": "Fichiers illimités"
+  },
+  "stats": {
+    "files_converted": "Fichiers convertis",
+    "supported_formats": "Formats supportés",
+    "active_users": "Utilisateurs actifs",
+    "avg_speed": "Vitesse moyenne",
+    "avg_speed_val": "< 2 secondes",
+    "server_uptime": "Temps de fonctionnement",
+    "uptime_val": "99.9%"
+  },
+  "how_it_works": {
+    "title": "Comment ça marche",
+    "subtitle": "Convertissez vos fichiers en trois étapes simples",
+    "step_1_title": "1. Télécharger Fichier",
+    "step_1_desc": "Glissez-déposez votre fichier ou cliquez pour sélectionner. Vos fichiers sont cryptés instantanément.",
+    "step_2_title": "2. Choisir le format",
+    "step_2_desc": "Sélectionnez le format de sortie souhaité parmi plus de 60 outils de conversion pris en charge.",
+    "step_3_title": "3. Télécharger",
+    "step_3_desc": "Cliquez sur convertir et téléchargez votre fichier traité instantanément. Nous ne stockons jamais vos données."
+  },
+  "footer": {
+    "description": "Le convertisseur de fichiers axé sur la confidentialité. Traitez vos PDF, images et vidéos entièrement dans votre navigateur sans aucune collecte de données.",
+    "company": "Entreprise", "support": "Support", "product": "Produit",
+    "features": "Fonctionnalités",
+    "pricing": "Tarification",
+    "api": "API",
+    "resources": "Ressources",
+    "blog": "Blog",
+    "help_center": "Centre d'aide",
+    "contact": "Contact",
+    "legal": "Légal",
+    "privacy": "Politique de confidentialité",
+    "terms": "Conditions d'utilisation",
+    "copyright": "© 2026 ConvertLocally. Tous droits réservés."
+  }
+}
+

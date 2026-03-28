@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import Link from '@/components/LocalizedLink';
+import { useSharedRouter } from "@/lib/navigation";
 
 export default function NotFound() {
-    const router = useRouter();
+    const router = useSharedRouter();
 
     return (
         <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">

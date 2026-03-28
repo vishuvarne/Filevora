@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from '@/components/LocalizedLink';
 import { Metadata } from "next";
 import { TOOLS } from "@/config/tools";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";

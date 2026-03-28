@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from '@/components/LocalizedLink';
 import { TOOLS } from "@/config/tools";
 
 const WEB_APP_IDS = [

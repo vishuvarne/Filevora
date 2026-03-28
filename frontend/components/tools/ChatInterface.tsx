@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, Suspense, lazy } from "react";
-import Link from "next/link";
+import Link from '@/components/LocalizedLink';
 import Dropzone from "@/components/ui/Dropzone";
 import { processJob, getDownloadUrl } from "@/lib/api";
 import { TOOLS, ToolDef } from "@/config/tools";

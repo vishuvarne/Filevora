@@ -2,7 +2,7 @@
 
 import React from "react";
 import { ToolDef } from "@/config/tools";
-import Link from "next/link";
+import Link from '@/components/LocalizedLink';
 import { useFavorites } from "@/hooks/useFavorites";
 import { useState } from "react";
 import { preWarmTool } from "@/lib/client-processor";

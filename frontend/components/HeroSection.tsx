@@ -1,10 +1,12 @@
 "use client";
 
 import { useDesignStyle } from "@/context/ThemeStyleContext";
-import Link from "next/link";
+import { useDictionary } from "@/context/DictionaryProvider";
+import Link from '@/components/LocalizedLink';
 
 export default function HeroSection() {
     const { isNeu } = useDesignStyle();
+    const { hero } = useDictionary();
 
     if (isNeu) {
         return (
@@ -20,7 +22,7 @@ export default function HeroSection() {
                                     color: "var(--nb-text)",
                                 }}
                             >
-                                Process Files{" "}
+                                {hero?.title_main || "Free Online"}{" "}
                                 <span
                                     className="inline-block"
                                     style={{
@@ -32,16 +34,14 @@ export default function HeroSection() {
                                         transform: "rotate(-1deg)",
                                     }}
                                 >
-                                    Locally.
+                                    {hero?.title_highlight || "File Converter"}
                                 </span>{" "}
-                                <br className="hidden sm:block" />
-                                No Limits. No Watermarks.
                             </h1>
                             <p
                                 className="mt-2 sm:mt-3 text-base sm:text-lg leading-6 sm:leading-7 max-w-2xl mx-auto px-4 sm:px-0"
                                 style={{ color: "var(--nb-text2)", fontWeight: 500 }}
                             >
-                                60+ tools. Bank-grade encryption. Free forever.
+                                {hero?.subtitle || "Format, merge, and optimize your files instantly right in your browser. Totally free, incredibly fast, and zero installation."}
                             </p>
 
                             <p
@@ -74,10 +74,10 @@ export default function HeroSection() {
                 <div className="mx-auto max-w-7xl px-6 lg:px-8">
                     <div className="mx-auto max-w-4xl text-center">
                         <h1 className="text-3xl font-black tracking-tight text-foreground sm:text-7xl mb-6 sm:mb-8 leading-tight sm:leading-[1.1]">
-                            Process Files <span className="text-primary">Locally.</span> <br className="hidden sm:block" /> No Limits. No Watermarks.
+                            {hero?.title_main || "Free Online"} <span className="text-primary">{hero?.title_highlight || "File Converter"}</span>
                         </h1>
                         <p className="mt-4 sm:mt-6 text-lg sm:text-xl leading-7 sm:leading-8 text-muted-foreground max-w-2xl mx-auto px-4 sm:px-0">
-                            60+ tools. Bank-grade encryption. Free forever.
+                            {hero?.subtitle || "Format, merge, and optimize your files instantly right in your browser. Totally free, incredibly fast, and zero installation."}
                         </p>
 
                         <p className="mt-6 sm:mt-8 text-lg sm:text-xl leading-7 sm:leading-8 text-muted-foreground max-w-3xl mx-auto px-4 sm:px-0">

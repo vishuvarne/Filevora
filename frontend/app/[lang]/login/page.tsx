@@ -1,13 +1,13 @@
 "use client";
 
-import Link from "next/link";
+import Link from '@/components/LocalizedLink';
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useSharedRouter } from "@/lib/navigation";
 import { authAPI } from "@/lib/auth-api";
 
-export default function SignupPage() {
-    const router = useRouter();
-    const [formData, setFormData] = useState({ name: "", email: "", password: "" });
+export default function LoginPage() {
+    const router = useSharedRouter();
+    const [formData, setFormData] = useState({ email: "", password: "" });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -17,17 +17,17 @@ export default function SignupPage() {
         setLoading(true);
 
         try {
-            await authAPI.register(formData);
-            router.push("/profile"); // Redirect to profile after successful registration
+            await authAPI.login(formData);
+            router.push("/profile"); // Redirect to profile after successful login
         } catch (err: any) {
-            setError(err.message || "Registration failed");
+            setError(err.message || "Login failed");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <main className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 flex items-center justify-center p-4">
+        <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
                 {/* Logo and Header */}
                 <div className="text-center mb-8">
@@ -39,11 +39,11 @@ export default function SignupPage() {
                             Convert<span className="text-blue-600">Locally</span>
                         </span>
                     </Link>
-                    <h1 className="text-3xl font-bold text-slate-900 mb-2">Create your account</h1>
-                    <p className="text-slate-500">Get started with ConvertLocally for free</p>
+                    <h1 className="text-3xl font-bold text-slate-900 mb-2">Welcome back</h1>
+                    <p className="text-slate-500">Sign in to access your account</p>
                 </div>
 
-                {/* Signup Card */}
+                {/* Login Card */}
                 <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-8">
                     {error && (
                         <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm">
@@ -51,7 +51,7 @@ export default function SignupPage() {
                         </div>
                     )}
 
-                    {/* Social Signup Buttons */}
+                    {/* Social Login Buttons */}
                     <div className="space-y-3 mb-6">
                         <button type="button" className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-slate-200 rounded-xl font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all cursor-pointer">
                             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -69,13 +69,6 @@ export default function SignupPage() {
                             </svg>
                             Continue with GitHub
                         </button>
-
-                        <button type="button" className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-slate-200 rounded-xl font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all cursor-pointer">
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M22.46 6c-.85.38-1.78.64-2.75.76 1-.6 1.76-1.55 2.12-2.68-.93.55-1.96.95-3.06 1.17C17.88 4.34 16.65 3.72 15.29 3.72c-2.65 0-4.8 2.15-4.8 4.8 0 .38.04.75.13 1.1-3.99-.2-7.53-2.11-9.9-5.02-.41.71-.65 1.54-.65 2.43 0 1.67.85 3.14 2.14 4-.79-.02-1.53-.24-2.18-.6v.06c0 2.33 1.66 4.27 3.86 4.71-.4.11-.83.17-1.27.17-.31 0-.61-.03-.91-.08.62 1.93 2.41 3.34 4.53 3.38-1.66 1.3-3.75 2.07-6.02 2.07-.39 0-.78-.02-1.17-.07 2.18 1.4 4.77 2.21 7.56 2.21 9.05 0 14-7.5 14-14 0-.21 0-.42-.02-.63.96-.69 1.8-1.56 2.46-2.55z" />
-                            </svg>
-                            Continue with Twitter
-                        </button>
                     </div>
 
                     {/* Divider */}
@@ -84,27 +77,12 @@ export default function SignupPage() {
                             <div className="w-full border-t border-slate-200"></div>
                         </div>
                         <div className="relative flex justify-center text-sm">
-                            <span className="px-4 bg-white text-slate-500 font-medium">Or sign up with email</span>
+                            <span className="px-4 bg-white text-slate-500 font-medium">Or continue with email</span>
                         </div>
                     </div>
 
-                    {/* Signup Form */}
+                    {/* Email/Password Form */}
                     <form className="space-y-4" onSubmit={handleSubmit}>
-                        <div>
-                            <label htmlFor="name" className="block text-sm font-semibold text-slate-700 mb-2">Full name</label>
-                            <input
-                                type="text"
-                                id="name"
-                                name="name"
-                                autoComplete="name"
-                                required
-                                value={formData.name}
-                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                placeholder="John Doe"
-                                className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-slate-900"
-                            />
-                        </div>
-
                         <div>
                             <label htmlFor="email" className="block text-sm font-semibold text-slate-700 mb-2">Email address</label>
                             <input
@@ -121,33 +99,33 @@ export default function SignupPage() {
                         </div>
 
                         <div>
-                            <label htmlFor="password" className="block text-sm font-semibold text-slate-700 mb-2">Password</label>
+                            <div className="flex items-center justify-between mb-2">
+                                <label htmlFor="password" className="block text-sm font-semibold text-slate-700">Password</label>
+                                <Link href="/forgot-password" prefetch={false} className="text-sm font-medium text-blue-600 hover:text-blue-700">
+                                    Forgot password?
+                                </Link>
+                            </div>
                             <input
                                 type="password"
                                 id="password"
                                 name="password"
-                                autoComplete="new-password"
+                                autoComplete="current-password"
                                 required
                                 value={formData.password}
                                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                 placeholder="••••••••"
                                 className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-slate-900"
                             />
-                            <p className="mt-2 text-xs text-slate-500">Must be at least 8 characters</p>
                         </div>
 
-                        <div className="flex items-start">
+                        <div className="flex items-center">
                             <input
                                 type="checkbox"
-                                id="terms"
-                                required
-                                className="w-4 h-4 mt-1 text-blue-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-100"
+                                id="remember"
+                                className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-100"
                             />
-                            <label htmlFor="terms" className="ml-2 text-sm text-slate-600">
-                                I agree to ConvertLocally&apos;s{" "}
-                                <Link href="/terms" prefetch={false} className="text-blue-600 hover:text-blue-700 font-medium">Terms of Service</Link>
-                                {" "}and{" "}
-                                <Link href="/privacy" prefetch={false} className="text-blue-600 hover:text-blue-700 font-medium">Privacy Policy</Link>
+                            <label htmlFor="remember" className="ml-2 text-sm text-slate-600">
+                                Remember me for 30 days
                             </label>
                         </div>
 
@@ -156,17 +134,25 @@ export default function SignupPage() {
                             disabled={loading}
                             className="w-full py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 active:bg-blue-800 shadow-lg shadow-blue-200/50 transition-all transform active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {loading ? "Creating account..." : "Create account"}
+                            {loading ? "Signing in..." : "Sign in"}
                         </button>
                     </form>
                 </div>
 
-                {/* Login link */}
+                {/* Sign up link */}
                 <p className="text-center mt-6 text-slate-600">
-                    Already have an account?{" "}
-                    <Link href="/login" prefetch={false} className="font-semibold text-blue-600 hover:text-blue-700">
-                        Sign in
+                    Don&apos;t have an account?{" "}
+                    <Link href="/signup" prefetch={false} className="font-semibold text-blue-600 hover:text-blue-700">
+                        Sign up for free
                     </Link>
+                </p>
+
+                {/* Terms */}
+                <p className="text-center mt-8 text-xs text-slate-400">
+                    By continuing, you agree to ConvertLocally&apos;s{" "}
+                    <Link href="/terms" prefetch={false} className="underline hover:text-slate-600">Terms of Service</Link>
+                    {" "}and{" "}
+                    <Link href="/privacy" prefetch={false} className="underline hover:text-slate-600">Privacy Policy</Link>
                 </p>
             </div>
         </main>

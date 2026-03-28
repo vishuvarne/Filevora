@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from '@/components/LocalizedLink';
 import { useState, useEffect } from "react";
 import { useSharedRouter } from "@/lib/navigation";
 import { authAPI } from "@/lib/auth-api";
