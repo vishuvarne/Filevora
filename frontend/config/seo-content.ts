@@ -280,6 +280,205 @@ export const TOOL_SEO_CONTENT: Record<string, ToolSEOContent> = {
         ]
     },
 
+    // --- ADDITIONAL HIGH-TRAFFIC TOOLS ---
+    "split-pdf": {
+        keywords: [
+            "split pdf online free", "extract pages from pdf", "split pdf without upload",
+            "pdf page extractor", "separate pdf pages", "split pdf locally",
+            "split pdf no signup", "free pdf splitter", "split pdf into individual pages"
+        ],
+        howToSteps: {
+            step1: { title: "Upload PDF", description: "Select the PDF document you want to split from your device." },
+            step2: { title: "Choose Pages", description: "Select which pages to extract or specify page ranges like 1-3, 5, 7-10." },
+            step3: { title: "Download Split PDF", description: "Click Split and download your extracted pages as a new PDF instantly." }
+        },
+        useCases: [
+            { title: "Extract Chapters", desc: "Pull specific chapters from a large textbook PDF for focused reading or printing.", icon: "academic" },
+            { title: "Share Specific Pages", desc: "Extract only the relevant pages from a contract to share with specific stakeholders.", icon: "briefcase" },
+            { title: "Reduce File Size", desc: "Split large PDFs into smaller, more manageable files for easier emailing.", icon: "database" }
+        ],
+        faqs: [
+            { question: "How do I split a PDF without uploading it?", answer: "ConvertLocally splits PDFs entirely inside your browser using WebAssembly. Your documents never leave your device, ensuring 100% privacy." },
+            { question: "Can I extract non-consecutive pages?", answer: "Yes! You can select individual pages like 1, 3, 5 or ranges like 1-5, 10-15 to create a custom PDF." },
+            { question: "Is there a page limit for splitting?", answer: "No. Since processing happens locally on your device, there are no artificial page or file size limits." }
+        ]
+    },
+    "rotate-pdf": {
+        keywords: [
+            "rotate pdf online free", "rotate pdf pages", "fix pdf orientation",
+            "rotate pdf 90 degrees", "rotate scanned pdf", "pdf page rotation tool",
+            "turn pdf sideways", "rotate pdf without upload"
+        ],
+        howToSteps: {
+            step1: { title: "Upload PDF", description: "Select the PDF file with incorrectly oriented pages." },
+            step2: { title: "Rotate Pages", description: "Click to rotate individual pages or all pages 90°, 180°, or 270°." },
+            step3: { title: "Save Rotated PDF", description: "Download your corrected PDF with proper page orientation." }
+        },
+        useCases: [
+            { title: "Fix Scanned Documents", desc: "Correct the rotation of scanned documents that came out sideways or upside down.", icon: "briefcase" },
+            { title: "Presentation Prep", desc: "Rotate landscape slides to portrait or vice versa for proper display.", icon: "academic" },
+            { title: "Print Ready", desc: "Ensure all pages have correct orientation before printing important documents.", icon: "database" }
+        ],
+        faqs: [
+            { question: "Can I rotate individual pages in a PDF?", answer: "Yes, you can selectively rotate specific pages while leaving others unchanged." },
+            { question: "Does rotation affect PDF quality?", answer: "No. The tool rotates pages without re-encoding, preserving the original quality of text, images, and graphics." },
+            { question: "Is this tool free to use?", answer: "Yes, completely free with no limits. The rotation processes locally in your browser for maximum speed and privacy." }
+        ]
+    },
+    "pdf-to-jpg": {
+        keywords: [
+            "pdf to jpg converter", "convert pdf to images", "pdf to jpg free online",
+            "extract images from pdf", "pdf page to jpg", "pdf to jpeg converter",
+            "convert pdf to jpg without upload", "pdf to jpg high quality"
+        ],
+        howToSteps: {
+            step1: { title: "Upload PDF", description: "Select the PDF document you want to convert to JPG images." },
+            step2: { title: "Convert Pages", description: "Each page of your PDF is converted to a high-quality JPG image." },
+            step3: { title: "Download Images", description: "Download all converted JPG images as individual files or in a ZIP archive." }
+        },
+        useCases: [
+            { title: "Social Media Posts", desc: "Convert PDF infographics or flyers to JPG for easy sharing on social platforms.", icon: "briefcase" },
+            { title: "Presentations", desc: "Turn PDF slides into JPG images for embedding in PowerPoint or Google Slides.", icon: "academic" },
+            { title: "Archiving", desc: "Convert old PDF documents to images for easier browsing and thumbnail previews.", icon: "database" }
+        ],
+        faqs: [
+            { question: "What quality are the JPG images?", answer: "ConvertLocally generates high-resolution JPG images that preserve the original clarity of your PDF pages." },
+            { question: "Can I convert a multi-page PDF?", answer: "Yes! Each page is converted to a separate JPG image. You can download them all at once." },
+            { question: "Is my PDF data safe?", answer: "Absolutely. The conversion happens entirely in your browser — your PDF never leaves your device." }
+        ]
+    },
+    "convert-image": {
+        keywords: [
+            "image converter online free", "convert image format", "batch image converter",
+            "change image format online", "image format changer", "convert pictures online",
+            "photo format converter free", "bulk image conversion no upload"
+        ],
+        howToSteps: {
+            step1: { title: "Upload Images", description: "Select one or multiple images in any format: JPG, PNG, WebP, HEIC, AVIF, and 100+ more." },
+            step2: { title: "Choose Output Format", description: "Pick your desired output format from the dropdown menu." },
+            step3: { title: "Convert & Download", description: "Click Convert and download your images in the new format instantly." }
+        },
+        useCases: [
+            { title: "Web Optimization", desc: "Convert images to WebP or AVIF for dramatically faster website loading speeds.", icon: "briefcase" },
+            { title: "Cross-Platform Sharing", desc: "Convert HEIC iPhone photos so they work on Windows, Android, and the web.", icon: "academic" },
+            { title: "Batch Processing", desc: "Convert hundreds of images at once without any file size or quantity limits.", icon: "database" }
+        ],
+        faqs: [
+            { question: "How many image formats do you support?", answer: "ConvertLocally supports over 100 image formats including JPG, PNG, WebP, HEIC, AVIF, BMP, TIFF, SVG, ICO, GIF, and many more." },
+            { question: "Can I convert multiple images at once?", answer: "Yes! You can batch-convert as many images as you want simultaneously. There are no limits on quantity." },
+            { question: "Will I lose image quality?", answer: "Conversions between lossless formats (PNG, TIFF) preserve full quality. Going to lossy formats (JPG) uses optimal compression settings to minimize quality loss." }
+        ]
+    },
+    "image-compressor": {
+        keywords: [
+            "compress image online free", "reduce image file size", "image compressor no upload",
+            "compress jpg online", "compress png online", "shrink image file size",
+            "photo compressor free", "bulk image compression", "reduce photo size for email"
+        ],
+        howToSteps: {
+            step1: { title: "Upload Images", description: "Select the images you want to compress — supports JPG, PNG, WebP, and more." },
+            step2: { title: "Adjust Quality", description: "Use the slider to balance between file size and image quality." },
+            step3: { title: "Download Compressed Images", description: "Save your smaller images instantly — see file size savings in real-time." }
+        },
+        useCases: [
+            { title: "Website Speed", desc: "Compress images to dramatically improve your website's loading speed and SEO ranking.", icon: "briefcase" },
+            { title: "Email Attachments", desc: "Shrink photos to fit within email attachment limits (typically 25MB).", icon: "academic" },
+            { title: "Save Storage", desc: "Reduce photo library size by up to 80% without noticeable quality loss.", icon: "database" }
+        ],
+        faqs: [
+            { question: "How much can I reduce the file size?", answer: "Typically 50-80% reduction depending on the original image and quality settings. JPGs compress especially well." },
+            { question: "Will my images look blurry after compression?", answer: "No. Our smart compression algorithm preserves visual quality while dramatically reducing file size. You can preview the result before downloading." },
+            { question: "Is there a limit to how many images I can compress?", answer: "No limits at all. Since compression runs locally in your browser, you can process as many images as you need." }
+        ]
+    },
+    "video-to-gif": {
+        keywords: [
+            "video to gif converter", "make gif from video", "video to gif online free",
+            "convert video to animated gif", "create gif from video clip",
+            "video to gif no upload", "mp4 avi mov to gif free"
+        ],
+        howToSteps: {
+            step1: { title: "Upload Video", description: "Select any video file — MP4, MOV, AVI, WebM, or MKV are all supported." },
+            step2: { title: "Set GIF Options", description: "Choose the start/end time, frame rate, and resolution for your GIF." },
+            step3: { title: "Create & Download GIF", description: "Click Convert and download your high-quality animated GIF." }
+        },
+        useCases: [
+            { title: "Social Media Content", desc: "Create shareable GIFs from video highlights for Twitter, Reddit, or Discord.", icon: "briefcase" },
+            { title: "Tutorials & Demos", desc: "Make animated GIFs of screen recordings to embed in documentation or presentations.", icon: "academic" },
+            { title: "Memes & Fun", desc: "Capture funny or memorable video moments as GIFs to share with friends.", icon: "database" }
+        ],
+        faqs: [
+            { question: "What video formats can I convert to GIF?", answer: "ConvertLocally supports MP4, MOV, AVI, WebM, MKV, and most other common video formats." },
+            { question: "Is there a video length limit?", answer: "No hard limit, but GIFs work best for short clips (5-30 seconds). Longer clips produce very large files." },
+            { question: "Can I control the GIF quality?", answer: "Yes, you can adjust the frame rate and resolution to balance between quality and file size." }
+        ]
+    },
+    "mp4-to-gif": {
+        keywords: [
+            "mp4 to gif converter", "convert mp4 to gif online free", "mp4 to gif no upload",
+            "make gif from mp4", "mp4 to animated gif", "mp4 to gif offline",
+            "free mp4 to gif converter", "mp4 to gif browser"
+        ],
+        howToSteps: {
+            step1: { title: "Upload MP4 Video", description: "Select the MP4 file you want to turn into an animated GIF." },
+            step2: { title: "Trim & Customize", description: "Set the start and end time of the clip and adjust the output size." },
+            step3: { title: "Download GIF", description: "Click Convert to generate and download your animated GIF." }
+        },
+        useCases: [
+            { title: "Quick Reactions", desc: "Create reaction GIFs from your favorite MP4 video moments.", icon: "briefcase" },
+            { title: "Product Demos", desc: "Convert MP4 product videos into GIFs for email marketing campaigns.", icon: "academic" },
+            { title: "Game Clips", desc: "Turn MP4 gameplay recordings into shareable GIFs for forums and social media.", icon: "database" }
+        ],
+        faqs: [
+            { question: "How do I convert MP4 to GIF for free?", answer: "Simply upload your MP4 file to ConvertLocally. The conversion runs entirely in your browser — no signup, no upload to servers, completely free." },
+            { question: "Can I convert large MP4 files?", answer: "Yes! Since processing happens locally, there's no file size limit. However, shorter clips produce better GIFs." },
+            { question: "Is the GIF quality good?", answer: "Yes, ConvertLocally produces high-quality GIFs with smooth animation. You can adjust the frame rate and resolution to optimize the output." }
+        ]
+    },
+    "webp-to-jpg": {
+        keywords: [
+            "webp to jpg converter", "convert webp to jpeg free", "webp to jpg online",
+            "change webp to jpg", "save webp as jpg", "webp to jpeg no upload",
+            "webp to jpg bulk converter", "open webp files as jpg"
+        ],
+        howToSteps: {
+            step1: { title: "Upload WebP Images", description: "Select one or more WebP images from your computer or phone." },
+            step2: { title: "Convert Format", description: "Our browser engine converts WebP to standard JPEG format instantly." },
+            step3: { title: "Download JPGs", description: "Save your universally compatible JPG images to your device." }
+        },
+        useCases: [
+            { title: "Compatibility", desc: "Convert WebP downloads to JPG so they work with image editors that don't support WebP.", icon: "briefcase" },
+            { title: "Social Media", desc: "Change WebP screenshots to JPG for posting on platforms that don't accept WebP.", icon: "academic" },
+            { title: "Printing", desc: "Convert WebP to JPG for reliable printing at photo labs and print shops.", icon: "database" }
+        ],
+        faqs: [
+            { question: "Why convert WebP to JPG?", answer: "While WebP is great for the web, many apps, print services, and older devices don't support it. JPG is universally compatible." },
+            { question: "Does the conversion lose quality?", answer: "There's minimal quality loss. Our converter uses optimal JPEG compression settings to preserve the original appearance." },
+            { question: "Can I batch convert multiple WebP files?", answer: "Yes! Upload multiple WebP files at once and download all converted JPGs together." }
+        ]
+    },
+    "webp-to-png": {
+        keywords: [
+            "webp to png converter", "convert webp to png free", "webp to png online",
+            "change webp to png", "webp to png lossless", "webp to png no upload"
+        ],
+        howToSteps: {
+            step1: { title: "Upload WebP Images", description: "Select one or more WebP images to convert." },
+            step2: { title: "Lossless Conversion", description: "Convert to PNG format with zero quality loss." },
+            step3: { title: "Download PNGs", description: "Save your high-quality PNG images with full transparency support." }
+        },
+        useCases: [
+            { title: "Preserve Quality", desc: "Convert WebP to PNG for lossless editing in Photoshop or other image editors.", icon: "briefcase" },
+            { title: "Transparency Support", desc: "Maintain transparency when converting WebP images with alpha channels to PNG.", icon: "academic" },
+            { title: "Universal Format", desc: "PNG is supported everywhere — convert WebP for maximum compatibility.", icon: "database" }
+        ],
+        faqs: [
+            { question: "Why choose PNG over JPG?", answer: "PNG preserves transparency and uses lossless compression. Choose PNG when you need perfect quality or transparent backgrounds." },
+            { question: "Will the file size increase?", answer: "PNG files are typically larger than WebP since PNG uses lossless compression. The tradeoff is perfect quality preservation." },
+            { question: "Is transparency preserved?", answer: "Yes! If your WebP image has transparent areas, they'll be perfectly preserved in the PNG output." }
+        ]
+    },
+
     // Catch-all fallback
     "default": {
         keywords: ["free private offline file converter", "secure file conversion tool", "ConvertLocally convert securely"],

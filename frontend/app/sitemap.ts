@@ -6,6 +6,10 @@ export const dynamic = 'force-static';
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = "https://convertlocally.com";
 
+    // Use a stable last-modified date (update when you actually change content)
+    // Google penalizes constantly-changing lastModified as manipulation
+    const lastModified = new Date("2026-03-28");
+
     // High-priority tools
     const highPriorityTools = new Set([
         'image-to-pdf', 'jpg-to-pdf', 'merge-pdf', 'compress-pdf',
@@ -19,12 +23,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ]);
 
     // Tool pages with tiered priority
+    // IMPORTANT: trailing slash MUST match next.config.js trailingSlash: true
     const toolUrls = TOOLS.map((tool) => {
         const isHigh = highPriorityTools.has(tool.id);
         const isMed = medPriorityTools.has(tool.id);
         return {
-            url: `${baseUrl}/tools/${tool.id}`,
-            lastModified: new Date(),
+            url: `${baseUrl}/tools/${tool.id}/`,
+            lastModified,
             changeFrequency: (isHigh ? "daily" : "weekly") as "daily" | "weekly",
             priority: isHigh ? 1.0 : isMed ? 0.9 : 0.8,
         };
@@ -33,38 +38,44 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Static pages
     const staticUrls = [
         {
-            url: baseUrl,
-            lastModified: new Date(),
+            url: `${baseUrl}/`,
+            lastModified,
             changeFrequency: "daily" as const,
             priority: 1,
         },
         {
-            url: `${baseUrl}/about`,
-            lastModified: new Date(),
+            url: `${baseUrl}/about/`,
+            lastModified,
             changeFrequency: "monthly" as const,
             priority: 0.5,
         },
         {
-            url: `${baseUrl}/privacy`,
-            lastModified: new Date(),
+            url: `${baseUrl}/help/`,
+            lastModified,
+            changeFrequency: "monthly" as const,
+            priority: 0.4,
+        },
+        {
+            url: `${baseUrl}/privacy/`,
+            lastModified,
             changeFrequency: "monthly" as const,
             priority: 0.2,
         },
         {
-            url: `${baseUrl}/terms`,
-            lastModified: new Date(),
+            url: `${baseUrl}/terms/`,
+            lastModified,
             changeFrequency: "monthly" as const,
             priority: 0.2,
         },
         {
-            url: `${baseUrl}/contact`,
-            lastModified: new Date(),
+            url: `${baseUrl}/contact/`,
+            lastModified,
             changeFrequency: "monthly" as const,
             priority: 0.3,
         },
         {
-            url: `${baseUrl}/donate`,
-            lastModified: new Date(),
+            url: `${baseUrl}/donate/`,
+            lastModified,
             changeFrequency: "monthly" as const,
             priority: 0.3,
         },

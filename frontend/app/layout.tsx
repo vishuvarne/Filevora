@@ -81,7 +81,7 @@ export const metadata: Metadata = {
     description: "Convert, Edit, and Compress files online for free.",
     images: [
       {
-        url: "/og-image.png",
+        url: "https://convertlocally.com/og-image.png",
         width: 1200,
         height: 630,
         alt: "ConvertLocally - Free Online File Converter Tools",
@@ -92,7 +92,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "ConvertLocally - Free Online File Converter",
     description: "60+ free tools to convert, merge, compress files. PDF, Image, Video converter with no signup required.",
-    images: ["/og-image.png"],
+    images: ["https://convertlocally.com/og-image.png"],
   },
   robots: {
     index: true,
@@ -143,7 +143,7 @@ export default function RootLayout({
                 "@type": "Organization",
                 "name": "ConvertLocally",
                 "url": "https://convertlocally.com",
-                "logo": "https://convertlocally.com/logo.png",
+                "logo": "https://convertlocally.com/og-image.png",
                 "sameAs": []
               },
               {
@@ -156,6 +156,30 @@ export default function RootLayout({
                   "target": "https://convertlocally.com/?q={search_term_string}",
                   "query-input": "required name=search_term_string"
                 }
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "ItemList",
+                "name": "Free Online File Converter Tools",
+                "description": "60+ free online tools to convert, merge, and compress files.",
+                "numberOfItems": 15,
+                "itemListElement": [
+                  { "@type": "ListItem", "position": 1, "name": "Merge PDF", "url": "https://convertlocally.com/tools/merge-pdf/" },
+                  { "@type": "ListItem", "position": 2, "name": "Image to PDF", "url": "https://convertlocally.com/tools/image-to-pdf/" },
+                  { "@type": "ListItem", "position": 3, "name": "Compress PDF", "url": "https://convertlocally.com/tools/compress-pdf/" },
+                  { "@type": "ListItem", "position": 4, "name": "JPG to PDF", "url": "https://convertlocally.com/tools/jpg-to-pdf/" },
+                  { "@type": "ListItem", "position": 5, "name": "PDF to JPG", "url": "https://convertlocally.com/tools/pdf-to-jpg/" },
+                  { "@type": "ListItem", "position": 6, "name": "HEIC to JPG", "url": "https://convertlocally.com/tools/heic-to-jpg/" },
+                  { "@type": "ListItem", "position": 7, "name": "PNG to JPG", "url": "https://convertlocally.com/tools/png-to-jpg/" },
+                  { "@type": "ListItem", "position": 8, "name": "JPG to PNG", "url": "https://convertlocally.com/tools/jpg-to-png/" },
+                  { "@type": "ListItem", "position": 9, "name": "WebP to JPG", "url": "https://convertlocally.com/tools/webp-to-jpg/" },
+                  { "@type": "ListItem", "position": 10, "name": "Image Compressor", "url": "https://convertlocally.com/tools/image-compressor/" },
+                  { "@type": "ListItem", "position": 11, "name": "Split PDF", "url": "https://convertlocally.com/tools/split-pdf/" },
+                  { "@type": "ListItem", "position": 12, "name": "Rotate PDF", "url": "https://convertlocally.com/tools/rotate-pdf/" },
+                  { "@type": "ListItem", "position": 13, "name": "Video to GIF", "url": "https://convertlocally.com/tools/video-to-gif/" },
+                  { "@type": "ListItem", "position": 14, "name": "MP4 to GIF", "url": "https://convertlocally.com/tools/mp4-to-gif/" },
+                  { "@type": "ListItem", "position": 15, "name": "Image Converter", "url": "https://convertlocally.com/tools/convert-image/" }
+                ]
               }
             ])
           }}
@@ -222,7 +246,7 @@ export default function RootLayout({
             <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ""} />
             <Navbar />
             {/* AdSense Script - Global */}
-            <GoogleAdsense pId={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID || "ca-pub-0000000000000000"} />
+            <GoogleAdsense pId="ca-pub-6748722729156165" />
             <div className="flex-1 flex flex-col min-h-0">
               <Suspense fallback={<div className="flex-1 flex items-center justify-center min-h-[50vh]"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>}>
                 {children}

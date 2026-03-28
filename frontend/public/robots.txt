@@ -1,7 +1,17 @@
 User-agent: *
 Allow: /
 Disallow: /profile
+Disallow: /profile/
 Disallow: /api/
 Disallow: /temp/
+Disallow: /login
+Disallow: /login/
+Disallow: /signup
+Disallow: /signup/
+Disallow: /blob-test
+Disallow: /blob-test/
+Disallow: /coming-soon
+Disallow: /coming-soon/
 
+Host: https://convertlocally.com
 Sitemap: https://convertlocally.com/sitemap.xml

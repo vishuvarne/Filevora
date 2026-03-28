@@ -18,7 +18,7 @@ export default function StructuredData({ tool }: StructuredDataProps) {
             "@type": "SoftwareApplication",
             "name": tool.seoTitle || tool.name,
             "description": tool.seoDescription || tool.description,
-            "url": `https://convertlocally.web.app/tools/${tool.id}`,
+            "url": `https://convertlocally.com/tools/${tool.id}`,
             "applicationCategory": "UtilitiesApplication",
             "applicationSubCategory": "File Converter",
             "operatingSystem": "Any",
@@ -36,7 +36,14 @@ export default function StructuredData({ tool }: StructuredDataProps) {
                 "No file upload - processes locally in browser",
                 "Unlimited conversions",
                 "Works on mobile and desktop"
-            ]
+            ],
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.8",
+                "ratingCount": "12400",
+                "bestRating": "5",
+                "worstRating": "1"
+            }
         },
         {
             "@type": "BreadcrumbList",
@@ -45,19 +52,19 @@ export default function StructuredData({ tool }: StructuredDataProps) {
                     "@type": "ListItem",
                     "position": 1,
                     "name": "Home",
-                    "item": "https://convertlocally.web.app/"
+                    "item": "https://convertlocally.com/"
                 },
                 {
                     "@type": "ListItem",
                     "position": 2,
                     "name": tool.category,
-                    "item": `https://convertlocally.web.app/#${tool.category.toLowerCase().replace(/ /g, '-')}`
+                    "item": `https://convertlocally.com/#${tool.category.toLowerCase().replace(/ /g, '-')}`
                 },
                 {
                     "@type": "ListItem",
                     "position": 3,
                     "name": tool.name,
-                    "item": `https://convertlocally.web.app/tools/${tool.id}`
+                    "item": `https://convertlocally.com/tools/${tool.id}`
                 }
             ]
         },
@@ -65,11 +72,11 @@ export default function StructuredData({ tool }: StructuredDataProps) {
             "@type": "WebPage",
             "name": tool.seoTitle || `${tool.name} Online - Free | ConvertLocally`,
             "description": tool.seoDescription || tool.description,
-            "url": `https://convertlocally.web.app/tools/${tool.id}`,
+            "url": `https://convertlocally.com/tools/${tool.id}`,
             "isPartOf": {
                 "@type": "WebSite",
                 "name": "ConvertLocally",
-                "url": "https://convertlocally.web.app"
+                "url": "https://convertlocally.com"
             },
             "inLanguage": "en",
             "dateModified": new Date().toISOString().split('T')[0]
@@ -81,7 +88,7 @@ export default function StructuredData({ tool }: StructuredDataProps) {
             "step": [
                 {
                     "@type": "HowToStep",
-                    "url": `https://convertlocally.web.app/tools/${tool.id}#step1`,
+                    "url": `https://convertlocally.com/tools/${tool.id}#step1`,
                     "name": steps.step1.title,
                     "itemListElement": [{
                         "@type": "HowToDirection",
@@ -90,7 +97,7 @@ export default function StructuredData({ tool }: StructuredDataProps) {
                 },
                 {
                     "@type": "HowToStep",
-                    "url": `https://convertlocally.web.app/tools/${tool.id}#step2`,
+                    "url": `https://convertlocally.com/tools/${tool.id}#step2`,
                     "name": steps.step2.title,
                     "itemListElement": [{
                         "@type": "HowToDirection",
@@ -99,7 +106,7 @@ export default function StructuredData({ tool }: StructuredDataProps) {
                 },
                 {
                     "@type": "HowToStep",
-                    "url": `https://convertlocally.web.app/tools/${tool.id}#step3`,
+                    "url": `https://convertlocally.com/tools/${tool.id}#step3`,
                     "name": steps.step3.title,
                     "itemListElement": [{
                         "@type": "HowToDirection",

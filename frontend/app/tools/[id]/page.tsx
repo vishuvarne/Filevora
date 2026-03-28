@@ -36,7 +36,7 @@ export async function generateMetadata(
         openGraph: {
             title,
             description,
-            url: `https://convertlocally.web.app/tools/${tool.id}`,
+            url: `https://convertlocally.com/tools/${tool.id}`,
             images: [`/og/tools/${tool.id}.png`],
             siteName: "ConvertLocally",
             locale: "en_US",
@@ -49,7 +49,7 @@ export async function generateMetadata(
             images: [`/og/tools/${tool.id}.png`],
         },
         alternates: {
-            canonical: `https://convertlocally.web.app/tools/${tool.id}`,
+            canonical: `https://convertlocally.com/tools/${tool.id}`,
         }
     };
 }
