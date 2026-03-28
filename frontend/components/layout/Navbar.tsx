@@ -385,8 +385,8 @@ export default function Navbar() {
 
             {/* Desktop Mega Menu Dropdown */}
             <div
-                className={`hidden lg:block absolute left-0 w-full bg-background border-b border-border shadow-xl shadow-black/5 transition-all duration-300 ease-out origin-top z-[45] ${activeCategory ? "opacity-100 translate-y-0 visible" : "opacity-0 -translate-y-2 pointer-events-none invisible"}`}
-                style={{ contentVisibility: activeCategory ? 'visible' : 'auto' } as any}
+                className={`hidden lg:block absolute left-0 w-full bg-background border-b border-border shadow-xl shadow-black/5 transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] origin-top z-[45] ${activeCategory ? "opacity-100 translate-y-0 visible" : "opacity-0 -translate-y-2 pointer-events-none invisible"}`}
+                style={{ contentVisibility: activeCategory ? 'visible' : 'auto', willChange: 'transform, opacity' } as any}
             >
                 {activeCategory && (
                     <MegaMenu
@@ -437,7 +437,7 @@ export default function Navbar() {
 
             {/* Mobile: Drawer */}
             <div
-                className={`lg:hidden fixed top-0 right-0 h-[100dvh] w-[90vw] max-w-sm bg-background border-l border-border shadow-2xl z-[101] flex flex-col transition-transform duration-300 ease-out ${mobileMenuOpen ? "translate-x-0" : "translate-x-full pointer-events-none invisible"}`}
+                className={`lg:hidden fixed top-0 right-0 h-[100dvh] w-[90vw] max-w-sm bg-background border-l border-border shadow-2xl z-[101] flex flex-col transition-transform duration-[400ms] ease-[cubic-bezier(0.25,0.1,0.25,1)] ${mobileMenuOpen ? "translate-x-0" : "translate-x-full pointer-events-none invisible"}`}
                 {...({ inert: !mobileMenuOpen ? true : undefined } as any)}
             >
                 <div className="flex items-center justify-between p-4 border-b border-border shrink-0">

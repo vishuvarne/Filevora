@@ -40,7 +40,6 @@ import { processJob, getDownloadUrl, ProcessResponse, sendEmail } from "@/lib/ap
 import { SortableFileList } from "@/components/SortableFileList";
 import { authAPI } from "@/lib/auth-api";
 import { FirestoreService } from "@/lib/firestore-service";
-import AdSlot from "@/components/ads/AdSlot";
 import { useFileHistory } from "@/hooks/useFileHistory";
 import { canProcessLocally, processLocally } from "@/lib/client-processor";
 import GhostModeBadge from "@/components/GhostModeBadge";
@@ -1027,7 +1026,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                     <>
                         {/* 1. SELECTION SUBPAGE (Idle Status) */}
                         {status === "idle" && (
-                            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-500 pb-32">
+                            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-1 duration-300 pb-32">
 
                                 {/* Header Row */}
                                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-3 gap-3">
@@ -1068,10 +1067,6 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                         {/* Full Dropzone — only when no files selected */}
                                         {files.length === 0 && (
                                             <>
-                                                {/* Mobile Ad (Above Dropzone) */}
-                                                <div className="block md:hidden w-full max-w-[320px] mx-auto mb-2">
-                                                    <AdSlot adSlotId="mobile-top-dropzone" format="mobile-banner" isTest={false} />
-                                                </div>
 
                                                 <Dropzone
                                                     onFilesSelected={handleFilesSelected}
@@ -1079,11 +1074,6 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                     multiple={tool.multiple}
                                                     label="Drag & Drop files here, or click to select"
                                                 />
-
-                                                {/* Mobile Ad (Below Dropzone) */}
-                                                <div className="block md:hidden w-full max-w-[320px] mx-auto mt-2">
-                                                    <AdSlot adSlotId="mobile-bottom-dropzone" format="mobile-banner" isTest={false} />
-                                                </div>
 
                                                 <div className="flex items-center justify-center gap-2 text-[10px] sm:text-[11px] font-bold text-slate-800 dark:text-slate-200 bg-[#f4f4f5] dark:bg-slate-800 rounded-full px-4 py-2 w-fit mx-auto border-2 border-slate-900 dark:border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] dark:shadow-[2px_2px_0px_0px_rgba(30,41,59,1)]">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-green-600 dark:text-green-500 shrink-0">
@@ -2018,12 +2008,6 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
 
                                     </div>
 
-                                    {/* State 1 and 2: "Under Tool" Ad - Shown when idle (both before and during file configuration) */}
-                                    {status === "idle" && (
-                                        <div className="hidden md:flex w-full justify-center pt-8 pb-4">
-                                            <AdSlot adSlotId="UNDER_TOOL_BANNER" format="leaderboard" isTest={false} />
-                                        </div>
-                                    )}
 
                                     <ToolInfoSection tool={tool} />
                                 </div>
@@ -2034,7 +2018,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                         {/* 2. PROCESSING SUBPAGE */}
                         {
                             (status === "uploading" || status === "converting" || status === "processing") && (
-                                <div className="w-full flex flex-col items-center justify-center min-h-[500px] animate-in zoom-in-95 fade-in duration-500 pb-32">
+                                <div className="w-full flex flex-col items-center justify-center min-h-[500px] animate-in fade-in slide-in-from-bottom-2 duration-400 pb-32">
                                     <div className="bg-card dark:bg-[#1A1D24] w-full p-8 md:p-12 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-xl text-center relative overflow-hidden">
                                         <div className="relative z-10 flex flex-col items-center justify-between mb-8">
                                             <h2 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tight flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
@@ -2076,28 +2060,13 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                         {
                             status === "success" && result && (
                                 <div className="flex flex-col xl:flex-row gap-6 w-full items-stretch">
-                                    <div className="flex-1 w-full animate-in slide-in-from-bottom-4 fade-in duration-500 min-h-[500px] bg-card dark:bg-[#1A1D24] rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-xl p-6 md:p-8">
+                                    <div className="flex-1 w-full animate-in slide-in-from-bottom-2 fade-in duration-500 min-h-[500px] bg-card dark:bg-[#1A1D24] rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-xl p-6 md:p-8">
                                         <ConversionSuccessModal
                                             result={result}
                                             tool={tool}
                                             isGhostMode={isGhostMode}
                                             onReset={reset}
                                         />
-                                    </div>
-
-                                    {/* State 3: Success "High Conversion" Ad Card (Mobile & Desktop) */}
-                                    <div className="flex flex-col md:flex-row xl:flex-col justify-center items-center gap-6 w-full xl:w-[332px] shrink-0 animate-in fade-in duration-500 delay-300 bg-card dark:bg-[#1A1D24] rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-xl p-6 xl:p-4">
-                                        {/* Ad 1 */}
-                                        <div className="w-full flex-1 flex items-center justify-center">
-                                            <AdSlot adSlotId="SUCCESS_SIDEBAR_AD_1" format="rectangle" isTest={false} className="!w-full !max-w-[300px] !h-full" />
-                                        </div>
-                                        {/* Separator */}
-                                        <div className="hidden xl:block w-full h-px bg-slate-200 dark:bg-slate-800"></div>
-                                        <div className="md:hidden xl:hidden w-full h-px bg-slate-200 dark:bg-slate-800"></div>
-                                        {/* Ad 2 */}
-                                        <div className="w-full flex-1 flex items-center justify-center">
-                                            <AdSlot adSlotId="SUCCESS_SIDEBAR_AD_2" format="rectangle" isTest={false} className="!w-full !max-w-[300px] !h-full" />
-                                        </div>
                                     </div>
                                 </div>
                             )
@@ -2106,7 +2075,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                         {/* Error Banner fallback in case processing wasn't caught by the progress screen */}
                         {
                             status === "error" && errorMsg && (
-                                <div className="bg-[#ff4d4f] text-white p-6 md:p-8 rounded-2xl text-center max-w-2xl mx-auto border-[3px] border-slate-900 dark:border-slate-800 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] dark:shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] flex flex-col items-center gap-5 animate-in fade-in slide-in-from-top-4">
+                                <div className="bg-[#ff4d4f] text-white p-6 md:p-8 rounded-2xl text-center max-w-2xl mx-auto border-[3px] border-slate-900 dark:border-slate-800 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] dark:shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] flex flex-col items-center gap-5 animate-in fade-in slide-in-from-top-2 duration-400">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-12 h-12 flex-shrink-0 text-white"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
                                     <div className="text-xl font-black break-words tracking-tight uppercase leading-snug">{errorMsg}</div>
                                     <button onClick={reset} className="mt-4 px-8 py-3 bg-white text-slate-900 rounded-xl font-black uppercase tracking-wider border-[3px] border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none active:scale-95 transition-all duration-200">
@@ -2119,7 +2088,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                         {/* UNIVERSAL STICKY PROCESS BUTTON */}
                         {
                             files.length > 0 && status === "idle" && (
-                                <div className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 bg-background/80 md:bg-transparent backdrop-blur-md md:backdrop-blur-none border-t border-border md:border-t-0 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] md:shadow-none flex justify-center animate-in slide-in-from-bottom-8">
+                                <div className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 bg-background/80 md:bg-transparent backdrop-blur-md md:backdrop-blur-none border-t border-border md:border-t-0 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] md:shadow-none flex justify-center animate-in slide-in-from-bottom-4 duration-300">
                                     <button
                                         onClick={() => handleProcess()}
                                         className={`w-full md:w-auto md:min-w-[400px] h-14 md:h-16 rounded-full font-black uppercase tracking-wider text-xl transition-all duration-200 transform group relative overflow-hidden active:translate-y-0 active:scale-95 active:shadow-none hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] border-[3px] border-slate-900 dark:border-slate-800 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] dark:shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] ${tool.theme.gradient} text-white`}

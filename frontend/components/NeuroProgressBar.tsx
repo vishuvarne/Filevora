@@ -67,11 +67,11 @@ export default function NeuroProgressBar({ progress, className, color = "blue", 
             <div className={`h-3 md:h-4 w-full bg-slate-200 dark:bg-slate-800/50 rounded-full overflow-hidden relative shadow-inner backdrop-blur-sm dark:border dark:border-slate-700/30`}>
                 {/* Fill Bar */}
                 <div
-                    className={`h-full rounded-full transition-all duration-300 ease-out relative overflow-hidden bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.4)]`}
-                    style={{ width: `${safeProgress}%` }}
+                    className={`h-full rounded-full transition-[width] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] relative overflow-hidden bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.4)]`}
+                    style={{ width: `${safeProgress}%`, willChange: 'width' }}
                 >
                     {/* Shimmer Effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent w-full -translate-x-full animate-shimmer"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent w-full -translate-x-full animate-shimmer" style={{ animationDuration: '3s' }}></div>
                 </div>
             </div>
         </div>

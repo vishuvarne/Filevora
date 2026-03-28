@@ -99,7 +99,7 @@ function ToolCard({ tool }: { tool: ToolDef }) {
             prefetch={false}
             className={isNeu
                 ? "group relative p-6 flex flex-col h-full cursor-pointer nb-card overflow-hidden"
-                : `group relative bg-card p-6 rounded-2xl border border-border shadow-sm transition-all duration-300 overflow-hidden flex flex-col h-full cursor-pointer
+                : `group relative bg-card p-6 rounded-2xl border border-border shadow-sm transition-all duration-200 overflow-hidden flex flex-col h-full cursor-pointer will-change-transform
             hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:border-primary/60 hover:-translate-y-1 hover:bg-slate-50/50 dark:hover:bg-secondary/40 dark:hover:shadow-none active:scale-95`
             }
             onMouseEnter={() => {

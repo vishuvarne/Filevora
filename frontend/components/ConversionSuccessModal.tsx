@@ -149,7 +149,7 @@ export default function ConversionSuccessModal({
     // Standard Link prefetch={false} handles the hygiene now.
 
     return (
-        <div className="flex flex-col items-center justify-start p-4 py-6 md:p-6 md:py-8 animate-in fade-in slide-in-from-bottom-8 duration-500 min-h-full w-full max-w-4xl mx-auto relative overflow-visible">
+        <div className="flex flex-col items-center justify-start p-4 py-6 md:p-6 md:py-8 animate-in fade-in slide-in-from-bottom-4 duration-700 min-h-full w-full max-w-4xl mx-auto relative overflow-visible">
 
             {/* Solid Design: Clean Halo Backdrop */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[300px] bg-primary/5 dark:bg-primary/10 rounded-full blur-[60px] pointer-events-none -z-10"></div>

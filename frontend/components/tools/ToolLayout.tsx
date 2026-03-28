@@ -3,7 +3,6 @@ import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import GhostModeBadge from "@/components/GhostModeBadge";
 import { getProcessingVisual, getProcessingTitle } from "@/components/ProcessingVisuals";
 import Dropzone from "@/components/SmartDropzone";
-import AdSlot from "@/components/ads/AdSlot";
 import dynamic from "next/dynamic";
 
 const ConversionSuccessModal = dynamic(() => import("@/components/ConversionSuccessModal"), { ssr: false });
@@ -153,12 +152,6 @@ export default function ToolLayout({
                                             </div>
                                         ) : (
                                             <>
-                                                {/* Mobile Ad (Above Dropzone) */}
-                                                {!files.length && (
-                                                    <div className="block md:hidden w-full max-w-[320px] mx-auto mb-2 mt-4">
-                                                        <AdSlot adSlotId="mobile-top-layout" format="mobile-banner" isTest={false} />
-                                                    </div>
-                                                )}
 
                                                 <Dropzone
                                                     onFilesSelected={onFilesSelected}
@@ -168,12 +161,6 @@ export default function ToolLayout({
                                                     label={files.length > 0 ? "Add more files" : `Drag & Drop ${tool.name.split(' ')[0]} files here`}
                                                 />
 
-                                                {/* Mobile Ad (Below Dropzone) */}
-                                                {!files.length && (
-                                                    <div className="block md:hidden w-full max-w-[320px] mx-auto mt-2 mb-4">
-                                                        <AdSlot adSlotId="mobile-bottom-layout" format="mobile-banner" isTest={false} />
-                                                    </div>
-                                                )}
                                             </>
                                         )}
                                     </div>
