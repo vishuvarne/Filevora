@@ -187,21 +187,21 @@ export default async function RootLayout({
                 "description": "60+ free online tools to convert, merge, and compress files.",
                 "numberOfItems": 15,
                 "itemListElement": [
-                  { "@type": "ListItem", "position": 1, "name": "Merge PDF", "url": "https://convertlocally.com/tools/merge-pdf/" },
-                  { "@type": "ListItem", "position": 2, "name": "Image to PDF", "url": "https://convertlocally.com/tools/image-to-pdf/" },
-                  { "@type": "ListItem", "position": 3, "name": "Compress PDF", "url": "https://convertlocally.com/tools/compress-pdf/" },
-                  { "@type": "ListItem", "position": 4, "name": "JPG to PDF", "url": "https://convertlocally.com/tools/jpg-to-pdf/" },
-                  { "@type": "ListItem", "position": 5, "name": "PDF to JPG", "url": "https://convertlocally.com/tools/pdf-to-jpg/" },
-                  { "@type": "ListItem", "position": 6, "name": "HEIC to JPG", "url": "https://convertlocally.com/tools/heic-to-jpg/" },
-                  { "@type": "ListItem", "position": 7, "name": "PNG to JPG", "url": "https://convertlocally.com/tools/png-to-jpg/" },
-                  { "@type": "ListItem", "position": 8, "name": "JPG to PNG", "url": "https://convertlocally.com/tools/jpg-to-png/" },
-                  { "@type": "ListItem", "position": 9, "name": "WebP to JPG", "url": "https://convertlocally.com/tools/webp-to-jpg/" },
-                  { "@type": "ListItem", "position": 10, "name": "Image Compressor", "url": "https://convertlocally.com/tools/image-compressor/" },
-                  { "@type": "ListItem", "position": 11, "name": "Split PDF", "url": "https://convertlocally.com/tools/split-pdf/" },
-                  { "@type": "ListItem", "position": 12, "name": "Rotate PDF", "url": "https://convertlocally.com/tools/rotate-pdf/" },
-                  { "@type": "ListItem", "position": 13, "name": "Video to GIF", "url": "https://convertlocally.com/tools/video-to-gif/" },
-                  { "@type": "ListItem", "position": 14, "name": "MP4 to GIF", "url": "https://convertlocally.com/tools/mp4-to-gif/" },
-                  { "@type": "ListItem", "position": 15, "name": "Image Converter", "url": "https://convertlocally.com/tools/convert-image/" }
+                  { "@type": "ListItem", "position": 1, "name": "Merge PDF", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/merge-pdf/` },
+                  { "@type": "ListItem", "position": 2, "name": "Image to PDF", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/image-to-pdf/` },
+                  { "@type": "ListItem", "position": 3, "name": "Compress PDF", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/compress-pdf/` },
+                  { "@type": "ListItem", "position": 4, "name": "JPG to PDF", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/jpg-to-pdf/` },
+                  { "@type": "ListItem", "position": 5, "name": "PDF to JPG", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/pdf-to-jpg/` },
+                  { "@type": "ListItem", "position": 6, "name": "HEIC to JPG", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/heic-to-jpg/` },
+                  { "@type": "ListItem", "position": 7, "name": "PNG to JPG", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/png-to-jpg/` },
+                  { "@type": "ListItem", "position": 8, "name": "JPG to PNG", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/jpg-to-png/` },
+                  { "@type": "ListItem", "position": 9, "name": "WebP to JPG", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/webp-to-jpg/` },
+                  { "@type": "ListItem", "position": 10, "name": "Image Compressor", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/image-compressor/` },
+                  { "@type": "ListItem", "position": 11, "name": "Split PDF", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/split-pdf/` },
+                  { "@type": "ListItem", "position": 12, "name": "Rotate PDF", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/rotate-pdf/` },
+                  { "@type": "ListItem", "position": 13, "name": "Video to GIF", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/video-to-gif/` },
+                  { "@type": "ListItem", "position": 14, "name": "MP4 to GIF", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/mp4-to-gif/` },
+                  { "@type": "ListItem", "position": 15, "name": "Image Converter", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/convert-image/` }
                 ]
               }
             ])

@@ -5,14 +5,14 @@ import ToolInterface from "@/components/ToolInterface";
 import StructuredData from "@/components/StructuredData";
 import { getToolSEOContent } from "@/config/seo-content";
 interface Props {
-    params: Promise<{ id: string }>;
+    params: Promise<{ lang: string; id: string }>;
 }
 
 export async function generateMetadata(
     { params }: Props,
     parent: ResolvingMetadata
 ): Promise<Metadata> {
-    const id = (await params).id;
+    const { lang, id } = await params;
     const tool = TOOLS.find((t) => t.id === id);
 
     if (!tool) {
@@ -29,6 +29,8 @@ export async function generateMetadata(
     const title = tool.seoTitle || `${tool.name} Online - Free, Fast & Secure | ConvertLocally`;
     const description = tool.seoDescription || `The best free online ${tool.name.toLowerCase()} tool. Fast, secure, and no installation required. Convert, compress, or edit your files in seconds with ConvertLocally.`;
 
+    const baseUrl = `https://convertlocally.com/${lang}/tools/${tool.id}`;
+
     return {
         title,
         description,
@@ -36,10 +38,10 @@ export async function generateMetadata(
         openGraph: {
             title,
             description,
-            url: `https://convertlocally.com/tools/${tool.id}`,
+            url: baseUrl,
             images: [`/og/tools/${tool.id}.png`],
             siteName: "ConvertLocally",
-            locale: "en_US",
+            locale: lang === 'en' ? 'en_US' : lang, // Map to standard if possible
             type: "website",
         },
         twitter: {
@@ -49,7 +51,7 @@ export async function generateMetadata(
             images: [`/og/tools/${tool.id}.png`],
         },
         alternates: {
-            canonical: `https://convertlocally.com/tools/${tool.id}`,
+            canonical: baseUrl,
         }
     };
 }
@@ -70,10 +72,18 @@ export default async function ToolPage({ params }: Props) {
     );
 }
 
-// Generate static params for faster at-edge delivery and SEO
+// Generate static params for all combinations of language and tool ID
 export async function generateStaticParams() {
-    return TOOLS
-        .map((tool) => ({
-            id: tool.id,
-        }));
+    const paths: { lang: string; id: string }[] = [];
+    
+    // We import from i18n directly
+    const locales = ['en', 'es', 'de', 'fr', 'hi']; 
+    
+    for (const lang of locales) {
+        for (const tool of TOOLS) {
+            paths.push({ lang, id: tool.id });
+        }
+    }
+    
+    return paths;
 }

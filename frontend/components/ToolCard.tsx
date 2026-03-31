@@ -6,7 +6,7 @@ import Link from '@/components/LocalizedLink';
 import { useFavorites } from "@/hooks/useFavorites";
 import { useState } from "react";
 import { preWarmTool } from "@/lib/client-processor";
-import { useRouter } from "next/navigation";
+import { useSharedRouter as useRouter } from "@/lib/navigation";
 import { useDesignStyle } from "@/context/ThemeStyleContext";
 
 // Category color mapp based on PRD specifications

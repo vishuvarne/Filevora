@@ -6,24 +6,32 @@ export const dynamic = 'force-static';
 
 export async function generateStaticParams() {
     const paths = getAllPostSlugs();
-    return paths.map((path) => ({
-        slug: path.slug,
-    }));
+    const locales = ['en', 'es', 'de', 'fr', 'hi'];
+    const combinedPaths: { lang: string; slug: string }[] = [];
+
+    for (const lang of locales) {
+        for (const post of paths) {
+            combinedPaths.push({ lang, slug: post.slug });
+        }
+    }
+    return combinedPaths;
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ lang: string; slug: string }> }): Promise<Metadata> {
+    const { lang, slug } = await params;
     try {
-        const post = await getPostData(params.slug);
+        const post = await getPostData(slug);
+        const baseUrl = `https://convertlocally.com/${lang}/blog/${slug}/`;
         return {
             title: `${post.title} | ConvertLocally Blog`,
             description: post.excerpt,
             alternates: {
-                canonical: `https://convertlocally.com/blog/${params.slug}/`,
+                canonical: baseUrl,
             },
             openGraph: {
                 title: post.title,
                 description: post.excerpt,
-                url: `https://convertlocally.com/blog/${params.slug}/`,
+                url: baseUrl,
                 type: 'article',
                 publishedTime: post.date,
             }
@@ -35,10 +43,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     }
 }
 
-export default async function BlogPost({ params }: { params: { slug: string } }) {
+export default async function BlogPost({ params }: { params: Promise<{ lang: string; slug: string }> }) {
+    const { slug } = await params;
     let postData;
     try {
-        postData = await getPostData(params.slug);
+        postData = await getPostData(slug);
     } catch (error) {
         notFound();
     }

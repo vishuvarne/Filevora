@@ -8,8 +8,7 @@ import {
     XMarkIcon
 } from "@heroicons/react/24/outline";
 import { importCloudFile, getDownloadUrl } from "../../lib/api";
-import { useRouter } from "next/navigation";
-import { useSharedPathname } from "@/lib/navigation";
+import { useSharedRouter as useRouter, useSharedPathname } from "@/lib/navigation";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { TOOLS } from "@/config/tools";

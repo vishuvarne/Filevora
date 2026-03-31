@@ -13,7 +13,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSharedRouter as useRouter, useSharedSearchParams as useSearchParams } from '@/lib/navigation';
 import {
     createSession,
     updateSession,
