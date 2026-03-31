@@ -2,9 +2,37 @@
 
 import Link from '@/components/LocalizedLink';
 import { useSharedRouter } from "@/lib/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function NotFound() {
     const router = useSharedRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const [isRedirecting, setIsRedirecting] = useState(false);
+
+    useEffect(() => {
+        // Handle common URL mistypings or broken external links 
+        // Example: /tools/image%20to%20pdf -> /tools/image-to-pdf
+        if (pathname && (pathname.includes('%20') || pathname.includes(' '))) {
+            setIsRedirecting(true);
+            const normalizedPath = pathname.replace(/%20| /g, '-').toLowerCase();
+            const qs = searchParams.toString();
+            // Use window location replace to completely escape the Next.js 404 static trap
+            window.location.replace(`${normalizedPath}${qs ? `?${qs}` : ''}`);
+        }
+    }, [pathname, searchParams]);
+
+    if (isRedirecting) {
+        return (
+            <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+                <div className="flex flex-col items-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+                    <p className="text-slate-600 font-medium">Redirecting to tool...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
