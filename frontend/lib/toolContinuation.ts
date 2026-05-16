@@ -3,6 +3,7 @@ import { FileTransferService } from "@/lib/file-transfer-service";
 import { UniversalRouter } from "./navigation";
 import { MemoryTransferCache } from "@/lib/memory-transfer-cache";
 import { normalizePath } from "./navigation";
+import { getCategoryForTool } from "@/config/tools";
 
 /**
  * Downloads a result blob/URL and converts it to a File object
@@ -87,9 +88,13 @@ export function navigateToToolWithFile(
             fromTool: fromTool || ''
         }).catch(e => console.error("Background IDB save failed", e));
 
-        // Navigate to the tool with the transfer key
-        const path = `/tools/${toolId}`;
-        router.push(`${path}?transfer=${transferKey}`);
+        // Navigate to the tool with the transfer key (category-based routing)
+        const categorySlug = getCategoryForTool(toolId);
+        const path = categorySlug ? `/tools/${categorySlug}/` : `/tools/${toolId}/`;
+        const params = new URLSearchParams();
+        if (categorySlug) params.set('tool', toolId);
+        params.set('transfer', transferKey);
+        router.push(`${path}?${params.toString()}`);
 
     } catch (error) {
         console.error('Error navigating to tool with file:', error);
@@ -130,9 +135,13 @@ export function navigateToToolWithDeferred(
             })
             .catch(e => console.error("Background IDB save failed for deferred transfer", e));
 
-        // Navigate immediately
-        const path = `/tools/${toolId}`;
-        router.push(`${path}?transfer=${transferKey}`);
+        // Navigate immediately (category-based routing)
+        const categorySlug = getCategoryForTool(toolId);
+        const path = categorySlug ? `/tools/${categorySlug}/` : `/tools/${toolId}/`;
+        const params = new URLSearchParams();
+        if (categorySlug) params.set('tool', toolId);
+        params.set('transfer', transferKey);
+        router.push(`${path}?${params.toString()}`);
 
     } catch (error) {
         console.error('Error navigating to tool with deferred file:', error);

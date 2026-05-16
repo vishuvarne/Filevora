@@ -32,7 +32,7 @@ export default function MegaMenu({ activeCategory, showAllTools, setShowAllTools
                     {getToolsForCategory(activeCategory).slice(0, showAllTools ? undefined : 12).map((tool) => (
                         <Link
                             key={tool.id}
-                            href={`/tools/${tool.id}/`}
+                            href={`/tools/${tool.categorySlug}/?tool=${tool.id}`}
                             prefetch={false}
                             onClick={() => setActiveCategory(null)}
                             className="flex items-start gap-4 p-4 rounded-xl hover:bg-secondary/60 active:bg-secondary transition-all group border border-transparent hover:border-border/50"

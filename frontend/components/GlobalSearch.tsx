@@ -124,7 +124,7 @@ export default function GlobalSearch({ className = "" }: GlobalSearchProps) {
                     {results.map((tool, index) => (
                         <Link
                             key={tool.id}
-                            href={`/tools/${tool.id}/`}
+                            href={`/tools/${tool.categorySlug}/?tool=${tool.id}`}
                             prefetch={false}
                             onClick={() => {
                                 setIsOpen(false);

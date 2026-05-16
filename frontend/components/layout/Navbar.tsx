@@ -271,7 +271,7 @@ export default function Navbar() {
                                                         return (
                                                             <Link
                                                                 key={tool.id}
-                                                                href={`/tools/${tool.id}/`}
+                                                                href={`/tools/${tool.categorySlug}/?tool=${tool.id}`}
                                                                 prefetch={false}
                                                                 onClick={() => setFavoritesOpen(false)}
                                                                 className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-secondary transition-colors m-1"
@@ -478,7 +478,7 @@ export default function Navbar() {
                                         {filteredTools.map((tool) => (
                                             <Link
                                                 key={tool.id}
-                                                href={`/tools/${tool.id}/`}
+                                                href={`/tools/${tool.categorySlug}/?tool=${tool.id}`}
                                                 prefetch={false}
                                                 onClick={() => { setMobileMenuOpen(false); setSearchQuery(""); }}
                                                 className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-secondary/80 active:bg-secondary transition-colors"
@@ -518,7 +518,7 @@ export default function Navbar() {
                                         return (
                                             <Link
                                                 key={tool.id}
-                                                href={`/tools/${tool.id}/`}
+                                                href={`/tools/${tool.categorySlug}/?tool=${tool.id}`}
                                                 prefetch={false}
                                                 onClick={() => setMobileMenuOpen(false)}
                                                 className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-background active:bg-secondary transition-colors border border-border/50 hover:border-border shadow-sm"
@@ -594,7 +594,7 @@ export default function Navbar() {
                                         {TOOLS.filter(t => ["merge-pdf", "convert-image", "image-compressor", "compress-pdf"].includes(t.id)).map((tool) => (
                                             <Link
                                                 key={tool.id}
-                                                href={`/tools/${tool.id}/`}
+                                                href={`/tools/${tool.categorySlug}/?tool=${tool.id}`}
                                                 prefetch={false}
                                                 onClick={() => setMobileMenuOpen(false)}
                                                 className="flex flex-col items-center gap-2 p-3 rounded-xl bg-background/50 hover:bg-background active:bg-secondary transition-all border border-border/50 hover:border-border shadow-sm"
@@ -648,7 +648,7 @@ export default function Navbar() {
                                                 {getToolsForCategory("Web Apps").map((tool) => (
                                                     <Link
                                                         key={tool.id}
-                                                        href={`/tools/${tool.id}/`}
+                                                        href={`/tools/${tool.categorySlug}/?tool=${tool.id}`}
                                                         prefetch={false}
                                                         onClick={() => setMobileMenuOpen(false)}
                                                         className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-secondary/50 active:bg-secondary transition-colors"
@@ -690,7 +690,7 @@ export default function Navbar() {
                                                         {tools.map((tool) => (
                                                             <Link
                                                                 key={tool.id}
-                                                                href={`/tools/${tool.id}/`}
+                                                                href={`/tools/${tool.categorySlug}/?tool=${tool.id}`}
                                                                 prefetch={false}
                                                                 onClick={() => setMobileMenuOpen(false)}
                                                                 className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-secondary/50 active:bg-secondary transition-colors"

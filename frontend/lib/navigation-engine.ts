@@ -7,6 +7,7 @@
  */
 
 import type { ToolSessionState } from './session-store';
+import { getCategoryForTool } from '@/config/tools';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -30,23 +31,29 @@ export interface MinimalRouter {
 // ── URL Builders ─────────────────────────────────────────────────────────────
 
 /**
- * Build a deterministic tool URL.
+ * Build a deterministic tool URL using category-based routing.
+ * 
+ * After the single-page migration, tools live under their category:
+ *   /tools/{categorySlug}/?tool={toolId}&session=...&state=...
  * 
  * Examples:
- *   buildToolUrl({ toolId: "pdf-to-word" })
- *     → "/tools/pdf-to-word"
+ *   buildToolUrl({ toolId: "merge-pdf" })
+ *     → "/tools/pdf/?tool=merge-pdf"
  * 
- *   buildToolUrl({ toolId: "pdf-to-word", sessionId: "abc123" })
- *     → "/tools/pdf-to-word?session=abc123"
- * 
- *   buildToolUrl({ toolId: "pdf-to-word", sessionId: "abc123", state: "success" })
- *     → "/tools/pdf-to-word?session=abc123&state=success"
+ *   buildToolUrl({ toolId: "merge-pdf", sessionId: "abc123", state: "success" })
+ *     → "/tools/pdf/?tool=merge-pdf&session=abc123&state=success"
  */
 export function buildToolUrl(opts: Omit<NavigateOptions, 'replace'>): string {
+    // Resolve the category slug for this tool
+    const categorySlug = getCategoryForTool(opts.toolId);
     // MUST include trailing slash to match next.config.js trailingSlash: true
-    // Without it, static export serves 301 redirects that break navigation flow
-    const base = `/tools/${opts.toolId}/`;
+    const base = categorySlug ? `/tools/${categorySlug}/` : `/tools/${opts.toolId}/`;
     const params = new URLSearchParams();
+
+    // Always include the tool ID as a query param for category-based routing
+    if (categorySlug) {
+        params.set('tool', opts.toolId);
+    }
 
     if (opts.sessionId) {
         params.set('session', opts.sessionId);

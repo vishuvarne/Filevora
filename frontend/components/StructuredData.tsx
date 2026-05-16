@@ -18,7 +18,7 @@ export default function StructuredData({ tool }: StructuredDataProps) {
             "@type": "SoftwareApplication",
             "name": tool.seoTitle || tool.name,
             "description": tool.seoDescription || tool.description,
-            "url": `https://convertlocally.com/tools/${tool.id}`,
+            "url": `https://convertlocally.com/en/tools/${tool.categorySlug}/?tool=${tool.id}`,
             "applicationCategory": "UtilitiesApplication",
             "applicationSubCategory": "File Converter",
             "operatingSystem": "Any",
@@ -64,7 +64,7 @@ export default function StructuredData({ tool }: StructuredDataProps) {
                     "@type": "ListItem",
                     "position": 3,
                     "name": tool.name,
-                    "item": `https://convertlocally.com/tools/${tool.id}`
+                    "item": `https://convertlocally.com/en/tools/${tool.categorySlug}/?tool=${tool.id}`
                 }
             ]
         },
@@ -72,7 +72,7 @@ export default function StructuredData({ tool }: StructuredDataProps) {
             "@type": "WebPage",
             "name": tool.seoTitle || `${tool.name} Online - Free | ConvertLocally`,
             "description": tool.seoDescription || tool.description,
-            "url": `https://convertlocally.com/tools/${tool.id}`,
+            "url": `https://convertlocally.com/en/tools/${tool.categorySlug}/?tool=${tool.id}`,
             "isPartOf": {
                 "@type": "WebSite",
                 "name": "ConvertLocally",
@@ -88,7 +88,7 @@ export default function StructuredData({ tool }: StructuredDataProps) {
             "step": [
                 {
                     "@type": "HowToStep",
-                    "url": `https://convertlocally.com/tools/${tool.id}#step1`,
+                    "url": `https://convertlocally.com/en/tools/${tool.categorySlug}/?tool=${tool.id}#step1`,
                     "name": steps.step1.title,
                     "itemListElement": [{
                         "@type": "HowToDirection",
@@ -97,7 +97,7 @@ export default function StructuredData({ tool }: StructuredDataProps) {
                 },
                 {
                     "@type": "HowToStep",
-                    "url": `https://convertlocally.com/tools/${tool.id}#step2`,
+                    "url": `https://convertlocally.com/en/tools/${tool.categorySlug}/?tool=${tool.id}#step2`,
                     "name": steps.step2.title,
                     "itemListElement": [{
                         "@type": "HowToDirection",
@@ -106,7 +106,7 @@ export default function StructuredData({ tool }: StructuredDataProps) {
                 },
                 {
                     "@type": "HowToStep",
-                    "url": `https://convertlocally.com/tools/${tool.id}#step3`,
+                    "url": `https://convertlocally.com/en/tools/${tool.categorySlug}/?tool=${tool.id}#step3`,
                     "name": steps.step3.title,
                     "itemListElement": [{
                         "@type": "HowToDirection",

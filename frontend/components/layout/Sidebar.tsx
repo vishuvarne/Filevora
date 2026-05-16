@@ -79,11 +79,11 @@ export default function Sidebar({ onNavigate }: SidebarProps = {}) {
                         {isExpanded && (
                             <div className="space-y-0.5 pb-2 animate-in slide-in-from-top-1 duration-200">
                                 {tools.map((tool) => {
-                                    const isActive = pathname === `/tools/${tool.id}/` || pathname === `/tools/${tool.id}`;
+                                    const isActive = pathname === `/tools/${tool.categorySlug}/` && typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('tool') === tool.id;
                                     return (
                                         <Link
                                             key={tool.id}
-                                            href={`/tools/${tool.id}/`}
+                                            href={`/tools/${tool.categorySlug}/?tool=${tool.id}`}
                                             prefetch={false}
                                             onClick={onNavigate}
                                             className={`flex items-center gap-3 px-3 py-2 ml-2 rounded-xl text-sm transition-all duration-200 border-l-2 ${isActive

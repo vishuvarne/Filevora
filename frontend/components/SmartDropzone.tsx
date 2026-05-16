@@ -26,7 +26,6 @@ export default function SmartDropzone({
     className = "",
 }: DropzoneProps & { className?: string }) {
     const [isDragging, setIsDragging] = useState(false);
-    const [isHovered, setIsHovered] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [analyzedFiles, setAnalyzedFiles] = useState<File[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -123,16 +122,7 @@ export default function SmartDropzone({
     };
 
     const processFilesWithAnalysis = async (files: File[]) => {
-        // Start Analysis Mode
-        setIsAnalyzing(true);
-        setAnalyzedFiles(files);
-
-        // Simulate "Real-time analysis" - shortened for local speed
-        await new Promise(resolve => setTimeout(resolve, 400));
-
         onFilesSelected(files);
-        setIsAnalyzing(false);
-        setAnalyzedFiles([]);
     };
 
     const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -216,8 +206,6 @@ export default function SmartDropzone({
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
                 tabIndex={0}
                 role="button"
                 aria-label="Smart Upload Zone"
@@ -228,20 +216,20 @@ export default function SmartDropzone({
                     ${compact
                         ? 'rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg hover:shadow-indigo-500/30 active:scale-[0.98] py-4 border-0'
                         : isNB
-                            ? 'rounded-3xl border-2 border-solid min-h-[300px] ' + (isDragging || isHovered
+                            ? 'rounded-3xl border-2 border-solid min-h-[300px] ' + (isDragging
                                 ? 'border-[#FFB5E8] scale-[1.01]'
                                 : 'border-[#ccc] dark:border-[#555]')
-                            : 'rounded-3xl bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 border-2 ' + (isDragging || isHovered ? "border-primary shadow-[0_20px_50px_rgba(59,130,246,0.2)] scale-[1.02]" : "border-dashed border-slate-300 dark:border-slate-700 hover:border-primary/50 min-h-[300px]")
+                            : 'rounded-3xl bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 border-2 ' + (isDragging ? "border-primary shadow-[0_20px_50px_rgba(59,130,246,0.2)] scale-[1.02]" : "border-dashed border-slate-300 dark:border-slate-700 hover:border-primary/50 min-h-[300px]")
                     }
                 `}
                 style={{
-                    transform: isDragging || isAnalyzing || isHovered ? (compact ? 'none' : 'rotateX(5deg)') : 'rotateX(0deg)',
+                    transform: isDragging || isAnalyzing ? (compact ? 'none' : 'rotateX(5deg)') : 'rotateX(0deg)',
                     borderRadius: compact ? '0.75rem' : '32px',
                     ...(isNB && !compact ? {
-                        background: isDragging || isHovered
+                        background: isDragging
                             ? 'color-mix(in srgb, var(--nb-card) 94%, #FFB5E8)'
                             : 'var(--nb-card)',
-                        boxShadow: isDragging || isHovered
+                        boxShadow: isDragging
                             ? '4px 4px 0px 0px var(--nb-shadow-color), 0 0 0 3px rgba(255,181,232,0.5), 0 0 30px -5px rgba(255,181,232,0.25), 0 0 60px -10px rgba(231,198,255,0.15)'
                             : '3px 3px 0px 0px var(--nb-shadow-color)',
                         transition: 'all 400ms cubic-bezier(0.34, 1.56, 0.64, 1)',
@@ -253,7 +241,7 @@ export default function SmartDropzone({
                     <div
                         className={`
                             absolute top-0 left-0 right-0 h-full bg-white/50 dark:bg-slate-800/50 rounded-3xl pointer-events-none transition-all duration-500 ease-out origin-top border-b border-white/20
-                            ${isDragging || isHovered ? "-translate-y-4 [transform:rotateX(-12deg)] opacity-80" : "translate-y-0 [transform:rotateX(0deg)] opacity-0"}
+                            ${isDragging ? "-translate-y-4 [transform:rotateX(-12deg)] opacity-80" : "translate-y-0 [transform:rotateX(0deg)] opacity-0"}
                         `}
                         style={{ borderRadius: '32px' }}
                     ></div>
@@ -270,7 +258,7 @@ export default function SmartDropzone({
                     {!compact && (
                         <div className={`w-24 h-24 mb-6 relative shrink-0`}>
                             {/* Circle BG */}
-                            <div className={`absolute inset-0 rounded-full transition-all duration-500 ${isDragging || isHovered
+                            <div className={`absolute inset-0 rounded-full transition-all duration-500 ${isDragging
                                 ? isNB
                                     ? 'bg-[#FFB5E8] scale-110 shadow-[0_0_20px_rgba(255,181,232,0.4)]'
                                     : 'bg-primary/20 scale-110'
@@ -290,7 +278,7 @@ export default function SmartDropzone({
                                     stroke="currentColor"
                                     className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-500 
                                     w-10 h-10
-                                    ${isDragging || isHovered
+                                    ${isDragging
                                             ? isNB
                                                 ? 'text-[#1A1A1A] scale-125 -mt-2 rotate-3'
                                                 : 'text-primary scale-125 -mt-2'

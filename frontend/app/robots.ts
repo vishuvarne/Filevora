@@ -21,6 +21,24 @@ export default function robots(): MetadataRoute.Robots {
                     "/blob-test/",
                     "/coming-soon",
                     "/coming-soon/",
+                    // Block non-English locales from crawling
+                    "/es/",
+                    "/de/",
+                    "/fr/",
+                    "/hi/",
+                    // Block old individual tool routes (now redirected)
+                    "/en/tools/*/",
+                ],
+            },
+            {
+                userAgent: "*",
+                allow: [
+                    "/en/tools/pdf/",
+                    "/en/tools/image/",
+                    "/en/tools/gif/",
+                    "/en/tools/audio-video/",
+                    "/en/tools/archive/",
+                    "/en/tools/utilities/",
                 ],
             },
         ],

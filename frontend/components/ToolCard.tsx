@@ -95,7 +95,7 @@ function ToolCard({ tool }: { tool: ToolDef }) {
 
     return (
         <Link
-            href={`/tools/${tool.id}/`}
+            href={`/tools/${tool.categorySlug}/?tool=${tool.id}`}
             prefetch={false}
             className={isNeu
                 ? "group relative p-6 flex flex-col h-full cursor-pointer nb-card overflow-hidden"
@@ -111,7 +111,7 @@ function ToolCard({ tool }: { tool: ToolDef }) {
 
                         // 1. Tell Next.js to background-fetch the specific UI chunk 
                         // so click navigation is fully instant (effectively prefetch={true} but ONLY on hover).
-                        router.prefetch(`/tools/${tool.id}/`);
+                        router.prefetch(`/tools/${tool.categorySlug}/`);
 
                         // 2. Pre-warm any required WASM workers
                         preWarmTool(tool.id);

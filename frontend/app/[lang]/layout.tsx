@@ -106,13 +106,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    languages: {
-      'en': '/',
-      'es': '/es/',
-      'de': '/de/',
-      'fr': '/fr/',
-      'hi': '/hi/',
-    },
+    canonical: 'https://convertlocally.com/en/',
   },
 };
 
@@ -129,7 +123,8 @@ import { getDictionary } from "@/lib/i18n";
 import { DictionaryProvider } from "@/context/DictionaryProvider";
 
 export async function generateStaticParams() {
-  return i18n.locales.map((locale) => ({ lang: locale }));
+  // English only — non-English locales are blocked via robots.txt
+  return [{ lang: 'en' }];
 }
 
 export default async function RootLayout({
@@ -185,23 +180,14 @@ export default async function RootLayout({
                 "@type": "ItemList",
                 "name": "Free Online File Converter Tools",
                 "description": "60+ free online tools to convert, merge, and compress files.",
-                "numberOfItems": 15,
+                "numberOfItems": 6,
                 "itemListElement": [
-                  { "@type": "ListItem", "position": 1, "name": "Merge PDF", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/merge-pdf/` },
-                  { "@type": "ListItem", "position": 2, "name": "Image to PDF", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/image-to-pdf/` },
-                  { "@type": "ListItem", "position": 3, "name": "Compress PDF", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/compress-pdf/` },
-                  { "@type": "ListItem", "position": 4, "name": "JPG to PDF", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/jpg-to-pdf/` },
-                  { "@type": "ListItem", "position": 5, "name": "PDF to JPG", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/pdf-to-jpg/` },
-                  { "@type": "ListItem", "position": 6, "name": "HEIC to JPG", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/heic-to-jpg/` },
-                  { "@type": "ListItem", "position": 7, "name": "PNG to JPG", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/png-to-jpg/` },
-                  { "@type": "ListItem", "position": 8, "name": "JPG to PNG", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/jpg-to-png/` },
-                  { "@type": "ListItem", "position": 9, "name": "WebP to JPG", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/webp-to-jpg/` },
-                  { "@type": "ListItem", "position": 10, "name": "Image Compressor", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/image-compressor/` },
-                  { "@type": "ListItem", "position": 11, "name": "Split PDF", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/split-pdf/` },
-                  { "@type": "ListItem", "position": 12, "name": "Rotate PDF", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/rotate-pdf/` },
-                  { "@type": "ListItem", "position": 13, "name": "Video to GIF", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/video-to-gif/` },
-                  { "@type": "ListItem", "position": 14, "name": "MP4 to GIF", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/mp4-to-gif/` },
-                  { "@type": "ListItem", "position": 15, "name": "Image Converter", "url": `https://convertlocally.com/${resolvedParams.lang}/tools/convert-image/` }
+                  { "@type": "ListItem", "position": 1, "name": "PDF Tools", "url": "https://convertlocally.com/en/tools/pdf/" },
+                  { "@type": "ListItem", "position": 2, "name": "Image Tools", "url": "https://convertlocally.com/en/tools/image/" },
+                  { "@type": "ListItem", "position": 3, "name": "GIF Tools", "url": "https://convertlocally.com/en/tools/gif/" },
+                  { "@type": "ListItem", "position": 4, "name": "Audio & Video", "url": "https://convertlocally.com/en/tools/audio-video/" },
+                  { "@type": "ListItem", "position": 5, "name": "Archive Tools", "url": "https://convertlocally.com/en/tools/archive/" },
+                  { "@type": "ListItem", "position": 6, "name": "Utilities", "url": "https://convertlocally.com/en/tools/utilities/" }
                 ]
               }
             ])

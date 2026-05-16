@@ -142,7 +142,7 @@ export function useToolState(tool: ToolDef) {
                     isHydratingRef.current = false;
                     return;
                 } else {
-                    router.replace(normalizePath(`/tools/${tool.id}`));
+                    router.replace(normalizePath(`/tools/${tool.categorySlug}/?tool=${tool.id}`));
                 }
             }
 
@@ -189,7 +189,7 @@ export function useToolState(tool: ToolDef) {
                     setRetentionTimestamp(cached.retentionTimestamp || Date.now());
                 } else {
                     // Invalid history state (cache was somehow cleared). Eject them back to tool.
-                    router.replace(normalizePath(`/tools/${tool.id}`));
+                    router.replace(normalizePath(`/tools/${tool.categorySlug}/?tool=${tool.id}`));
                 }
             }
         };
@@ -217,7 +217,7 @@ export function useToolState(tool: ToolDef) {
                     if (fastData.file) {
                         setFiles([fastData.file]);
                         setContinuedFromTool(fastData.metadata?.fromTool || null);
-                        router.replace(normalizePath(`/tools/${tool.id}`));
+                        router.replace(normalizePath(`/tools/${tool.categorySlug}/?tool=${tool.id}`));
                         setIsTransferLoading(false);
                         return;
                     } else if (fastData.deferred) {
@@ -231,7 +231,7 @@ export function useToolState(tool: ToolDef) {
                         } catch (e) {
                             console.error('Deferred transfer fetch failed:', e);
                         }
-                        router.replace(normalizePath(`/tools/${tool.id}`));
+                        router.replace(normalizePath(`/tools/${tool.categorySlug}/?tool=${tool.id}`));
                         setIsTransferLoading(false);
                         return;
                     }
@@ -245,7 +245,7 @@ export function useToolState(tool: ToolDef) {
                     if (data) {
                         setFiles([data.file]);
                         setContinuedFromTool(data.metadata?.fromTool || null);
-                        router.replace(normalizePath(`/tools/${tool.id}`));
+                        router.replace(normalizePath(`/tools/${tool.categorySlug}/?tool=${tool.id}`));
                     }
                 } catch (e) {
                     console.error("IDB Transfer failed", e);
@@ -325,7 +325,7 @@ export function useToolState(tool: ToolDef) {
             result: null,
             retentionTimestamp: null
         });
-        router.replace(normalizePath(`/tools/${tool.id}`));
+        router.replace(normalizePath(`/tools/${tool.categorySlug}/?tool=${tool.id}`));
     };
 
     const hardReset = () => {
@@ -343,7 +343,7 @@ export function useToolState(tool: ToolDef) {
         setProgressMessage(null);
         clearToolState(tool.id);
         isNavigatingRef.current = false;
-        router.replace(normalizePath(`/tools/${tool.id}`), undefined);
+        router.replace(normalizePath(`/tools/${tool.categorySlug}/?tool=${tool.id}`), undefined);
     };
 
     const softReset = () => {
