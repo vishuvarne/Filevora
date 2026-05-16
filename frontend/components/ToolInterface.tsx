@@ -128,6 +128,21 @@ function SortableFileItem(props: any) {
 
 // Format constants (IMAGE_CONVERTER_FORMATS, AUDIO_CONVERTER_FORMATS) are imported from @/config/formatConstants
 
+const ImagePreview = React.memo(({ file, rotation }: { file: File, rotation: number }) => {
+    const [url, setUrl] = React.useState<string>('');
+    React.useEffect(() => {
+        let active = true;
+        const objectUrl = URL.createObjectURL(file);
+        if (active) setUrl(objectUrl);
+        return () => {
+            active = false;
+            URL.revokeObjectURL(objectUrl);
+        };
+    }, [file]);
+
+    if (!url) return null;
+    return <img draggable={false} src={url} alt="" className="w-full h-full object-contain drop-shadow-sm rounded-lg transition-transform duration-300 select-none" style={{ transform: `rotate(${rotation}deg)` }} />;
+});
 
 interface ToolInterfaceProps {
     tool: ToolDef;
@@ -880,6 +895,9 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
 
                 } catch (localError: any) {
                     setIsBackgroundProcessing(false);
+                    if (localError.name === 'AbortError' || localError.message?.toLowerCase().includes("worker terminated")) {
+                        return; // Ignore error since it was cancelled by the user
+                    }
                     console.error("Local processing failed:", localError);
                     // Do NOT fallback to server for Ghost Mode tools to respect privacy
                     setStatus("error");
@@ -1640,7 +1658,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
 
                                                                                         <div className="w-full h-full flex items-center justify-center p-2 sm:p-3 pb-7 sm:pb-3 pointer-events-none">
                                                                                             {f.type.startsWith("image/") ? (
-                                                                                                <img draggable={false} src={URL.createObjectURL(f)} alt="" className="w-full h-full object-contain drop-shadow-sm rounded-lg transition-transform duration-300 select-none" style={{ transform: `rotate(${fileRotations[i] || 0}deg)` }} onLoad={(e) => URL.revokeObjectURL((e.target as HTMLImageElement).src)} />
+                                                                                                <ImagePreview file={f} rotation={fileRotations[i] || 0} />
                                                                                             ) : fileThumbnails[`${f.name}-${f.size}-${f.lastModified}`] ? (
                                                                                                 <img draggable={false} src={fileThumbnails[`${f.name}-${f.size}-${f.lastModified}`]} alt={f.name} className="w-full h-full object-contain drop-shadow-sm rounded-lg bg-white select-none" />
                                                                                             ) : (
@@ -2094,7 +2112,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                 animate={{ opacity: 1, scale: 1, x: 0 }}
                                                 exit={{ opacity: 0, scale: 0.5, x: -20 }}
                                                 onClick={handleCancel}
-                                                className="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-full bg-red-500 hover:bg-red-400 text-white flex items-center justify-center border-[3px] border-slate-900 dark:border-slate-800 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] dark:shadow-[4px_4px_0px_0px_rgba(30,41,59,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none active:scale-95 transition-all duration-200 group"
+                                                className="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#ff4d4f] hover:bg-[#ff7875] text-white flex items-center justify-center border-[3px] border-slate-900 dark:border-slate-800 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] dark:shadow-[4px_4px_0px_0px_rgba(30,41,59,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none active:scale-95 transition-all duration-200 group"
                                                 title="Cancel Processing"
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3.5} stroke="currentColor" className="w-6 h-6 transition-transform group-hover:rotate-90">
