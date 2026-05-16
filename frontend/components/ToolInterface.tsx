@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback, Suspense } from "react";
+import { useState, useEffect, useRef, useCallback, Suspense, memo } from "react";
 import AIAssistant from "./AIAssistant";
 import { ToolDef } from "@/config/tools";
 import FormatSelector from "./FormatSelector";
@@ -128,9 +128,9 @@ function SortableFileItem(props: any) {
 
 // Format constants (IMAGE_CONVERTER_FORMATS, AUDIO_CONVERTER_FORMATS) are imported from @/config/formatConstants
 
-const ImagePreview = React.memo(({ file, rotation }: { file: File, rotation: number }) => {
-    const [url, setUrl] = React.useState<string>('');
-    React.useEffect(() => {
+const ImagePreview = memo(({ file, rotation }: { file: File, rotation: number }) => {
+    const [url, setUrl] = useState<string>('');
+    useEffect(() => {
         let active = true;
         const objectUrl = URL.createObjectURL(file);
         if (active) setUrl(objectUrl);
