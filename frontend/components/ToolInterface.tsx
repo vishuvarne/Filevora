@@ -2056,42 +2056,53 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                         <AnimatePresence>
                         {
                             files.length > 0 && status === "idle" && (
-                                <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} transition={{ duration: 0.3 }} className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 bg-background/80 md:bg-transparent backdrop-blur-md md:backdrop-blur-none border-t border-border md:border-t-0 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] md:shadow-none flex justify-center">
-                                    <button
-                                        onClick={() => isBackgroundProcessing ? handleCancel() : handleProcess()}
-                                        className={`w-full md:w-auto md:min-w-[400px] h-14 md:h-16 rounded-full font-black uppercase tracking-wider text-xl transition-all duration-200 transform group relative overflow-hidden active:translate-y-0 active:scale-95 active:shadow-none hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] border-[3px] border-slate-900 dark:border-slate-800 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] dark:shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] ${isBackgroundProcessing ? 'bg-slate-800 text-white dark:bg-slate-800 hover:!bg-red-500' : `${tool.theme.gradient} text-white`}`}
-                                    >
-                                        {!isBackgroundProcessing && <div className="absolute inset-0 -translate-x-[150%] skew-x-12 bg-white/30 group-hover:animate-[shine_1.5s_ease-out_infinite]" />}
-                                        {/* Progress Bar Background fill */}
-                                        {isBackgroundProcessing && (
-                                            <div 
-                                                className="absolute inset-0 bg-primary/20 transition-all duration-300 ease-out z-0" 
-                                                style={{ width: `${simulatedProgress}%` }} 
-                                            />
-                                        )}
-                                        <span className="relative z-10 flex items-center justify-center gap-3">
-                                            {isBackgroundProcessing ? (
-                                                <span className="group-hover:hidden flex items-center gap-3">
-                                                    <svg className="w-6 h-6 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                                    </svg>
-                                                    Processing... {Math.round(simulatedProgress)}%
-                                                </span>
-                                            ) : (
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-6 h-6 animate-bounce-horizontal"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
-                                            )}
+                                <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} transition={{ duration: 0.3 }} className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 bg-background/80 md:bg-transparent backdrop-blur-md md:backdrop-blur-none border-t border-border md:border-t-0 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] md:shadow-none flex justify-center w-full">
+                                    <div className="w-full md:w-auto flex items-center justify-center gap-3">
+                                        <button
+                                            onClick={() => !isBackgroundProcessing && handleProcess()}
+                                            className={`flex-1 md:flex-initial md:min-w-[400px] h-14 md:h-16 rounded-full font-black uppercase tracking-wider text-xl transition-all duration-200 transform group relative overflow-hidden active:translate-y-0 active:scale-95 active:shadow-none hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] border-[3px] border-slate-900 dark:border-slate-800 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] dark:shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] ${isBackgroundProcessing ? 'bg-slate-800 text-white dark:bg-slate-800 cursor-default hover:-translate-y-0 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:scale-100' : `${tool.theme.gradient} text-white`}`}
+                                        >
+                                            {!isBackgroundProcessing && <div className="absolute inset-0 -translate-x-[150%] skew-x-12 bg-white/30 group-hover:animate-[shine_1.5s_ease-out_infinite]" />}
+                                            {/* Progress Bar Background fill */}
                                             {isBackgroundProcessing && (
-                                                <span className="hidden group-hover:flex items-center gap-3">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-6 h-6">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                                    </svg>
-                                                    Cancel
-                                                </span>
+                                                <div 
+                                                    className="absolute inset-0 bg-primary/30 transition-all duration-300 ease-out z-0" 
+                                                    style={{ width: `${simulatedProgress}%` }} 
+                                                />
                                             )}
-                                            {!isBackgroundProcessing && `Process ${files.length} File${files.length !== 1 ? 's' : ''}`}
-                                        </span>
-                                    </button>
+                                            <span className="relative z-10 flex items-center justify-center gap-3">
+                                                {isBackgroundProcessing ? (
+                                                    <>
+                                                        <svg className="w-6 h-6 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                        </svg>
+                                                        Processing... {Math.round(simulatedProgress)}%
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-6 h-6 animate-bounce-horizontal"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                                                        Process {files.length} File{files.length !== 1 ? 's' : ''}
+                                                    </>
+                                                )}
+                                            </span>
+                                        </button>
+
+                                        {isBackgroundProcessing && (
+                                            <m.button
+                                                initial={{ opacity: 0, scale: 0.5, x: -20 }}
+                                                animate={{ opacity: 1, scale: 1, x: 0 }}
+                                                exit={{ opacity: 0, scale: 0.5, x: -20 }}
+                                                onClick={handleCancel}
+                                                className="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-full bg-red-500 hover:bg-red-400 text-white flex items-center justify-center border-[3px] border-slate-900 dark:border-slate-800 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] dark:shadow-[4px_4px_0px_0px_rgba(30,41,59,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none active:scale-95 transition-all duration-200 group"
+                                                title="Cancel Processing"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3.5} stroke="currentColor" className="w-6 h-6 transition-transform group-hover:rotate-90">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </m.button>
+                                        )}
+                                    </div>
                                 </m.div>
                             )
                         }
