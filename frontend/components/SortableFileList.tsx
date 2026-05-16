@@ -163,7 +163,7 @@ const SortableItem = React.memo(function SortableItem(props: { id: string, file:
     };
 
     return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="touch-none h-full">
+        <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="h-full">
             <ItemCard
                 file={props.file}
                 index={props.index}

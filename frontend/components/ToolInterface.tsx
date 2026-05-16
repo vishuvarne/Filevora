@@ -15,7 +15,7 @@ import dynamic from "next/dynamic";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ToolLoadingSkeleton from "@/components/ui/ToolLoadingSkeleton";
 import { IMAGE_CONVERTER_FORMATS, AUDIO_CONVERTER_FORMATS } from "@/config/formatConstants";
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent, DragOverlay, defaultDropAnimationSideEffects } from '@dnd-kit/core';
+import { DndContext, closestCenter, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors, DragEndEvent, DragOverlay, defaultDropAnimationSideEffects } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, rectSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -120,7 +120,7 @@ function SortableFileItem(props: any) {
     };
 
     return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="touch-none h-full outline-none">
+        <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="h-full outline-none">
             {props.children}
         </div>
     );
@@ -387,9 +387,15 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
     const [dragIndex, setDragIndex] = useState<number | null>(null);
     // Initialize dnd-kit sensors for drag and drop
     const sensors = useSensors(
-        useSensor(PointerSensor, {
+        useSensor(MouseSensor, {
             activationConstraint: {
                 distance: 5, // minimum drag distance to activate, allows clicks to pass through
+            },
+        }),
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                delay: 200, // wait 200ms before starting drag, allows mobile scrolling to pass through
+                tolerance: 5,
             },
         }),
         useSensor(KeyboardSensor, {
