@@ -156,7 +156,6 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
     const { addToHistory } = useFileHistory();
     const [isGhostMode, setIsGhostMode] = useState(false);
     const [isBackgroundProcessing, setIsBackgroundProcessing] = useState(false);
-    const hasShownProgressUIRef = useRef(false);
     const [showGhostExplainer, setShowGhostExplainer] = useState(false);
     const [isTransferLoading, setIsTransferLoading] = useState(false);
 
@@ -346,7 +345,6 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
         }
         setStatus("idle");
         setIsBackgroundProcessing(false);
-        hasShownProgressUIRef.current = false;
         setErrorMsg("");
         setSimulatedProgress(0);
     };
@@ -815,7 +813,6 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
         if (isBackgroundProcessing) return; // Prevent double submit
 
         setIsBackgroundProcessing(true);
-        hasShownProgressUIRef.current = false;
 
         // ── DNE: Create session on process start ────────────────────────
         const ghostMode = canProcessLocally(tool.id);
@@ -825,12 +822,6 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
         abortControllerRef.current = new AbortController();
 
         setSimulatedProgress(0); // Reset progress
-
-        // Delay showing the progress UI for 800ms
-        const progressTimeout = setTimeout(() => {
-            hasShownProgressUIRef.current = true;
-            setStatus(ghostMode ? "processing" : "uploading");
-        }, 800);
 
         try {
             // Check for Client-Side Processing (Ghost Mode)
@@ -868,7 +859,6 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                         setSimulatedProgress(percent);
                     }, abortControllerRef.current?.signal);
 
-                    clearTimeout(progressTimeout);
                     setIsBackgroundProcessing(false);
                     setSimulatedProgress(100);
                     setResult(localResult);
@@ -889,7 +879,6 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                     return; // Exit early, do not send to server
 
                 } catch (localError: any) {
-                    clearTimeout(progressTimeout);
                     setIsBackgroundProcessing(false);
                     console.error("Local processing failed:", localError);
                     // Do NOT fallback to server for Ghost Mode tools to respect privacy
@@ -952,13 +941,10 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                 (percent, stage) => {
                     // Start progress immediately if it's 0
                     setSimulatedProgress(prev => Math.max(prev, percent));
-                    if (hasShownProgressUIRef.current) {
-                        setStatus(stage); // 'uploading' or 'converting'
-                    }
+                    // Intentionally NOT setting status here, to stay on the main config UI
                 }
             );
 
-            clearTimeout(progressTimeout);
             setIsBackgroundProcessing(false);
             setResult(res);
             setStatus("success");
@@ -992,7 +978,6 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                 }
             }
         } catch (e: any) {
-            clearTimeout(progressTimeout);
             setIsBackgroundProcessing(false);
             if (e.name === 'AbortError') {
                 return; // Do nothing, state already reset by handleCancel if needed, or we just stay idle
@@ -2036,47 +2021,6 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                         )
                         } {/* End Selection Subpage */}
 
-                        {/* 2. PROCESSING SUBPAGE */}
-                        {
-                            (status === "uploading" || status === "converting" || status === "processing") && (
-                                <m.div key="processing" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.05 }} transition={{ duration: 0.3 }} className="w-full flex flex-col items-center justify-center min-h-[500px] pb-32">
-                                    <div className="bg-card dark:bg-[#1A1D24] w-full p-8 md:p-12 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-xl text-center relative overflow-hidden">
-                                        <div className="relative z-10 flex flex-col items-center justify-between mb-8">
-                                            <h2 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tight flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
-                                                {status === "uploading" && <><span className="text-blue-500 animate-pulse">Uploading</span> files...</>}
-                                                {(status === "converting" || status === "processing") && (
-                                                    isGhostMode
-                                                        ? <><span className="text-indigo-500 animate-pulse">Processing files</span> locally...</>
-                                                        : <><span className="text-indigo-500 animate-pulse">Converting</span> files...</>
-                                                )}
-                                            </h2>
-                                            <p className="text-sm font-medium text-muted-foreground mt-3 md:mt-2 px-4">
-                                                {isGhostMode ? "Your data never leaves your device." : "Hang tight, we are crunching the numbers..."}
-                                            </p>
-                                        </div>
-                                        <div className="relative z-10">
-                                            <NeuroProgressBar
-                                                progress={simulatedProgress}
-                                                className={`h-4 md:h-6 rounded-full w-full max-w-lg mx-auto bg-blue-600 overflow-hidden shadow-inner ring-1 ring-border`}
-                                                color="blue"
-                                                segments={isGhostMode ? ["Read", "Process", "Save"] : ["Upload", "Process", "Download"]}
-                                                isGhostMode={isGhostMode}
-                                            />
-                                            <div className="mt-8 flex justify-center">
-                                                <button
-                                                    onClick={handleCancel}
-                                                    className="group flex items-center justify-center gap-2 px-8 py-3.5 bg-red-500 hover:bg-red-400 active:bg-red-600 text-white font-black text-sm uppercase tracking-wider rounded-full border-[3px] border-slate-900 dark:border-slate-800 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] dark:shadow-[4px_4px_0px_0px_rgba(30,41,59,1)] transition-all duration-[200ms] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none active:scale-95"
-                                                >
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-5 h-5 transition-transform group-hover:rotate-90 group-active:scale-75"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-                                                    Cancel Operation
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </m.div>
-                            )
-                        } {/* End Processing Subpage */}
-
                         {/* 3. DOWNLOAD SUBPAGE (Success Status) */}
                         {
                             status === "success" && result && (
@@ -2114,21 +2058,38 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                             files.length > 0 && status === "idle" && (
                                 <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} transition={{ duration: 0.3 }} className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 bg-background/80 md:bg-transparent backdrop-blur-md md:backdrop-blur-none border-t border-border md:border-t-0 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] md:shadow-none flex justify-center">
                                     <button
-                                        onClick={() => handleProcess()}
-                                        disabled={isBackgroundProcessing}
-                                        className={`w-full md:w-auto md:min-w-[400px] h-14 md:h-16 rounded-full font-black uppercase tracking-wider text-xl transition-all duration-200 transform group relative overflow-hidden ${isBackgroundProcessing ? 'opacity-90 cursor-wait' : 'active:translate-y-0 active:scale-95 active:shadow-none hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_rgba(15,23,42,1)]'} border-[3px] border-slate-900 dark:border-slate-800 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] dark:shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] ${tool.theme.gradient} text-white`}
+                                        onClick={() => isBackgroundProcessing ? handleCancel() : handleProcess()}
+                                        className={`w-full md:w-auto md:min-w-[400px] h-14 md:h-16 rounded-full font-black uppercase tracking-wider text-xl transition-all duration-200 transform group relative overflow-hidden active:translate-y-0 active:scale-95 active:shadow-none hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] border-[3px] border-slate-900 dark:border-slate-800 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] dark:shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] ${isBackgroundProcessing ? 'bg-slate-800 text-white dark:bg-slate-800 hover:!bg-red-500' : `${tool.theme.gradient} text-white`}`}
                                     >
                                         {!isBackgroundProcessing && <div className="absolute inset-0 -translate-x-[150%] skew-x-12 bg-white/30 group-hover:animate-[shine_1.5s_ease-out_infinite]" />}
-                                        <span className="relative flex items-center justify-center gap-3">
+                                        {/* Progress Bar Background fill */}
+                                        {isBackgroundProcessing && (
+                                            <div 
+                                                className="absolute inset-0 bg-primary/20 transition-all duration-300 ease-out z-0" 
+                                                style={{ width: `${simulatedProgress}%` }} 
+                                            />
+                                        )}
+                                        <span className="relative z-10 flex items-center justify-center gap-3">
                                             {isBackgroundProcessing ? (
-                                                <svg className="w-6 h-6 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                                </svg>
+                                                <span className="group-hover:hidden flex items-center gap-3">
+                                                    <svg className="w-6 h-6 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                    </svg>
+                                                    Processing... {Math.round(simulatedProgress)}%
+                                                </span>
                                             ) : (
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-6 h-6 animate-bounce-horizontal"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
                                             )}
-                                            {isBackgroundProcessing ? 'Processing...' : `Process ${files.length} File${files.length !== 1 ? 's' : ''}`}
+                                            {isBackgroundProcessing && (
+                                                <span className="hidden group-hover:flex items-center gap-3">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-6 h-6">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                    Cancel
+                                                </span>
+                                            )}
+                                            {!isBackgroundProcessing && `Process ${files.length} File${files.length !== 1 ? 's' : ''}`}
                                         </span>
                                     </button>
                                 </m.div>
