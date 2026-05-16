@@ -2104,7 +2104,8 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                 animate={{ opacity: 1, scale: 1, x: 0 }}
                                                 exit={{ opacity: 0, scale: 0.5, x: -20 }}
                                                 onClick={handleCancel}
-                                                className="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-xl bg-red-500 hover:bg-red-400 text-white flex items-center justify-center border-[3px] border-slate-900 dark:border-slate-800 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] dark:shadow-[4px_4px_0px_0px_rgba(30,41,59,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none active:scale-95 transition-all duration-200 group"
+                                                className="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-xl !bg-red-500 hover:!bg-red-400 text-white flex items-center justify-center border-[3px] border-slate-900 dark:border-slate-800 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] dark:shadow-[4px_4px_0px_0px_rgba(30,41,59,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none active:scale-95 transition-all duration-200 group"
+                                                style={{ backgroundColor: '#ef4444' }}
                                                 title="Cancel Processing"
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={4} stroke="currentColor" className="w-6 h-6 transition-transform group-hover:rotate-90">
