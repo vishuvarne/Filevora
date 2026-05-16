@@ -155,6 +155,8 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
     const [previewFile, setPreviewFile] = useState<File | null>(null);
     const { addToHistory } = useFileHistory();
     const [isGhostMode, setIsGhostMode] = useState(false);
+    const [isBackgroundProcessing, setIsBackgroundProcessing] = useState(false);
+    const hasShownProgressUIRef = useRef(false);
     const [showGhostExplainer, setShowGhostExplainer] = useState(false);
     const [isTransferLoading, setIsTransferLoading] = useState(false);
 
@@ -343,6 +345,8 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
             abortControllerRef.current = null;
         }
         setStatus("idle");
+        setIsBackgroundProcessing(false);
+        hasShownProgressUIRef.current = false;
         setErrorMsg("");
         setSimulatedProgress(0);
     };
@@ -808,6 +812,10 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
 
     const handleProcess = async (overrides?: { targetFormat?: string, compressionLevel?: string }) => {
         if (files.length === 0) return;
+        if (isBackgroundProcessing) return; // Prevent double submit
+
+        setIsBackgroundProcessing(true);
+        hasShownProgressUIRef.current = false;
 
         // ── DNE: Create session on process start ────────────────────────
         const ghostMode = canProcessLocally(tool.id);
@@ -816,19 +824,18 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
         // Reset abort controller
         abortControllerRef.current = new AbortController();
 
-        setStatus("uploading");
         setSimulatedProgress(0); // Reset progress
 
-        // Scroll to process area - Disabled for smoother UX
-        // setTimeout(() => {
-        //     progressRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-        // }, 100);
+        // Delay showing the progress UI for 800ms
+        const progressTimeout = setTimeout(() => {
+            hasShownProgressUIRef.current = true;
+            setStatus(ghostMode ? "processing" : "uploading");
+        }, 800);
 
         try {
             // Check for Client-Side Processing (Ghost Mode)
-            if (canProcessLocally(tool.id)) {
+            if (ghostMode) {
                 try {
-                    setStatus("processing");
                     // Start from 0 to avoid jumping to Process segment directly
                     setSimulatedProgress(0);
 
@@ -861,6 +868,8 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                         setSimulatedProgress(percent);
                     }, abortControllerRef.current?.signal);
 
+                    clearTimeout(progressTimeout);
+                    setIsBackgroundProcessing(false);
                     setSimulatedProgress(100);
                     setResult(localResult);
                     setStatus("success");
@@ -880,6 +889,8 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                     return; // Exit early, do not send to server
 
                 } catch (localError: any) {
+                    clearTimeout(progressTimeout);
+                    setIsBackgroundProcessing(false);
                     console.error("Local processing failed:", localError);
                     // Do NOT fallback to server for Ghost Mode tools to respect privacy
                     setStatus("error");
@@ -941,10 +952,14 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                 (percent, stage) => {
                     // Start progress immediately if it's 0
                     setSimulatedProgress(prev => Math.max(prev, percent));
-                    setStatus(stage); // 'uploading' or 'converting'
+                    if (hasShownProgressUIRef.current) {
+                        setStatus(stage); // 'uploading' or 'converting'
+                    }
                 }
             );
 
+            clearTimeout(progressTimeout);
+            setIsBackgroundProcessing(false);
             setResult(res);
             setStatus("success");
             setSimulatedProgress(100);
@@ -977,6 +992,8 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                 }
             }
         } catch (e: any) {
+            clearTimeout(progressTimeout);
+            setIsBackgroundProcessing(false);
             if (e.name === 'AbortError') {
                 return; // Do nothing, state already reset by handleCancel if needed, or we just stay idle
             }
@@ -991,6 +1008,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
     const reset = () => {
         setFiles([]);
         setStatus("idle");
+        setIsBackgroundProcessing(false);
         setResult(null);
         setErrorMsg("");
         setSimulatedProgress(0);
@@ -2097,12 +2115,20 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                 <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} transition={{ duration: 0.3 }} className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 bg-background/80 md:bg-transparent backdrop-blur-md md:backdrop-blur-none border-t border-border md:border-t-0 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] md:shadow-none flex justify-center">
                                     <button
                                         onClick={() => handleProcess()}
-                                        className={`w-full md:w-auto md:min-w-[400px] h-14 md:h-16 rounded-full font-black uppercase tracking-wider text-xl transition-all duration-200 transform group relative overflow-hidden active:translate-y-0 active:scale-95 active:shadow-none hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] border-[3px] border-slate-900 dark:border-slate-800 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] dark:shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] ${tool.theme.gradient} text-white`}
+                                        disabled={isBackgroundProcessing}
+                                        className={`w-full md:w-auto md:min-w-[400px] h-14 md:h-16 rounded-full font-black uppercase tracking-wider text-xl transition-all duration-200 transform group relative overflow-hidden ${isBackgroundProcessing ? 'opacity-90 cursor-wait' : 'active:translate-y-0 active:scale-95 active:shadow-none hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_rgba(15,23,42,1)]'} border-[3px] border-slate-900 dark:border-slate-800 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] dark:shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] ${tool.theme.gradient} text-white`}
                                     >
-                                        <div className="absolute inset-0 -translate-x-[150%] skew-x-12 bg-white/30 group-hover:animate-[shine_1.5s_ease-out_infinite]" />
+                                        {!isBackgroundProcessing && <div className="absolute inset-0 -translate-x-[150%] skew-x-12 bg-white/30 group-hover:animate-[shine_1.5s_ease-out_infinite]" />}
                                         <span className="relative flex items-center justify-center gap-3">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-6 h-6 animate-bounce-horizontal"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
-                                            Process {files.length} File{files.length !== 1 ? 's' : ''}
+                                            {isBackgroundProcessing ? (
+                                                <svg className="w-6 h-6 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                </svg>
+                                            ) : (
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-6 h-6 animate-bounce-horizontal"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                                            )}
+                                            {isBackgroundProcessing ? 'Processing...' : `Process ${files.length} File${files.length !== 1 ? 's' : ''}`}
                                         </span>
                                     </button>
                                 </m.div>
