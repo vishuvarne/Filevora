@@ -311,30 +311,22 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
         let interval: NodeJS.Timeout;
 
         // Reset only on 0 or idle, otherwise keep current
-        if (status === "idle") {
+        if (!isBackgroundProcessing && status === "idle") {
             setSimulatedProgress(0);
-        } else if (status === "uploading" && !isGhostMode) {
-            setSimulatedProgress(prev => Math.max(prev, 10)); // Start at 10%
+        } else if (isBackgroundProcessing) {
+            setSimulatedProgress(prev => Math.max(prev, 5)); // Start at 5%
             interval = setInterval(() => {
                 setSimulatedProgress(prev => {
-                    const next = prev + Math.random() * 5;
-                    // Cap uploading at 60% until server responds
-                    return (next > 60 ? 60 : next);
-                });
-            }, 500);
-        } else if ((status === "processing" || status === "converting") && !isGhostMode) {
-            interval = setInterval(() => {
-                setSimulatedProgress(prev => {
-                    const next = prev + Math.random() * 3;
+                    const next = prev + Math.random() * 4;
                     // Ease towards 95%
                     return (next > 95 ? 95 : next);
                 });
-            }, 800);
+            }, 600);
         } else if (status === "success") {
             setSimulatedProgress(100);
         }
         return () => clearInterval(interval);
-    }, [status]);
+    }, [isBackgroundProcessing, status]);
 
     // Auto-scroll to results on success (Mobile UX)
     useEffect(() => {
@@ -1135,7 +1127,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                         animate={{ y: 0 }}
                                                         exit={{ y: "100%" }}
                                                         transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-                                                        className="lg:hidden fixed inset-x-0 bottom-0 z-[100] flex flex-col bg-background rounded-t-[2rem] shadow-2xl max-h-[75vh] border-[3px] border-b-0 border-slate-900 dark:border-slate-700"
+                                                        className="lg:hidden fixed inset-x-0 bottom-0 z-[100] flex flex-col bg-background rounded-t-[2rem] overflow-hidden shadow-2xl max-h-[75vh] border-[3px] border-b-0 border-slate-900 dark:border-slate-700"
                                                     >
                                                         {/* Overlay Header */}
                                                         <div className="shrink-0 flex items-center justify-between px-5 py-4 border-b border-border bg-card/80 backdrop-blur-xl">
@@ -2112,10 +2104,10 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                 animate={{ opacity: 1, scale: 1, x: 0 }}
                                                 exit={{ opacity: 0, scale: 0.5, x: -20 }}
                                                 onClick={handleCancel}
-                                                className="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#ff4d4f] hover:bg-[#ff7875] text-white flex items-center justify-center border-[3px] border-slate-900 dark:border-slate-800 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] dark:shadow-[4px_4px_0px_0px_rgba(30,41,59,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none active:scale-95 transition-all duration-200 group"
+                                                className="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-xl bg-red-500 hover:bg-red-400 text-white flex items-center justify-center border-[3px] border-slate-900 dark:border-slate-800 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] dark:shadow-[4px_4px_0px_0px_rgba(30,41,59,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none active:scale-95 transition-all duration-200 group"
                                                 title="Cancel Processing"
                                             >
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3.5} stroke="currentColor" className="w-6 h-6 transition-transform group-hover:rotate-90">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={4} stroke="currentColor" className="w-6 h-6 transition-transform group-hover:rotate-90">
                                                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                 </svg>
                                             </m.button>
