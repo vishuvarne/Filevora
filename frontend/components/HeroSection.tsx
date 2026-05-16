@@ -38,23 +38,20 @@ export default function HeroSection() {
                                 </span>{" "}
                             </h1>
                             <p
-                                className="mt-2 sm:mt-3 text-base sm:text-lg leading-6 sm:leading-7 max-w-2xl mx-auto px-4 sm:px-0"
-                                style={{ color: "var(--nb-text2)", fontWeight: 500 }}
+                                className="mt-4 sm:mt-5 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto px-4 sm:px-0 text-slate-700 dark:text-slate-300"
+                                style={{ fontWeight: 500 }}
                             >
                                 {hero?.subtitle || "Format, merge, and optimize your files instantly right in your browser. Totally free, incredibly fast, and zero installation."}
                             </p>
 
-                            <p
-                                className="mt-4 sm:mt-5 text-base sm:text-lg leading-6 sm:leading-7 max-w-3xl mx-auto px-4 sm:px-0"
-                                style={{ color: "var(--nb-text2)", fontWeight: 500 }}
-                            >
-                                <span className="inline-flex items-center font-bold text-green-600 mr-2 uppercase tracking-wide">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-5 h-5 mr-1">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    100% Private & Secure.
-                                </span>
-                                Your files never leave your device. All processing happens entirely within your browser locally using WebAssembly. We do not use servers, we do not upload your documents, and we do not store your data. Everything is completely offline-capable.
+                            {/* Powerful concise text */}
+                            <p className="mt-6 sm:mt-8 text-base sm:text-lg font-bold text-slate-800 dark:text-slate-200 tracking-wide flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-5 h-5 text-green-600 dark:text-green-500 inline-block">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span className="text-green-700 dark:text-green-400 uppercase">100% Private.</span>
+                                <span>Zero server uploads.</span>
+                                <span>Processed entirely on your device.</span>
                             </p>
                         </div>
                     </div>

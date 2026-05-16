@@ -5,7 +5,6 @@ import { Suspense, useMemo } from "react";
 import { CategorySlug, getToolsByCategory, TOOLS } from "@/config/tools";
 import ToolSelector from "@/components/ToolSelector";
 import ToolInterface from "@/components/ToolInterface";
-import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import ToolLoadingSkeleton from "@/components/ui/ToolLoadingSkeleton";
 
 interface CategoryPageClientProps {
@@ -38,27 +37,18 @@ function CategoryPageInner({ categorySlug, categoryName }: CategoryPageClientPro
     }
 
     return (
-        <main className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/20 pb-20 pt-4">
+        <main className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/20 pb-20 pt-1">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Breadcrumbs */}
-                <Breadcrumbs items={[
-                    { label: "Home", href: "/" },
-                    { label: categoryName },
-                ]} />
 
-                {/* Category Header */}
-                <div className="mt-4 mb-6">
-                    <h1 className="text-3xl sm:text-4xl font-black text-foreground leading-tight">
-                        {categoryName}
-                    </h1>
-                </div>
 
-                {/* Tool Selector Pills */}
                 <ToolSelector
                     tools={categoryTools}
                     activeToolId={activeTool.id}
                     categorySlug={categorySlug}
                 />
+
+                {/* Separator Line */}
+                <div className="w-full h-px bg-slate-200 dark:bg-slate-800 mt-0 mb-4" />
             </div>
 
             {/* Tool Interface */}

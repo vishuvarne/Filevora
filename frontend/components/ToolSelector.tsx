@@ -32,11 +32,11 @@ export default function ToolSelector({ tools, activeToolId, categorySlug }: Tool
     }, [router]);
 
     return (
-        <div className="relative mb-6">
+        <div className="relative mb-2">
             {/* Scroll container */}
             <div
                 ref={scrollRef}
-                className="flex gap-2 overflow-x-auto no-scrollbar pb-2 px-1"
+                className="flex gap-3 overflow-x-auto no-scrollbar py-2 px-2 -mx-2 sm:px-1 sm:mx-0"
             >
                 {tools.map((tool) => {
                     const isActive = tool.id === activeToolId;
@@ -46,12 +46,13 @@ export default function ToolSelector({ tools, activeToolId, categorySlug }: Tool
                             ref={isActive ? activeRef : undefined}
                             onClick={() => handleToolSelect(tool.id)}
                             className={`
-                                shrink-0 px-4 py-2.5 rounded-xl text-sm font-bold
-                                transition-all duration-200 whitespace-nowrap
-                                border-2 select-none
+                                shrink-0 px-5 py-2.5 rounded-[14px] text-sm font-black tracking-wide
+                                transition-all duration-300 ease-out whitespace-nowrap
+                                border-[2px] sm:border-[3px] select-none outline-none
+                                focus-visible:ring-4 focus-visible:ring-primary/20
                                 ${isActive
-                                    ? "bg-[var(--nb-yellow,#FFE88A)] border-[var(--nb-border,#1A1A1A)] text-[#1A1A1A] shadow-[var(--nb-shadow,3px_3px_0px_0px_#1A1A1A)]"
-                                    : "bg-[var(--nb-card,#FFFFFF)] border-[var(--nb-border,#1A1A1A)] text-[var(--nb-text,#1A1A1A)] shadow-[var(--nb-shadow-sm,2px_2px_0px_0px_#1A1A1A)] hover:translate-y-[-2px] hover:shadow-[var(--nb-shadow-hover,4px_4px_0px_0px_#1A1A1A)] active:translate-y-[1px] active:shadow-[var(--nb-shadow-active,1px_1px_0px_0px_#1A1A1A)]"
+                                    ? "bg-[var(--nb-yellow,#FFE88A)] border-slate-900 dark:border-slate-900 text-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] sm:shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] dark:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] sm:dark:shadow-[3px_3px_0px_0px_rgba(15,23,42,1)]"
+                                    : "bg-white dark:bg-slate-800 border-slate-900 dark:border-slate-700 text-slate-800 dark:text-slate-200 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] sm:shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] dark:shadow-[2px_2px_0px_0px_rgba(30,41,59,1)] sm:dark:shadow-[3px_3px_0px_0px_rgba(30,41,59,1)] hover:-translate-y-1 hover:bg-[var(--nb-mint,#AFF8D8)] hover:text-slate-900 hover:border-slate-900 dark:hover:border-slate-900 hover:shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] sm:hover:shadow-[5px_5px_0px_0px_rgba(15,23,42,1)] active:translate-y-[1px] active:shadow-none"
                                 }
                             `}
                         >
@@ -60,10 +61,6 @@ export default function ToolSelector({ tools, activeToolId, categorySlug }: Tool
                     );
                 })}
             </div>
-
-            {/* Fade edges */}
-            <div className="absolute top-0 left-0 w-8 h-full bg-gradient-to-r from-[var(--nb-bg,#F4F4F0)] to-transparent pointer-events-none dark:from-[#111111]" />
-            <div className="absolute top-0 right-0 w-8 h-full bg-gradient-to-l from-[var(--nb-bg,#F4F4F0)] to-transparent pointer-events-none dark:from-[#111111]" />
         </div>
     );
 }

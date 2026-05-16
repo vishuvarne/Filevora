@@ -212,30 +212,28 @@ export default function SmartDropzone({
                 className={`
                     relative ${className || 'w-full'} h-auto transition-all duration-500 [transform-style:preserve-3d] cursor-pointer outline-none
                     flex flex-col items-center justify-center
-                    overflow-visible
+                    overflow-visible group/container
                     ${compact
                         ? 'rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg hover:shadow-indigo-500/30 active:scale-[0.98] py-4 border-0'
                         : isNB
-                            ? 'rounded-3xl border-2 border-solid min-h-[300px] ' + (isDragging
-                                ? 'border-[#FFB5E8] scale-[1.01]'
-                                : 'border-[#ccc] dark:border-[#555]')
-                            : 'rounded-3xl bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 border-2 ' + (isDragging ? "border-primary shadow-[0_20px_50px_rgba(59,130,246,0.2)] scale-[1.02]" : "border-dashed border-slate-300 dark:border-slate-700 hover:border-primary/50 min-h-[300px]")
+                            ? `rounded-[2rem] border-2 min-h-[300px] overflow-hidden ${isDragging 
+                                ? 'border-[#FFB5E8] scale-[1.01] bg-[#FFB5E8]/10 shadow-[4px_4px_0px_0px_#1A1A1A]' 
+                                : 'border-[#1A1A1A] dark:border-[#555] bg-white dark:bg-[#1E1E1E] shadow-[3px_3px_0px_0px_#1A1A1A]'}`
+                            : `rounded-3xl bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 border-2 min-h-[300px] overflow-hidden ${isDragging 
+                                ? "border-primary shadow-[0_20px_50px_rgba(59,130,246,0.2)] scale-[1.02]" 
+                                : "border-dashed border-slate-300 dark:border-slate-700 hover:border-primary"}`
                     }
                 `}
                 style={{
                     transform: isDragging || isAnalyzing ? (compact ? 'none' : 'rotateX(5deg)') : 'rotateX(0deg)',
                     borderRadius: compact ? '0.75rem' : '32px',
-                    ...(isNB && !compact ? {
-                        background: isDragging
-                            ? 'color-mix(in srgb, var(--nb-card) 94%, #FFB5E8)'
-                            : 'var(--nb-card)',
-                        boxShadow: isDragging
-                            ? '4px 4px 0px 0px var(--nb-shadow-color), 0 0 0 3px rgba(255,181,232,0.5), 0 0 30px -5px rgba(255,181,232,0.25), 0 0 60px -10px rgba(231,198,255,0.15)'
-                            : '3px 3px 0px 0px var(--nb-shadow-color)',
-                        transition: 'all 400ms cubic-bezier(0.34, 1.56, 0.64, 1)',
-                    } : {})
                 }}
             >
+                {/* Looping Light Hover Effect (Shimmer) */}
+                <div className="absolute inset-0 overflow-hidden rounded-[inherit] pointer-events-none opacity-0 group-hover/container:opacity-100 transition-opacity duration-300">
+                    <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/60 dark:via-white/10 to-transparent animate-shimmer w-full h-full skew-x-[-20deg]" />
+                </div>
+                
                 {/* 3D "Lid" Effect - Visual top part that opens (Hidden in compact mode) */}
                 {!compact && (
                     <div
@@ -263,8 +261,8 @@ export default function SmartDropzone({
                                     ? 'bg-[#FFB5E8] scale-110 shadow-[0_0_20px_rgba(255,181,232,0.4)]'
                                     : 'bg-primary/20 scale-110'
                                 : isNB
-                                    ? 'bg-[#AFF8D8] border-2 border-[#1A1A1A] dark:border-[#666]'
-                                    : 'bg-slate-100 dark:bg-slate-800'
+                                    ? 'bg-[#AFF8D8] border-2 border-[#1A1A1A] dark:border-[#666] group-hover/container:bg-[#FFB5E8]'
+                                    : 'bg-slate-100 dark:bg-slate-800 group-hover/container:bg-primary/10'
                                 } ${isDragging ? "animate-pulse" : ""}`}></div>
 
                             {/* Icon SVG */}

@@ -996,12 +996,6 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
 
     return (
         <div className="w-full mx-auto px-2 sm:px-4 lg:px-6 pb-12">
-
-            <Breadcrumbs items={[
-                { label: "Home", href: "/" },
-                { label: tool.name }
-            ]} />
-
             {/* Main Content Area - Subpages */}
             <div className="mt-2 w-full">
 
