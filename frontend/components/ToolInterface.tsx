@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback, Suspense, memo } from "react";
+import { useSearchParams } from "next/navigation";
 import AIAssistant from "./AIAssistant";
 import { ToolDef } from "@/config/tools";
 import FormatSelector from "./FormatSelector";
@@ -173,18 +174,23 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
     const [isBackgroundProcessing, setIsBackgroundProcessing] = useState(false);
     const [showGhostExplainer, setShowGhostExplainer] = useState(false);
     const [isTransferLoading, setIsTransferLoading] = useState(false);
+    const urlSearchParams = useSearchParams();
+    const lastProcessedTransfer = useRef<string | null>(null);
 
     // ── TRANSFER LOAD LOGIC (Restored post-DNE) ──────────────────────────
+    // Uses useSearchParams() so it reacts to Next.js client-side navigation
+    // instead of window.location.search which has race conditions.
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const transferKey = params.get('transfer');
+        const transferKey = urlSearchParams.get('transfer');
 
-        if (!transferKey) return;
+        if (!transferKey || lastProcessedTransfer.current === transferKey) return;
+        lastProcessedTransfer.current = transferKey;
 
         let isMounted = true;
 
         // Build a clean URL that preserves ?tool= but strips transfer params
         const buildCleanUrl = () => {
+            // Using window.location.search is fine here as we just want to visually clear it
             const cleanParams = new URLSearchParams(window.location.search);
             cleanParams.delete('transfer');
             const remaining = cleanParams.toString();
@@ -238,7 +244,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
         loadContent();
 
         return () => { isMounted = false; };
-    }, [tool.id]);
+    }, [tool.id, urlSearchParams]);
 
     // ── DNE: Restore session state on mount (refresh recovery) ───────────
     useEffect(() => {
@@ -393,6 +399,17 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
 
     // NOTE: Processing/Uploading UI was previously in a dead block scope here.
     // The actual processing UI is rendered in the return statement below.
+
+    // Signal to FileVault FAB: process bar is showing at the bottom
+    const isProcessBarVisible = files.length > 0 && status === "idle";
+    useEffect(() => {
+        if (isProcessBarVisible) {
+            document.body.setAttribute('data-process-bar', '1');
+        } else {
+            document.body.removeAttribute('data-process-bar');
+        }
+        return () => { document.body.removeAttribute('data-process-bar'); };
+    }, [isProcessBarVisible]);
 
     // Tool Specific Options
     const [rotateAngle, setRotateAngle] = useState(90);

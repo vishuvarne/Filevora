@@ -200,10 +200,8 @@ export function useToolState(tool: ToolDef) {
 
     // --- TRANSFER LOAD LOGIC ---
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const transferKey = params.get('transfer');
-        const continuationKey = params.get('continuation');
-        const transferKeyParam = transferKey; // Alias for clarity inside closure if needed
+        const transferKey = searchParams.get('transfer');
+        const continuationKey = searchParams.get('continuation');
 
         if (!transferKey && !continuationKey) return;
 
@@ -267,7 +265,7 @@ export function useToolState(tool: ToolDef) {
             }
         };
         loadContent();
-    }, [tool.id]);
+    }, [tool.id, searchParams]);
 
     // --- PERSISTENCE ---
     useEffect(() => {

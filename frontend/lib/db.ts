@@ -62,6 +62,11 @@ export const fileDB = {
         await db.delete('files', id);
     },
 
+    async getFile(id: string) {
+        const db = await getDB();
+        return await db.get('files', id);
+    },
+
     async clear() {
         const db = await getDB();
         await db.clear('files');

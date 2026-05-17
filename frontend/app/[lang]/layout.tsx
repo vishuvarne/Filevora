@@ -115,6 +115,7 @@ import "../globals.css";
 import { SpeculationRules } from "@/components/SpeculationRules";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
+import FileVaultLoader from "@/components/FileVaultLoader";
 
 
 import { i18n, Locale } from "@/lib/i18n";
@@ -265,6 +266,7 @@ export default async function RootLayout({
               <FooterWrapper>
                 <Footer />
               </FooterWrapper>
+              <FileVaultLoader />
             </ThemeStyleProvider>
           </AppNavigationProvider>
         </DictionaryProvider>

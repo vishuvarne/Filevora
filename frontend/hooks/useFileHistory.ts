@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef, useSyncExternalStore } from 'react';
 import { fileDB } from '@/lib/db';
 
 export interface HistoryItem {
@@ -12,116 +12,175 @@ export interface HistoryItem {
     type: string;
 }
 
-export function useFileHistory() {
-    const [history, setHistory] = useState<HistoryItem[]>([]);
+// ────────────────────────────────────────────────────────────────────────────
+// Shared singleton store — ensures all useFileHistory() consumers share the
+// same state and stay in sync without requiring a React Context provider.
+// ────────────────────────────────────────────────────────────────────────────
 
-    useEffect(() => {
-        let active = true;
-        const objectUrls: string[] = [];
+type Listener = () => void;
 
-        async function loadHistory() {
-            try {
-                // Prune old files
-                await fileDB.prune();
+let _items: HistoryItem[] = [];
+let _listeners: Set<Listener> = new Set();
+let _initialized = false;
+let _initializing = false;
+/** Track blob URLs we've created so we can revoke them on reload */
+let _blobUrls: string[] = [];
 
-                // Load valid files
-                const items = await fileDB.getAll();
+function _notify() {
+    _listeners.forEach(fn => fn());
+}
 
-                if (!active) return;
+function _subscribe(listener: Listener): () => void {
+    _listeners.add(listener);
+    return () => { _listeners.delete(listener); };
+}
 
-                // Sort by timestamp desc
-                items.sort((a, b) => b.timestamp - a.timestamp);
+function _getSnapshot(): HistoryItem[] {
+    return _items;
+}
 
-                // Create blob URLs
-                const historyItems: HistoryItem[] = items.map(item => {
-                    const url = URL.createObjectURL(item.blob);
-                    objectUrls.push(url);
-                    return {
-                        id: item.id,
-                        jobId: item.jobId,
-                        fileName: item.fileName,
-                        toolId: item.toolId,
-                        timestamp: item.timestamp,
-                        downloadUrl: url,
-                        size: (item.size / 1024).toFixed(0) + ' KB',
-                        type: item.type
-                    };
-                });
+/** Server snapshot (SSR) — always empty */
+function _getServerSnapshot(): HistoryItem[] {
+    return [];
+}
 
-                setHistory(historyItems);
-            } catch (e) {
-                console.error("Failed to load history from IDB", e);
-            }
-        }
+/** Revoke old blob URLs to avoid memory leaks */
+function _revokeUrls() {
+    _blobUrls.forEach(u => URL.revokeObjectURL(u));
+    _blobUrls = [];
+}
 
-        loadHistory();
+/** Load all files from IDB into shared state */
+async function _loadFromIDB() {
+    if (typeof window === 'undefined') return;
+    if (_initializing) return; // Prevent double-init
+    _initializing = true;
 
-        return () => {
-            active = false;
-            // Revoke all created URLs to avoid leaks
-            objectUrls.forEach(url => URL.revokeObjectURL(url));
-        };
-    }, []);
+    try {
+        await fileDB.prune();
+        const records = await fileDB.getAll();
+        records.sort((a, b) => b.timestamp - a.timestamp);
 
-    const addToHistory = async (item: Omit<HistoryItem, 'timestamp' | 'id' | 'size'> & { blob?: Blob }) => {
-        // We need the blob to persist it.
-        // If passed explicitly, use it. If not, try to fetch from downloadUrl (if it is a blob url).
-        let blobToStore = item.blob;
+        // Revoke any previous blob URLs before creating new ones
+        _revokeUrls();
 
-        if (!blobToStore && item.downloadUrl.startsWith('blob:')) {
-            try {
-                const r = await fetch(item.downloadUrl);
-                blobToStore = await r.blob();
-            } catch (e) {
-                console.warn("Could not fetch blob from URL for persistence", e);
-            }
-        }
-
-        if (!blobToStore) {
-            // For remote URLs (cloud), we might not be able to store the file itself 
-            // without CORS issues, or we might just store the link.
-            // For MVP Phase 2 Offline First, we assume Local processing primarily.
-            // If no blob, we skip persistence logic or store dummy?
-            // Actually, the interface `fileDB.saveFile` expects `blob: Blob`.
-            return;
-        }
-
-        const id = crypto.randomUUID();
-        const savedItem = await fileDB.saveFile({
-            id,
-            jobId: item.jobId,
-            fileName: item.fileName,
-            toolId: item.toolId,
-            blob: blobToStore,
-            size: blobToStore.size,
-            type: item.type
+        _items = records.map(rec => {
+            const url = URL.createObjectURL(rec.blob);
+            _blobUrls.push(url);
+            return {
+                id: rec.id,
+                jobId: rec.jobId,
+                fileName: rec.fileName,
+                toolId: rec.toolId,
+                timestamp: rec.timestamp,
+                downloadUrl: url,
+                size: (rec.size / 1024).toFixed(0) + ' KB',
+                type: rec.type,
+            };
         });
 
-        // Update state
-        const newUrl = URL.createObjectURL(blobToStore);
-        const newItem: HistoryItem = {
-            id,
-            jobId: savedItem.jobId,
-            fileName: savedItem.fileName,
-            toolId: savedItem.toolId,
-            timestamp: savedItem.timestamp,
-            downloadUrl: newUrl,
-            size: (savedItem.size / 1024).toFixed(0) + ' KB',
-            type: savedItem.type
-        };
+        _initialized = true;
+        _notify();
+    } catch (e) {
+        console.error("Failed to load history from IDB", e);
+    } finally {
+        _initializing = false;
+    }
+}
 
-        setHistory(prev => [newItem, ...prev]);
+/** Add a new item — persists to IDB + updates shared state immediately */
+async function _addItem(item: Omit<HistoryItem, 'timestamp' | 'id' | 'size'> & { blob?: Blob }) {
+    let blobToStore = item.blob;
+
+    if (!blobToStore && item.downloadUrl.startsWith('blob:')) {
+        try {
+            const r = await fetch(item.downloadUrl);
+            blobToStore = await r.blob();
+        } catch (e) {
+            console.warn("Could not fetch blob from URL for persistence", e);
+        }
+    }
+
+    if (!blobToStore) return;
+
+    const id = crypto.randomUUID();
+    const savedItem = await fileDB.saveFile({
+        id,
+        jobId: item.jobId,
+        fileName: item.fileName,
+        toolId: item.toolId,
+        blob: blobToStore,
+        size: blobToStore.size,
+        type: item.type,
+    });
+
+    const newUrl = URL.createObjectURL(blobToStore);
+    _blobUrls.push(newUrl);
+
+    const historyItem: HistoryItem = {
+        id,
+        jobId: savedItem.jobId,
+        fileName: savedItem.fileName,
+        toolId: savedItem.toolId,
+        timestamp: savedItem.timestamp,
+        downloadUrl: newUrl,
+        size: (savedItem.size / 1024).toFixed(0) + ' KB',
+        type: savedItem.type,
     };
 
-    const removeFromHistory = async (id: string) => {
-        await fileDB.delete(id);
-        setHistory(prev => prev.filter(h => h.id !== id));
-    };
+    // Prepend to the shared list (newest first)
+    _items = [historyItem, ..._items];
+    _notify();
+}
 
-    const clearHistory = async () => {
-        await fileDB.clear();
-        setHistory([]);
-    };
+/** Remove a single item */
+async function _removeItem(id: string) {
+    await fileDB.delete(id);
+    const removed = _items.find(h => h.id === id);
+    if (removed?.downloadUrl?.startsWith('blob:')) {
+        URL.revokeObjectURL(removed.downloadUrl);
+    }
+    _items = _items.filter(h => h.id !== id);
+    _notify();
+}
+
+/** Clear all items */
+async function _clearAll() {
+    await fileDB.clear();
+    _revokeUrls();
+    _items = [];
+    _notify();
+}
+
+
+// ────────────────────────────────────────────────────────────────────────────
+// Public hook — thin wrapper around the shared store
+// ────────────────────────────────────────────────────────────────────────────
+
+export function useFileHistory() {
+    const history = useSyncExternalStore(_subscribe, _getSnapshot, _getServerSnapshot);
+
+    // Trigger initial load on first mount (idempotent)
+    useEffect(() => {
+        if (!_initialized && !_initializing) {
+            _loadFromIDB();
+        }
+    }, []);
+
+    const addToHistory = useCallback(
+        (item: Omit<HistoryItem, 'timestamp' | 'id' | 'size'> & { blob?: Blob }) => _addItem(item),
+        []
+    );
+
+    const removeFromHistory = useCallback(
+        (id: string) => _removeItem(id),
+        []
+    );
+
+    const clearHistory = useCallback(
+        () => _clearAll(),
+        []
+    );
 
     return { history, addToHistory, removeFromHistory, clearHistory };
 }
