@@ -2188,7 +2188,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                             </svg>
                                         </button>
                                     </div>
-                                    <div className="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar pb-32">
+                                    <div className="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar">
                                         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStartDnd} onDragEnd={handleDragEndDnd}>
                                             <SortableContext items={files.map(f => `${f.name}-${f.size}-${f.lastModified}`)} strategy={rectSortingStrategy}>
                                                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 sm:gap-4 max-w-[1600px] mx-auto">
@@ -2227,8 +2227,8 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                             </SortableContext>
                                         </DndContext>
                                     </div>
-                                    <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-background via-background/90 to-transparent pt-16 flex justify-center pointer-events-none">
-                                        <button onClick={() => setExpandedFileView(false)} className="pointer-events-auto px-8 py-4 bg-primary text-white font-black uppercase tracking-wider rounded-2xl border-[3px] border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:scale-95 active:shadow-none transition-all flex items-center gap-2">
+                                    <div className="p-4 sm:p-5 border-t border-border bg-card/80 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] flex justify-center backdrop-blur-md z-10 shrink-0">
+                                        <button onClick={() => setExpandedFileView(false)} className="px-8 py-4 bg-primary text-white font-black uppercase tracking-wider rounded-2xl border-[3px] border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:scale-95 active:shadow-none transition-all flex items-center gap-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-5 h-5">
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                                             </svg>
