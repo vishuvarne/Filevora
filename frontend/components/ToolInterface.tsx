@@ -183,6 +183,16 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
 
         let isMounted = true;
 
+        // Build a clean URL that preserves ?tool= but strips transfer params
+        const buildCleanUrl = () => {
+            const cleanParams = new URLSearchParams(window.location.search);
+            cleanParams.delete('transfer');
+            const remaining = cleanParams.toString();
+            return remaining
+                ? `${window.location.pathname}?${remaining}`
+                : window.location.pathname;
+        };
+
         const loadContent = async () => {
             setIsTransferLoading(true);
 
@@ -191,7 +201,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
             if (fastData) {
                 if (fastData.file) {
                     if (isMounted) setFiles([fastData.file]);
-                    window.history.replaceState({}, '', window.location.pathname);
+                    window.history.replaceState({}, '', buildCleanUrl());
                     if (isMounted) setIsTransferLoading(false);
                     return;
                 } else if (fastData.deferred) {
@@ -204,7 +214,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                         console.error('Deferred transfer fetch failed:', e);
                         if (isMounted) setErrorMsg('Failed to load transferred file.');
                     }
-                    window.history.replaceState({}, '', window.location.pathname);
+                    window.history.replaceState({}, '', buildCleanUrl());
                     if (isMounted) setIsTransferLoading(false);
                     return;
                 }
@@ -220,7 +230,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
             } catch (e) {
                 console.error("IDB Transfer failed", e);
             } finally {
-                window.history.replaceState({}, '', window.location.pathname);
+                window.history.replaceState({}, '', buildCleanUrl());
                 if (isMounted) setIsTransferLoading(false);
             }
         };
