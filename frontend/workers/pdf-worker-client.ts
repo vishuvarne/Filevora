@@ -20,6 +20,7 @@ interface TaskDef {
     onChunk?: (chunk: any) => void;
     onProgress?: (percent: number, message?: string) => void;
     watchdog?: NodeJS.Timeout;
+    timeoutMs?: number;
 }
 
 interface QueueItem {
@@ -116,6 +117,18 @@ export class PDFWorkerClient {
 
         if (type === 'progress') {
             task?.onProgress?.(data.percent || 0, data.message);
+
+            // CRITICAL: Reset watchdog on progress — worker is alive and working.
+            // This converts the watchdog from an "absolute deadline" to an "inactivity timeout".
+            // Without this, long-running tasks (e.g., 200MB PDF compression) get killed mid-processing.
+            if (task?.watchdog) {
+                clearTimeout(task.watchdog);
+                const timeout = task.timeoutMs || 120000;
+                task.watchdog = setTimeout(() => {
+                    console.error(`[PDFWorkerClient] Task ${jobId} went silent for ${timeout}ms. Performing recovery...`);
+                    this.terminateAndRestart();
+                }, timeout);
+            }
             return;
         }
 
@@ -168,7 +181,8 @@ export class PDFWorkerClient {
                 // Start active watchdog now that task is dispatched
                 const task = this.tasks.get(next.jobId);
                 if (task) {
-                    const timeout = (next as any).timeoutMs || 60000;
+                    const timeout = (next as any).timeoutMs || 120000;
+                    task.timeoutMs = timeout;
                     task.watchdog = setTimeout(() => {
                         console.error(`[PDFWorkerClient] Task ${next.jobId} timed out (${timeout}ms). Performing extreme recovery...`);
                         this.terminateAndRestart();
@@ -201,7 +215,7 @@ export class PDFWorkerClient {
         onProgress?: (percent: number, message?: string) => void,
         signal?: AbortSignal,
         priority?: boolean,
-        timeoutMs: number = 60000 // Stricter 60s default (was 180s)
+        timeoutMs: number = 120000 // 2 minute inactivity timeout (watchdog resets on progress)
     ): Promise<any> {
         this.clearIdleTermination();
 

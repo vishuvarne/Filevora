@@ -113,6 +113,7 @@ self.onmessage = async (e) => {
                 result = await rotatePDF(payload.file, payload.angle);
                 break;
             case 'compress-pdf':
+                payload.jobId = jobId; // Inject jobId so progress messages are tagged correctly
                 result = await compressPDF(payload);
                 break;
             case 'password-protect-pdf':
@@ -818,17 +819,17 @@ async function compressWithHybrid(file, level, quality, dpi, useManual, jobId, c
 
                                     const newBytes = new Uint8Array(await compressedBlob.arrayBuffer());
 
-                                    // Extreme mode should always prioritize size even for small gains
-                                    // Other modes should require at least 5% reduction to justify quality loss
-                                    const sizeThreshold = (level === 'extreme' || compressionMode === 'target') ? 0.99 : 0.95;
-
-                                    if (newBytes.length < imgBytes.length * sizeThreshold) {
+                                    // Accept compressed version if it's ANY smaller
+                                    // Old threshold was 0.95 (5% reduction required) which blocked most basic/recommended re-encodes
+                                    if (newBytes.length < imgBytes.length) {
                                         const embeddedImage = await pdfDoc.embedJpg(newBytes);
                                         originalToNewRef.set(refHash, embeddedImage.ref);
                                         xObjects.set(name, embeddedImage.ref);
                                         imagesCompressedCount++;
+                                        console.log(`[Hybrid] Image compressed: ${(imgBytes.length / 1024).toFixed(0)}KB → ${(newBytes.length / 1024).toFixed(0)}KB (${((1 - newBytes.length / imgBytes.length) * 100).toFixed(1)}% reduction, quality=${currentQuality}, scale=${scale.toFixed(2)})`);
                                     } else {
                                         originalToNewRef.set(refHash, ref);
+                                        console.log(`[Hybrid] Image skipped (re-encode larger): ${(imgBytes.length / 1024).toFixed(0)}KB → ${(newBytes.length / 1024).toFixed(0)}KB (quality=${currentQuality})`);
                                     }
                                 } else {
                                     originalToNewRef.set(refHash, ref);
