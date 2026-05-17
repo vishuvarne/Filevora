@@ -176,40 +176,45 @@ export default function FileVault() {
                 `}
                 style={{ maxHeight: "min(75vh, 560px)", ...(isNeu ? { boxShadow: "var(--nb-shadow-lg)" } : {}) }}
             >
-                {/* Mobile drag handle */}
-                <div className="sm:hidden flex justify-center pt-2"><div className="w-10 h-1 rounded-full bg-slate-300 dark:bg-slate-600" /></div>
-
-                {/* Header */}
-                <div className={`shrink-0 flex items-center justify-between px-4 py-3
-                    ${isNeu ? "border-b-[3px] border-slate-900 dark:border-slate-100" : "border-b border-border"}`}
+                {/* Header Container */}
+                <div 
+                    className={`shrink-0 ${isNeu ? "border-b-[3px] border-slate-900 dark:border-slate-100" : "border-b border-border"}`}
                     style={isNeu ? { background: "var(--nb-yellow)" } : undefined}
                 >
-                    <div className="flex items-center gap-3">
-                        <div className={`w-9 h-9 flex items-center justify-center shrink-0
-                            ${isNeu ? "rounded-[var(--nb-r-sm)] border-[2px] border-slate-900 dark:border-slate-100" : "rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 shadow-sm"}`}
-                            style={isNeu ? { background: "var(--nb-green)" } : undefined}
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={isNeu ? 2.5 : 2} stroke={isNeu ? "var(--nb-text)" : "white"} className="w-4 h-4">
-                                <path strokeLinecap="round" strokeLinejoin="round" d={VI} />
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 className={`text-sm text-foreground ${isNeu ? "font-black uppercase tracking-wide" : "font-bold"}`}>File Vault</h3>
-                            <p className={`text-[10px] text-muted-foreground ${isNeu ? "font-bold" : ""}`}>{active.length} file{active.length !== 1 ? "s" : ""} • 60 min retention</p>
-                        </div>
+                    {/* Mobile drag handle */}
+                    <div className="sm:hidden flex justify-center pt-3 pb-1">
+                        <div className={`w-10 h-1.5 rounded-full ${isNeu ? "bg-slate-900/20" : "bg-slate-300 dark:bg-slate-600"}`} />
                     </div>
-                    <div className="flex items-center gap-1">
-                        {active.length > 0 && (
-                            <button onClick={() => { if (confirm("Clear all files?")) clearHistory(); }}
-                                className={`text-[10px] font-bold px-2 py-1 text-red-500 transition-colors ${isNeu ? "rounded-[var(--nb-r-sm)] hover:bg-red-200" : "rounded-md hover:bg-red-50 dark:hover:bg-red-500/10"}`}>
-                                Clear All
+
+                    {/* Header */}
+                    <div className="flex items-center justify-between px-4 pb-3 sm:py-3">
+                        <div className="flex items-center gap-3">
+                            <div className={`w-9 h-9 flex items-center justify-center shrink-0
+                                ${isNeu ? "rounded-[var(--nb-r-sm)] border-[2px] border-slate-900 dark:border-slate-100" : "rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 shadow-sm"}`}
+                                style={isNeu ? { background: "var(--nb-green)" } : undefined}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={isNeu ? 2.5 : 2} stroke={isNeu ? "var(--nb-text)" : "white"} className="w-4 h-4">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d={VI} />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 className={`text-sm text-foreground ${isNeu ? "font-black uppercase tracking-wide" : "font-bold"}`}>File Vault</h3>
+                                <p className={`text-[10px] text-muted-foreground ${isNeu ? "font-bold" : ""}`}>{active.length} file{active.length !== 1 ? "s" : ""} • 60 min retention</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-1">
+                            {active.length > 0 && (
+                                <button onClick={() => { if (confirm("Clear all files?")) clearHistory(); }}
+                                    className={`text-[10px] font-bold px-2 py-1 text-red-500 transition-colors ${isNeu ? "rounded-[var(--nb-r-sm)] hover:bg-red-200 border border-transparent hover:border-red-500/30" : "rounded-md hover:bg-red-50 dark:hover:bg-red-500/10"}`}>
+                                    Clear All
+                                </button>
+                            )}
+                            <button onClick={() => setOpen(false)} className={`p-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors ${isNeu ? "hover:bg-slate-900/10" : "hover:bg-secondary/80"}`}>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={isNeu ? 3 : 2} stroke="currentColor" className="w-4 h-4">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
                             </button>
-                        )}
-                        <button onClick={() => setOpen(false)} className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={isNeu ? 3 : 2} stroke="currentColor" className="w-4 h-4">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
+                        </div>
                     </div>
                 </div>
 
