@@ -1668,7 +1668,6 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                                             {files.map((f, i) => (
                                                                                 <SortableFileItem key={`${f.name}-${f.size}-${f.lastModified}`} id={`${f.name}-${f.size}-${f.lastModified}`}>
                                                                                     <m.div
-                                                                                        layoutId={`${f.name}-${f.size}-${f.lastModified}`}
                                                                                         initial={{ opacity: 0, scale: 0.8 }}
                                                                                         animate={{ opacity: 1, scale: 1 }}
                                                                                         exit={{ opacity: 0, scale: 0.8 }}
@@ -2195,7 +2194,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                     <AnimatePresence>
                                                         {files.map((f, i) => (
                                                             <SortableFileItem key={`${f.name}-${f.size}-${f.lastModified}`} id={`${f.name}-${f.size}-${f.lastModified}`}>
-                                                                <m.div layoutId={`modal-${f.name}-${f.size}-${f.lastModified}`} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} className={`w-full relative aspect-square bg-[#1A1D24] dark:bg-[#1A1D24] rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden select-none cursor-grab active:cursor-grabbing ${dragIndex === i ? 'opacity-50 border-primary z-40 scale-105 shadow-xl ring-4 ring-primary/20' : 'border-slate-800 hover:border-slate-500 z-10'}`}>
+                                                                <m.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} className={`w-full relative aspect-square bg-[#1A1D24] dark:bg-[#1A1D24] rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden select-none cursor-grab active:cursor-grabbing ${dragIndex === i ? 'opacity-50 border-primary z-40 scale-105 shadow-xl ring-4 ring-primary/20' : 'border-slate-800 hover:border-slate-500 z-10'}`}>
                                                                     <div className="absolute top-2 left-2 z-10 w-7 h-7 rounded-full bg-slate-900/90 ring-2 ring-white/20 flex items-center justify-center text-xs font-black text-white shadow-md">
                                                                         {i + 1}
                                                                     </div>
