@@ -594,26 +594,36 @@ function detectDeviceClass() {
     const isMobile = typeof navigator !== 'undefined' &&
         /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-    // When both memory and cores are unknown:
-    // - Mobile → conservative (low-end)
-    // - Desktop → assume capable (high-end) so hybrid compression works
+    // Capability-based detection: check if OffscreenCanvas + convertToBlob are available
+    // This is the actual requirement for hybrid compression, not device form factor
+    const hasOffscreenCanvas = typeof OffscreenCanvas !== 'undefined';
+    const hasConvertToBlob = hasOffscreenCanvas && typeof OffscreenCanvas.prototype.convertToBlob === 'function';
+    const hasCreateImageBitmap = typeof createImageBitmap === 'function';
+    const canDoHybridCompression = hasOffscreenCanvas && hasConvertToBlob && hasCreateImageBitmap;
+
+    // When both memory and cores are unknown (Safari, Firefox):
+    // Use capability detection instead of blindly assuming mobile = low-end
+    // iPhone 14+ and modern iPads fully support OffscreenCanvas hybrid compression
     if (memory === undefined && cores === undefined) {
-        const isLowEnd = isMobile;
+        const isLowEnd = !canDoHybridCompression;
         cachedDeviceClass = { isLowEnd, memory, cores };
-        console.log(`[Device Detector] Unknown specs, ${isMobile ? 'mobile → low-end' : 'desktop → high-end'}`);
+        console.log(`[Device Detector] Unknown specs. OffscreenCanvas: ${hasOffscreenCanvas}, convertToBlob: ${hasConvertToBlob}, createImageBitmap: ${hasCreateImageBitmap} → ${isLowEnd ? 'low-end (Stage-0)' : 'high-end (Hybrid)'}`);
         return cachedDeviceClass;
     }
 
-    // Low-end criteria: deviceMemory ≤ 4 GB OR hardwareConcurrency ≤ 4
-    const isLowEndMemory = memory !== undefined && memory <= 4;
-    const isLowEndCores = cores !== undefined && cores <= 4;
-    const isLowEnd = isLowEndMemory || isLowEndCores;
+    // Low-end criteria: deviceMemory ≤ 2 GB (was 4, but 4GB devices can handle hybrid fine)
+    // OR hardwareConcurrency ≤ 2 (very weak CPUs)
+    // AND no OffscreenCanvas support
+    const isLowEndMemory = memory !== undefined && memory <= 2;
+    const isLowEndCores = cores !== undefined && cores <= 2;
+    const isLowEnd = (isLowEndMemory || isLowEndCores) && !canDoHybridCompression;
 
     cachedDeviceClass = { isLowEnd, memory, cores };
     console.log('[Device Detector]', {
         deviceClass: isLowEnd ? 'low-end' : 'high-end',
         memory: memory ? `${memory} GB` : 'unknown',
-        cores: cores || 'unknown'
+        cores: cores || 'unknown',
+        canDoHybridCompression
     });
 
     return cachedDeviceClass;
@@ -784,7 +794,7 @@ async function compressWithHybrid(file, level, quality, dpi, useManual, jobId, c
                         const height = dict.get(PDFName.of('Height'))?.numberValue || 0;
                         const targetLongestSide = currentDpi * 11;
 
-                        if (isJpg || width > targetLongestSide || height > targetLongestSide) {
+                        if (true) { // All images are candidates for compression (was: isJpg || oversized only)
                             let bitmap = null;
                             try {
                                 const imgBytes = xObject.contents;
@@ -793,7 +803,7 @@ async function compressWithHybrid(file, level, quality, dpi, useManual, jobId, c
 
                                 const scale = Math.min(1, targetLongestSide / Math.max(bitmap.width, bitmap.height));
 
-                                if (scale < 0.95 || currentQuality < 0.6) {
+                                if (scale < 0.95 || currentQuality < 0.95) { // Re-encode at target quality (was: < 0.6, which skipped basic/recommended)
                                     const newWidth = Math.max(1, Math.round(bitmap.width * scale));
                                     const newHeight = Math.max(1, Math.round(bitmap.height * scale));
 
