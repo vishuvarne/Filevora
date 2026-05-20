@@ -1071,7 +1071,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                         <AnimatePresence mode="wait">
                         {/* 1. SELECTION SUBPAGE (Idle Status) */}
                         {status === "idle" && (
-                            <m.div key="idle" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }} className="space-y-4 pb-32 w-full">
+                            <m.div key="idle" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.15 }} className="space-y-4 pb-32 w-full">
 
                                 {/* Header Row */}
                                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-3 gap-3">
@@ -2072,7 +2072,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                         {/* 3. DOWNLOAD SUBPAGE (Success Status) */}
                         {
                             status === "success" && result && (
-                                <m.div key="success" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4 }} className="flex flex-col xl:flex-row gap-6 w-full items-stretch">
+                                <m.div key="success" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }} className="flex flex-col xl:flex-row gap-6 w-full items-stretch">
                                     <div className="flex-1 w-full min-h-[500px] bg-card dark:bg-[#1A1D24] rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-xl p-6 md:p-8">
                                         <ConversionSuccessModal
                                             result={result}
