@@ -67,8 +67,8 @@ export async function compressWithStage0(
 
         // Save with aggressive structural optimization
         const compressedBytes = await pdfDoc.save({
-            // Enable object streams for better compression
-            useObjectStreams: true,
+            // Disable object streams for compatibility (prevents blank pages bug)
+            useObjectStreams: false,
 
             // Don't add a default page if none exist
             addDefaultPage: false,

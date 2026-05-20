@@ -48,11 +48,10 @@ export class PDFWorkerClient {
         this.clearIdleTermination();
 
         if (this.worker && this.workerTaskType !== taskType && taskType) {
-            // If the requested task requires a different worker, terminate the current one
-            // This ensures we don't keep mixing mega workers and split workers
-            if (this.tasks.size === 0) {
-                this.terminate();
-            }
+            // CRITICAL: Force-terminate when task type doesn't match.
+            // Sending a message to the wrong worker type always results in
+            // "Unknown worker action", so pending tasks would fail anyway.
+            this.terminate();
         }
 
         if (!this.worker) {

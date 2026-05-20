@@ -1,10 +1,67 @@
-// @ts-ignore
-import * as pdfjsLib from 'pdfjs-dist/build/pdf';
+// Polyfill for PDF.js compatibility in Web Worker context.
+// pdfjs-dist's "fake worker" fallback needs `document` which doesn't exist in workers.
+// This MUST run before pdfjs-dist loads, so we set it up first and use dynamic import below.
+if (typeof document === 'undefined') {
+    const doc: any = {
+        currentScript: null,
+        createElement: function (tag: string) {
+            if (tag === 'canvas' && typeof OffscreenCanvas !== 'undefined') {
+                const canvas: any = new OffscreenCanvas(1, 1);
+                canvas.style = {};
+                canvas.setAttribute = () => {};
+                canvas.getAttribute = () => null;
+                canvas.ownerDocument = doc;
+                return canvas;
+            }
+            return {
+                style: {},
+                setAttribute: () => {},
+                getAttribute: () => null,
+                appendChild: () => {},
+                append: () => {},
+                getContext: () => null,
+                nodeName: tag.toUpperCase(),
+                ownerDocument: doc,
+                remove: function () {},
+                removeChild: function (child: any) { return child; },
+                cloneNode: function () { return this; },
+                parentNode: null,
+            };
+        },
+        createElementNS: function (_ns: string, tag: string) { return this.createElement(tag); },
+        documentElement: { style: {}, append: () => {} },
+        head: { appendChild: () => {}, append: () => {} },
+        body: { appendChild: () => {}, append: () => {} },
+        getElementsByTagName: () => [],
+        querySelector: () => null,
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        append: () => {},
+    };
+    (self as any).document = doc;
+    (self as any).window = self;
+    if (typeof OffscreenCanvas !== 'undefined') {
+        (self as any).HTMLCanvasElement = OffscreenCanvas;
+    }
+}
+
+// Static import of JSZip is safe — it doesn't need document
 import JSZip from 'jszip';
 
-// Configure worker loader for pdf.js via external CDN to prevent bundle bloating
-if (typeof self !== 'undefined') {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+// Dynamic import cache for pdfjs-dist
+let pdfjsLib: any = null;
+
+async function getPdfjs() {
+    if (!pdfjsLib) {
+        // Dynamic import ensures our document polyfill above is set BEFORE pdfjs initializes.
+        // Static imports are hoisted and would run before the polyfill.
+        // @ts-ignore — pdfjs-dist/build/pdf has no declaration file
+        const mod = await import('pdfjs-dist/build/pdf');
+        pdfjsLib = mod;
+        // Set workerSrc to CDN — the document polyfill handles fake worker fallback
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+    }
+    return pdfjsLib;
 }
 
 /**
@@ -20,7 +77,15 @@ self.onmessage = async (e: MessageEvent) => {
     }
 
     try {
-        const fileData: ArrayBuffer = payload.file;
+        const pdfjs = await getPdfjs();
+
+        const rawFileData: any = payload.file;
+        let fileData: ArrayBuffer;
+        if (rawFileData instanceof File || rawFileData instanceof Blob) {
+            fileData = await rawFileData.arrayBuffer();
+        } else {
+            fileData = rawFileData;
+        }
         const format = payload.format === 'png' ? 'png' : 'jpeg';
         const quality = payload.quality || 0.95;
         // The key to crisp PDF.js rendering is the scale factor. 
@@ -29,7 +94,7 @@ self.onmessage = async (e: MessageEvent) => {
 
         self.postMessage({ type: 'progress', jobId, percent: 10, message: 'Loading PDF for rendering...' });
 
-        const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(fileData) });
+        const loadingTask = pdfjs.getDocument({ data: new Uint8Array(fileData) });
         const pdf = await loadingTask.promise;
         const pageCount = pdf.numPages;
 

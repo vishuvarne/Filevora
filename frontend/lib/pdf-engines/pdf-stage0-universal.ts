@@ -52,10 +52,10 @@ export async function normalizePDF(pdfBytes: Uint8Array): Promise<Uint8Array> {
             // Ignore metadata errors
         }
 
-        // Fast Save with Object Streams
+        // Fast Save
         // This repacks the PDF, often fixing corruption and reducing memory footprint for the next step works
         const normalizedBytes = await pdfDoc.save({
-            useObjectStreams: true,
+            useObjectStreams: false,
             addDefaultPage: false,
             updateFieldAppearances: false, // Expensive operation
             objectsPerTick: Infinity       // Fastest execution

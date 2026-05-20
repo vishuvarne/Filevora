@@ -241,7 +241,7 @@ async function normalizePDF(fileData) {
         } catch (e) { /* ignore */ }
 
         const normalizedBytes = await pdfDoc.save({
-            useObjectStreams: true,
+            useObjectStreams: false,
             addDefaultPage: false,
             updateFieldAppearances: false,
             objectsPerTick: Infinity
@@ -658,7 +658,7 @@ async function compressWithStage0(file, jobId) {
 
     // Save with aggressive structural optimization
     const compressedBytes = await pdfDoc.save({
-        useObjectStreams: true,
+        useObjectStreams: false,
         addDefaultPage: false,
         updateFieldAppearances: false,
         objectsPerTick: Infinity
@@ -845,7 +845,7 @@ async function compressWithHybrid(file, level, quality, dpi, useManual, jobId, c
 
         // Save directly — context.assign replaces images in-place, no clean-copy needed
         const compressedPdfBytes = await pdfDoc.save({
-            useObjectStreams: true,
+            useObjectStreams: false,
             addDefaultPage: false,
             updateFieldAppearances: false
         });

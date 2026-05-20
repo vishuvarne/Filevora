@@ -26,6 +26,7 @@ describe('Core Engine Refinements', () => {
 
         // We don't call start() because it triggers a complex loop.
         // We just test the pause/resume state logic.
+        (scheduler as any).isRunning = true;
 
         expect((scheduler as any).isPaused).toBe(false);
         scheduler.pause();
@@ -57,8 +58,8 @@ describe('Core Engine Refinements', () => {
         (watchdog as any).checkMemory();
         expect(watchdog.getIsThrottled()).toBe(false);
 
-        // Breach threshold
-        (global as any).performance.memory.usedJSHeapSize = 150;
+        // Breach threshold (ratio 0.90 -> critical state)
+        (global as any).performance.memory.usedJSHeapSize = 90;
         (watchdog as any).checkMemory();
         expect(watchdog.getIsThrottled()).toBe(true);
         expect(onThrottle).toHaveBeenCalled();

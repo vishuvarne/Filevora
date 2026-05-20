@@ -191,7 +191,7 @@ export async function compressWithHybrid(
         copiedPages.forEach(p => cleanPdf.addPage(p));
 
         const compressedBytes = await cleanPdf.save({
-            useObjectStreams: settings.enableObjectStreams !== false,
+            useObjectStreams: false,
             addDefaultPage: false,
             updateFieldAppearances: false
         });

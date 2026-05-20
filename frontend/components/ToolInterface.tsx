@@ -265,6 +265,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
     // useToolSession resets its state to idle, but ToolInterface MUST also reset 
     // its independent local state to prevent a sticky UI.
     useEffect(() => {
+        if (isBackgroundProcessing) return; // Never reset during active processing
         if (!session && sessionState === 'idle' && status !== 'idle') {
             setStatus('idle');
             setResult(null);
@@ -272,7 +273,7 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
             setSimulatedProgress(0);
             setErrorMsg(null);
         }
-    }, [session, sessionState, status]);
+    }, [session, sessionState, status, isBackgroundProcessing]);
 
     // ── CRITICAL: Direct popstate listener for reliable Back/Forward navigation ──
     // React state propagation from useToolSession can miss edge cases during rapid
@@ -2177,8 +2178,12 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                                 </svg>
                                             </div>
                                             <div>
-                                                <h2 className="text-xl font-black uppercase tracking-wider text-foreground leading-tight">Rearrange Files</h2>
-                                                <span className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Drag and drop to reorder</span>
+                                                <h2 className="text-xl font-black uppercase tracking-wider text-foreground leading-tight">
+                                                    {tool.id === 'split-pdf' && splitMode === 'pages' && extractMode === 'select' ? "Select Pages" : "Rearrange Files"}
+                                                </h2>
+                                                <span className="text-xs font-bold text-muted-foreground uppercase tracking-wide">
+                                                    {tool.id === 'split-pdf' && splitMode === 'pages' && extractMode === 'select' ? "Click pages to toggle selection" : "Drag and drop to reorder"}
+                                                </span>
                                             </div>
                                         </div>
                                         <button onClick={() => setExpandedFileView(false)} className="p-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-full transition-colors text-slate-700 dark:text-slate-300 active:scale-95 border-2 border-transparent hover:border-slate-900 dark:hover:border-slate-500 hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
@@ -2188,50 +2193,93 @@ function ToolInterfaceInner({ tool }: ToolInterfaceProps) {
                                         </button>
                                     </div>
                                     <div className="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar">
-                                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStartDnd} onDragEnd={handleDragEndDnd}>
-                                            <SortableContext items={files.map(f => `${f.name}-${f.size}-${f.lastModified}`)} strategy={rectSortingStrategy}>
-                                                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 sm:gap-4 max-w-[1600px] mx-auto">
-                                                    <AnimatePresence>
-                                                        {files.map((f, i) => (
-                                                            <SortableFileItem key={`${f.name}-${f.size}-${f.lastModified}`} id={`${f.name}-${f.size}-${f.lastModified}`}>
-                                                                <m.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} className={`w-full relative aspect-square bg-[#1A1D24] dark:bg-[#1A1D24] rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden select-none cursor-grab active:cursor-grabbing ${dragIndex === i ? 'opacity-50 border-primary z-40 scale-105 shadow-xl ring-4 ring-primary/20' : 'border-slate-800 hover:border-slate-500 z-10'}`}>
-                                                                    <div className="absolute top-2 left-2 z-10 w-7 h-7 rounded-full bg-slate-900/90 ring-2 ring-white/20 flex items-center justify-center text-xs font-black text-white shadow-md">
-                                                                        {i + 1}
-                                                                    </div>
-                                                                    <div className="w-full h-full flex items-center justify-center p-2 pb-6 pointer-events-none">
-                                                                        {f.type.startsWith("image/") ? (
-                                                                            <ImagePreview file={f} rotation={fileRotations[i] || 0} />
-                                                                        ) : fileThumbnails[`${f.name}-${f.size}-${f.lastModified}`] ? (
-                                                                            <img draggable={false} src={fileThumbnails[`${f.name}-${f.size}-${f.lastModified}`]} alt={f.name} className="w-full h-full object-contain drop-shadow-sm rounded-lg bg-white select-none" />
-                                                                        ) : (
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-10 h-10 text-slate-500"><path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A9 9 0 0011.25 3.75H10.5V7.125A2.625 2.625 0 0113.125 9.75h3.375v.375a.375.375 0 01-.375.375H13.5a4.125 4.125 0 01-4.125-4.125V1.5H5.625z" /><path d="M12.971 1.816A5.23 5.23 0 0114.25 3.75c2.232 0 4.058 1.651 4.367 3.795a.75.75 0 01-.065.404A9.006 9.006 0 0020.25 12.75v7.875A3.375 3.375 0 0116.875 24H5.625A3.375 3.375 0 012.25 20.625V3.375A3.375 3.375 0 015.625 0h4.846c.95 0 1.864.377 2.5 1.066l.001-.001z" fillOpacity="0" /></svg>
-                                                                        )}
-                                                                    </div>
-                                                                    <div className="absolute top-1.5 right-1.5 z-30 flex flex-col gap-1">
-                                                                        <button onClick={(e) => { e.stopPropagation(); setFileRotations(prev => ({ ...prev, [i]: ((prev[i] || 0) + 90) % 360 })); }} className="p-1.5 bg-slate-800 hover:bg-white hover:text-slate-900 border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] text-white rounded-full transition-all hover:-translate-y-0.5 active:translate-y-0 active:shadow-none active:scale-95" title="Rotate 90°">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3 h-3"><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" /></svg>
-                                                                        </button>
-                                                                        <button onClick={(e) => { e.stopPropagation(); const newFiles = [...files]; newFiles.splice(i, 1); setFiles(newFiles); setFileRotations(prev => { const newRots = { ...prev }; delete newRots[i]; return newRots; }); }} className="p-1.5 bg-slate-800 hover:bg-red-500 border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] text-white rounded-full transition-all hover:-translate-y-0.5 active:translate-y-0 active:shadow-none active:scale-95" title="Remove File">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3 h-3"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-                                                                        </button>
-                                                                    </div>
-                                                                    <div className="absolute bottom-0 left-0 right-0 px-2 py-1.5 bg-black/80 backdrop-blur-md text-slate-300 text-[10px] font-bold truncate text-center pointer-events-none border-t border-slate-700/50">
-                                                                        {f.name}
-                                                                    </div>
-                                                                </m.div>
-                                                            </SortableFileItem>
-                                                        ))}
-                                                    </AnimatePresence>
-                                                </div>
-                                            </SortableContext>
-                                        </DndContext>
+                                        {tool.id === 'split-pdf' && splitMode === 'pages' && extractMode === 'select' && pdfPageCount > 0 ? (
+                                            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 sm:gap-4 max-w-[1600px] mx-auto">
+                                                {pdfThumbnails.map((thumbData, index) => {
+                                                    const pageNum = index + 1;
+                                                    const isSelected = selectedPages.has(pageNum);
+                                                    return (
+                                                        <div
+                                                            key={`page-expanded-${pageNum}`}
+                                                            onClick={() => {
+                                                                const newPages = new Set(selectedPages);
+                                                                if (isSelected) newPages.delete(pageNum);
+                                                                else newPages.add(pageNum);
+                                                                setSelectedPages(newPages);
+                                                                
+                                                                const sorted = Array.from(newPages).sort((a, b) => a - b);
+                                                                setExtractPagesInput(sorted.join(','));
+                                                            }}
+                                                            className={`group flex flex-col relative aspect-[1/1.3] rounded-lg overflow-hidden cursor-pointer transition-all duration-300 border-2 ${isSelected ? 'border-primary ring-2 ring-primary/20 shadow-lg -translate-y-0.5' : 'border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 bg-white dark:bg-[#1A1D24]'}`}
+                                                        >
+                                                            <div className={`absolute top-2 left-2 z-10 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-extrabold shadow-md ring-2 ring-white/30 ${isSelected ? 'bg-primary text-white' : 'bg-slate-900/80 text-white'}`}>
+                                                                {pageNum}
+                                                            </div>
+                                                            <div className="flex-1 w-full p-1 sm:p-2 flex items-center justify-center bg-slate-50 dark:bg-slate-800/40">
+                                                                {thumbData ? (
+                                                                    <img src={thumbData} alt={`Page ${pageNum}`} className="w-[95%] h-[95%] object-contain shadow-sm bg-white" />
+                                                                ) : (
+                                                                    <span className="text-xs text-muted-foreground animate-pulse font-medium">Loading...</span>
+                                                                )}
+                                                            </div>
+                                                            <div className={`absolute top-3 right-3 w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 flex items-center justify-center transition-all shadow-sm ${isSelected ? 'bg-primary border-primary text-white scale-110' : 'bg-white/90 dark:bg-black/50 border-slate-300 dark:border-slate-500 text-transparent group-hover:border-primary/40 group-hover:text-primary/20'}`}>
+                                                                <svg viewBox="0 0 24 24" fill="none" className="w-3.5 h-3.5 sm:w-4 sm:h-4" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+                                                                    <polyline points="20 6 9 17 4 12" />
+                                                                </svg>
+                                                            </div>
+                                                            <div className={`w-full py-2.5 transition-colors border-t border-slate-100 dark:border-slate-800 ${isSelected ? 'bg-primary border-primary text-primary-foreground' : 'bg-white dark:bg-[#1A1D24] text-foreground group-hover:bg-slate-50 dark:group-hover:bg-slate-800/80'} text-center`}>
+                                                                <span className="text-sm font-bold tracking-tight">Page {pageNum}</span>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        ) : (
+                                            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStartDnd} onDragEnd={handleDragEndDnd}>
+                                                <SortableContext items={files.map(f => `${f.name}-${f.size}-${f.lastModified}`)} strategy={rectSortingStrategy}>
+                                                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 sm:gap-4 max-w-[1600px] mx-auto">
+                                                        <AnimatePresence>
+                                                            {files.map((f, i) => (
+                                                                <SortableFileItem key={`${f.name}-${f.size}-${f.lastModified}`} id={`${f.name}-${f.size}-${f.lastModified}`}>
+                                                                    <m.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} className={`w-full relative aspect-square bg-[#1A1D24] dark:bg-[#1A1D24] rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden select-none cursor-grab active:cursor-grabbing ${dragIndex === i ? 'opacity-50 border-primary z-40 scale-105 shadow-xl ring-4 ring-primary/20' : 'border-slate-800 hover:border-slate-500 z-10'}`}>
+                                                                        <div className="absolute top-2 left-2 z-10 w-7 h-7 rounded-full bg-slate-900/90 ring-2 ring-white/20 flex items-center justify-center text-xs font-black text-white shadow-md">
+                                                                            {i + 1}
+                                                                        </div>
+                                                                        <div className="w-full h-full flex items-center justify-center p-2 pb-6 pointer-events-none">
+                                                                            {f.type.startsWith("image/") ? (
+                                                                                <ImagePreview file={f} rotation={fileRotations[i] || 0} />
+                                                                            ) : fileThumbnails[`${f.name}-${f.size}-${f.lastModified}`] ? (
+                                                                                <img draggable={false} src={fileThumbnails[`${f.name}-${f.size}-${f.lastModified}`]} alt={f.name} className="w-full h-full object-contain drop-shadow-sm rounded-lg bg-white select-none" />
+                                                                            ) : (
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-10 h-10 text-slate-500"><path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A9 9 0 0011.25 3.75H10.5V7.125A2.625 2.625 0 0113.125 9.75h3.375v.375a.375.375 0 01-.375.375H13.5a4.125 4.125 0 01-4.125-4.125V1.5H5.625z" /><path d="M12.971 1.816A5.23 5.23 0 0114.25 3.75c2.232 0 4.058 1.651 4.367 3.795a.75.75 0 01-.065.404A9.006 9.006 0 0020.25 12.75v7.875A3.375 3.375 0 0116.875 24H5.625A3.375 3.375 0 012.25 20.625V3.375A3.375 3.375 0 015.625 0h4.846c.95 0 1.864.377 2.5 1.066l.001-.001z" fillOpacity="0" /></svg>
+                                                                            )}
+                                                                        </div>
+                                                                        <div className="absolute top-1.5 right-1.5 z-30 flex flex-col gap-1">
+                                                                            <button onClick={(e) => { e.stopPropagation(); setFileRotations(prev => ({ ...prev, [i]: ((prev[i] || 0) + 90) % 360 })); }} className="p-1.5 bg-slate-800 hover:bg-white hover:text-slate-900 border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] text-white rounded-full transition-all hover:-translate-y-0.5 active:translate-y-0 active:shadow-none active:scale-95" title="Rotate 90°">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3 h-3"><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" /></svg>
+                                                                            </button>
+                                                                            <button onClick={(e) => { e.stopPropagation(); const newFiles = [...files]; newFiles.splice(i, 1); setFiles(newFiles); setFileRotations(prev => { const newRots = { ...prev }; delete newRots[i]; return newRots; }); }} className="p-1.5 bg-slate-800 hover:bg-red-500 border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] text-white rounded-full transition-all hover:-translate-y-0.5 active:translate-y-0 active:shadow-none active:scale-95" title="Remove File">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3 h-3"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div className="absolute bottom-0 left-0 right-0 px-2 py-1.5 bg-black/80 backdrop-blur-md text-slate-300 text-[10px] font-bold truncate text-center pointer-events-none border-t border-slate-700/50">
+                                                                            {f.name}
+                                                                        </div>
+                                                                    </m.div>
+                                                                </SortableFileItem>
+                                                            ))}
+                                                        </AnimatePresence>
+                                                    </div>
+                                                </SortableContext>
+                                            </DndContext>
+                                        )}
                                     </div>
                                     <div className="p-4 sm:p-5 border-t border-border bg-card/80 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] flex justify-center backdrop-blur-md z-10 shrink-0">
                                         <button onClick={() => setExpandedFileView(false)} className="px-8 py-4 bg-primary text-white font-black uppercase tracking-wider rounded-2xl border-[3px] border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:scale-95 active:shadow-none transition-all flex items-center gap-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-5 h-5">
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                                             </svg>
-                                            Done Rearranging
+                                            {tool.id === 'split-pdf' && splitMode === 'pages' && extractMode === 'select' ? "Done Selecting" : "Done Rearranging"}
                                         </button>
                                     </div>
                                 </m.div>

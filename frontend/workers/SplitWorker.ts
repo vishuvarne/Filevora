@@ -14,7 +14,13 @@ self.onmessage = async (e: MessageEvent) => {
     }
 
     try {
-        const fileData: ArrayBuffer = payload.file;
+        const rawFileData: any = payload.file;
+        let fileData: ArrayBuffer;
+        if (rawFileData instanceof File || rawFileData instanceof Blob) {
+            fileData = await rawFileData.arrayBuffer();
+        } else {
+            fileData = rawFileData;
+        }
         const { mode, customRanges, mergeAll, sizeLimit, sizeUnit } = payload;
 
         self.postMessage({ type: 'progress', jobId, percent: 10, message: 'Loading PDF...' });
@@ -61,7 +67,7 @@ self.onmessage = async (e: MessageEvent) => {
                     copiedPages.forEach(p => newPdf.addPage(p));
                     await new Promise(resolve => setTimeout(resolve, 0)); // Yield
                 }
-                const pdfBytes = await newPdf.save({ useObjectStreams: true, addDefaultPage: false });
+                const pdfBytes = await newPdf.save({ useObjectStreams: false });
                 resultBuffer = pdfBytes.buffer.slice(pdfBytes.byteOffset, pdfBytes.byteLength + pdfBytes.byteOffset) as ArrayBuffer;
                 resultExt = 'pdf';
             } else {
@@ -72,7 +78,7 @@ self.onmessage = async (e: MessageEvent) => {
                     for (let i = range.from - 1; i <= range.to - 1; i++) indices.push(i);
                     if (indices.length > 0) {
                         const newPdf = await createPdfFromIndices(indices);
-                        const pdfBytes = await newPdf.save({ useObjectStreams: true, addDefaultPage: false });
+                        const pdfBytes = await newPdf.save({ useObjectStreams: false });
                         const fileName = range.from === range.to ? `page_${range.from}.pdf` : `pages_${range.from}-${range.to}.pdf`;
                         zip.file(fileName, pdfBytes);
                     }
@@ -88,7 +94,7 @@ self.onmessage = async (e: MessageEvent) => {
             const zip = new JSZip();
             for (let i = 0; i < pageCount; i++) {
                 const newPdf = await createPdfFromIndices([i]);
-                const pdfBytes = await newPdf.save({ useObjectStreams: true, addDefaultPage: false });
+                const pdfBytes = await newPdf.save({ useObjectStreams: false });
                 zip.file(`page_${i + 1}.pdf`, pdfBytes);
                 if (i % 10 === 0) {
                     self.postMessage({ type: 'progress', jobId, percent: Math.round((i / pageCount) * 80) + 10, message: `Extracting page ${i + 1}...` });

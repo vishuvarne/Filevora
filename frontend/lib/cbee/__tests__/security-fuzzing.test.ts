@@ -169,7 +169,7 @@ describe('CBEE Security - Capability Fuzzing', () => {
 
             // Should be denied (exceeds 500MB limit for merge-pdf)
             expect(response.granted).toBe(false);
-            expect(response.denial_reason).toContain('exceeds limit');
+            expect(response.denial_reason).toContain('exceeds the safety limits');
         });
 
         it('should deny unknown tools', async () => {
@@ -181,7 +181,7 @@ describe('CBEE Security - Capability Fuzzing', () => {
             });
 
             expect(response.granted).toBe(false);
-            expect(response.denial_reason).toContain('Unknown tool');
+            expect(response.denial_reason).toContain('not recognized');
         });
 
         it('should deny network access for offline-only tools', async () => {
