@@ -108,6 +108,32 @@ export function navigateToTool(router: MinimalRouter, opts: NavigateOptions): vo
 }
 
 /**
+ * Silent navigation: updates the URL without triggering Next.js router,
+ * preventing Suspense boundary re-renders that would unmount the component tree.
+ * 
+ * MUST be used during active processing (startSession → transition) to avoid
+ * losing React state when useSearchParams() causes re-suspension.
+ * 
+ * Automatically detects and preserves the locale prefix from the current URL.
+ */
+export function silentNavigate(opts: NavigateOptions): void {
+    if (typeof window === 'undefined') return;
+
+    const url = buildToolUrl(opts);
+    
+    // Detect locale prefix from current URL (e.g., /en, /es, /de, /fr, /hi)
+    const localeMatch = window.location.pathname.match(/^\/(en|es|de|fr|hi)(?=\/|$)/);
+    const localePrefix = localeMatch ? `/${localeMatch[1]}` : '';
+    const fullUrl = `${localePrefix}${url}`;
+
+    if (opts.replace) {
+        window.history.replaceState(window.history.state, '', fullUrl);
+    } else {
+        window.history.pushState(window.history.state, '', fullUrl);
+    }
+}
+
+/**
  * Navigate back to the tool's idle state (clear session from URL).
  * This replaces router.back() — deterministic, never goes to Home.
  */

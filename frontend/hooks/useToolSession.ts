@@ -33,6 +33,7 @@ import {
     navigateToToolError,
     parseToolSearchParams,
     isValidTransition,
+    silentNavigate,
 } from '@/lib/navigation-engine';
 
 // ── Types ────────────────────────────────────────────────────────────────────
@@ -198,10 +199,11 @@ export function useToolSession(toolId: string): UseToolSessionReturn {
         setSessionBoth(newSession);
         setExpiredMessage(null);
 
-        // Use push (NOT replace) so the clean tool URL stays in browser history.
-        // Doing the state transition here directly avoids Next.js router batching issues 
-        // that happen if we push then replace immediately after.
-        navigateToTool(router, {
+        // Use silentNavigate (window.history.pushState) instead of router.push()
+        // to prevent Next.js Suspense boundaries from re-triggering.
+        // router.push() causes useSearchParams() to re-suspend, which unmounts
+        // the entire ToolInterface component tree, losing all processing state.
+        silentNavigate({
             toolId,
             sessionId: newSession.sessionId,
             state: initialState,
@@ -247,16 +249,13 @@ export function useToolSession(toolId: string): UseToolSessionReturn {
             setSessionBoth(updated);
         }
 
-        // Update URL
-        if (newState === 'success') {
-            navigateToToolSuccess(router, toolId, currentSession.sessionId);
-        } else if (newState === 'error') {
-            navigateToToolError(router, toolId, currentSession.sessionId);
-        } else if (newState === 'idle') {
+        // Update URL silently (via window.history) to prevent Next.js
+        // Suspense re-renders that would unmount the component tree.
+        // The idle transition still uses router for proper framework tracking.
+        if (newState === 'idle') {
             navigateToToolIdle(router, toolId);
         } else {
-            // uploading / processing — update URL to reflect state
-            navigateToTool(router, {
+            silentNavigate({
                 toolId,
                 sessionId: currentSession.sessionId,
                 state: newState,
