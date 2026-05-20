@@ -1,0 +1,5 @@
+# Ignore Brotli pre-compressed files (Vercel handles compression)
+*.br
+
+# Ignore LibreOffice WASM (too large for Git, downloaded separately)
+libreoffice/

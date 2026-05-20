@@ -1,0 +1,15 @@
+{
+  "name": "wasm-converter-entrypoint",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "converter_bg.wasm",
+    "converter.js",
+    "converter.d.ts"
+  ],
+  "main": "converter.js",
+  "types": "converter.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

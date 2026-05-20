@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "powershell -Command \"$p = Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue; if($p) { Stop-Process -Id $p.OwningProcess -Force -ErrorAction SilentlyContinue }\"; next dev",
-    "build": "node scripts/generate-wasm-hash.js && next build && node scripts/patch_soffice_memory.cjs && node scripts/patch_wasm_memory.cjs",
+    "build": "node scripts/copy-wasm.cjs && node scripts/generate-wasm-hash.js && next build && node scripts/patch_soffice_memory.cjs && node scripts/patch_wasm_memory.cjs",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest",

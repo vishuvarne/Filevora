@@ -1,0 +1,2 @@
+# Ignore Brotli pre-compressed files
+*.br
