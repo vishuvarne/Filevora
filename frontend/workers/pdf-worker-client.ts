@@ -48,10 +48,17 @@ export class PDFWorkerClient {
         this.clearIdleTermination();
 
         if (this.worker && this.workerTaskType !== taskType && taskType) {
-            // CRITICAL: Force-terminate when task type doesn't match.
-            // Sending a message to the wrong worker type always results in
-            // "Unknown worker action", so pending tasks would fail anyway.
-            this.terminate();
+            // Worker type mismatch — kill the OLD worker process but DON'T
+            // call this.terminate() which would reject ALL pending tasks,
+            // including the brand-new task that was just queued.
+            // This fixes the "double-click to process" bug: terminate() was
+            // destroying the new task's resolve/reject before the worker
+            // could even process it.
+            this.worker.terminate();
+            this.worker = null;
+            // Reset active job count since the old worker's in-flight tasks
+            // can no longer complete (worker is killed)
+            this.activeHeavyJobs = 0;
         }
 
         if (!this.worker) {
